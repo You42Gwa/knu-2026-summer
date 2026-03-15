@@ -1,0 +1,9 @@
+@'
+fastapi
+uvicorn
+langchain
+langchain-openai
+python-dotenv
+google-api-python-client
+pandas
+'@ | Out-File -FilePath requirements.txt -Encoding utf8

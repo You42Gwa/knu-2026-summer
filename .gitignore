@@ -1,9 +1,9 @@
-@'
 .env
 .venv/
 __pycache__/
 *.pyc
-data/*.json
-data/*.csv
 .DS_Store
-'@ | Out-File -FilePath .gitignore -Encoding utf8
+
+backend/data/*
+data/*
+!backend/data/.gitkeep

@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # 1. 로컬 LLM 서버 (Ollama) - 4060 Ti GPU 적극 활용
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama_server
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # 2. 정형 데이터 RDBMS (PostgreSQL) - 예산안, 메타데이터 저장
+  postgres:
+    image: postgres:15
+    container_name: rag_postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 1q2w3e4r  # 실제 사용 시 변경하세요
+      POSTGRES_DB: rag_database
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # 3. 비정형 데이터 VDBMS (ChromaDB) - 규정, 한글 문서 임베딩 저장
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: rag_chromadb
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    restart: unless-stopped
+
+  # 4. 자동화 워크플로우 툴 (n8n)
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n_server
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - WEBHOOK_URL=http://localhost:5678/
+    volumes:
+      - n8n_data:/home/node/.n8n
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+  pg_data:
+  chroma_data:
+  n8n_data:

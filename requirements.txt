@@ -1,9 +1,17 @@
-@'
 fastapi
 uvicorn
+pydantic
 langchain
-langchain-openai
-python-dotenv
-google-api-python-client
+langchain-community
+psycopg2-binary
+sqlalchemy
+chromadb
 pandas
-'@ | Out-File -FilePath requirements.txt -Encoding utf8
+openpyxl
+python-docx
+pdfplumber
+olefile
+pyhwp
+beautifulsoup4
+lxml
+html5lib

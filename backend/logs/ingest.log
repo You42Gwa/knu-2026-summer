@@ -1,0 +1,176 @@
+[2026-03-29 19:40:52,116] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp type=hwp category=uncategorized hash=0f44e099dccb46fe956e6038065a5a6c
+[2026-03-29 19:40:52,117] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-03-29 19:40:52,129] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_1_html_t)
+[2026-03-29 19:40:53,125] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-03-29 19:40:53,127] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp tables=1 chroma_chunks=0
+[2026-03-29 19:40:53,132] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-03-29 19:40:53,134] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp type=hwp category=uncategorized hash=34bf6315cfa6ba17d776402247dbe823
+[2026-03-29 19:40:53,134] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-03-29 19:40:53,143] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_10_html_t)
+[2026-03-29 19:40:53,737] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-03-29 19:40:53,885] INFO ingest - 기존 Chroma 문서 삭제 완료: 10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-03-29 19:40:54,437] INFO ingest - ChromaDB '10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp' 텍스트 임베딩 완료 (1 chunks)
+[2026-03-29 19:40:54,438] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp tables=1 chroma_chunks=1
+[2026-03-29 19:40:54,442] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-03-29 19:40:54,443] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp type=hwp category=uncategorized hash=7116b93d2dfdac0e7f98f63dc85b1d36
+[2026-03-29 19:40:54,444] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-03-29 19:40:54,452] INFO ingest - 기존 테이블 2개 삭제 완료 (prefix=tbl_2_html_t)
+[2026-03-29 19:40:55,028] INFO ingest - 추출된 2개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-03-29 19:40:55,154] INFO ingest - 기존 Chroma 문서 삭제 완료: 2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-03-29 19:40:55,581] INFO ingest - ChromaDB '2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp' 텍스트 임베딩 완료 (2 chunks)
+[2026-03-29 19:40:55,581] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp tables=2 chroma_chunks=2
+[2026-03-29 19:40:55,585] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-03-29 19:40:55,587] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp type=hwp category=uncategorized hash=924acae4b213f6803e729369336a9364
+[2026-03-29 19:40:55,587] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-03-29 19:40:55,593] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_3_html_t)
+[2026-03-29 19:40:56,150] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-03-29 19:40:56,275] INFO ingest - 기존 Chroma 문서 삭제 완료: 3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-03-29 19:40:56,633] INFO ingest - ChromaDB '3. 텍폴 신입생 장학금 3월-130만원.hwp' 텍스트 임베딩 완료 (1 chunks)
+[2026-03-29 19:40:56,633] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp tables=1 chroma_chunks=1
+[2026-03-29 19:40:56,637] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-03-29 19:40:56,639] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp type=hwp category=uncategorized hash=e9774e8e47af883bdcc27617ec48daf3
+[2026-03-29 19:40:56,639] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-03-29 19:40:56,651] INFO ingest - 기존 테이블 3개 삭제 완료 (prefix=tbl_4_html_t)
+[2026-03-29 19:40:58,718] INFO ingest - 추출된 3개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-03-29 19:40:58,850] INFO ingest - 기존 Chroma 문서 삭제 완료: 4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-03-29 19:40:59,303] INFO ingest - ChromaDB '4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp' 텍스트 임베딩 완료 (3 chunks)
+[2026-03-29 19:40:59,303] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp tables=3 chroma_chunks=3
+[2026-03-29 19:40:59,307] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-03-29 19:40:59,308] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx type=xlsx category=uncategorized hash=dcad9352185e968e37923bd0bceb5f04
+[2026-03-29 19:40:59,308] INFO ingest - [엑셀 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-03-29 19:40:59,741] INFO ingest - PostgreSQL 'tbl_5' 테이블 적재 완료
+[2026-03-29 19:40:59,743] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-03-29 19:40:59,745] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf type=pdf category=uncategorized hash=f19e45e0194753a4e6a9383a1e5d24b4
+[2026-03-29 19:40:59,745] INFO ingest - [PDF 하이브리드 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-03-29 19:40:59,751] WARNING ingest - 추출된 데이터가 없습니다. 스캔본 이미지일 수 있습니다. | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-03-29 19:40:59,751] INFO ingest - PDF 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf tables=0 chroma_chunks=0
+[2026-03-29 19:40:59,752] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-03-29 19:40:59,754] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp type=hwp category=uncategorized hash=be79258bed04b0fff87cca38c6371fc7
+[2026-03-29 19:40:59,754] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-03-29 19:40:59,760] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_7_html_t)
+[2026-03-29 19:41:00,417] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-03-29 19:41:00,418] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp tables=1 chroma_chunks=0
+[2026-03-29 19:41:00,421] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-03-29 19:41:00,423] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp type=hwp category=uncategorized hash=4d39010778c0e4181f10f96a2d218db5
+[2026-03-29 19:41:00,423] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-03-29 19:41:00,429] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_8_html_t)
+[2026-03-29 19:41:01,277] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-03-29 19:41:01,279] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp tables=1 chroma_chunks=0
+[2026-03-29 19:41:01,282] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-03-29 19:41:01,284] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf type=pdf category=uncategorized hash=c0cc85bb47d8753fac2dfa4a6c6fd9f1
+[2026-03-29 19:41:01,284] INFO ingest - [PDF 하이브리드 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-03-29 19:41:01,292] INFO ingest - 기존 테이블 2개 삭제 완료 (prefix=tbl_9_p)
+[2026-03-29 19:41:01,659] INFO ingest - 기존 Chroma 문서 삭제 완료: 9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-03-29 19:41:04,165] INFO ingest - ChromaDB '9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf' 텍스트 임베딩 완료 (32 chunks)
+[2026-03-29 19:41:04,165] INFO ingest - PDF 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf tables=2 chroma_chunks=32
+[2026-03-29 19:41:04,168] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-03-29 19:41:04,170] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.hwp type=hwp category=uncategorized hash=0f44e099dccb46fe956e6038065a5a6c
+[2026-03-29 19:41:04,170] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.hwp
+[2026-03-29 19:41:04,176] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=sample_html_t)
+[2026-03-29 19:41:05,120] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.hwp
+[2026-03-29 19:41:05,122] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.hwp tables=1 chroma_chunks=0
+[2026-03-29 19:41:05,125] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.hwp
+[2026-03-29 19:41:05,127] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.xlsx type=xlsx category=uncategorized hash=9f29d56764420f009fb4d2479f5075ef
+[2026-03-29 19:41:05,127] INFO ingest - [엑셀 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.xlsx
+[2026-03-29 19:41:05,177] INFO ingest - PostgreSQL 'sample' 테이블 적재 완료
+[2026-03-29 19:41:05,179] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.xlsx
+[2026-03-30 19:55:21,283] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp hash=0f44e099dccb46fe956e6038065a5a6c
+[2026-03-30 19:55:21,296] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp hash=34bf6315cfa6ba17d776402247dbe823
+[2026-03-30 19:55:21,309] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp hash=7116b93d2dfdac0e7f98f63dc85b1d36
+[2026-03-30 19:55:21,321] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp hash=924acae4b213f6803e729369336a9364
+[2026-03-30 19:55:21,334] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp hash=e9774e8e47af883bdcc27617ec48daf3
+[2026-03-30 19:55:21,346] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx hash=dcad9352185e968e37923bd0bceb5f04
+[2026-03-30 19:55:21,358] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf hash=f19e45e0194753a4e6a9383a1e5d24b4
+[2026-03-30 19:55:21,370] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp hash=be79258bed04b0fff87cca38c6371fc7
+[2026-03-30 19:55:21,382] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp hash=4d39010778c0e4181f10f96a2d218db5
+[2026-03-30 19:55:21,402] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf hash=c0cc85bb47d8753fac2dfa4a6c6fd9f1
+[2026-03-30 19:55:21,414] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.hwp hash=0f44e099dccb46fe956e6038065a5a6c
+[2026-03-30 19:55:21,426] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.xlsx hash=9f29d56764420f009fb4d2479f5075ef
+[2026-03-30 20:06:07,168] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp hash=0f44e099dccb46fe956e6038065a5a6c
+[2026-03-30 20:06:07,170] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp hash=34bf6315cfa6ba17d776402247dbe823
+[2026-03-30 20:06:07,172] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp hash=7116b93d2dfdac0e7f98f63dc85b1d36
+[2026-03-30 20:06:07,173] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp hash=924acae4b213f6803e729369336a9364
+[2026-03-30 20:06:07,174] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp hash=e9774e8e47af883bdcc27617ec48daf3
+[2026-03-30 20:06:07,175] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx hash=dcad9352185e968e37923bd0bceb5f04
+[2026-03-30 20:06:07,177] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf hash=f19e45e0194753a4e6a9383a1e5d24b4
+[2026-03-30 20:06:07,178] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp hash=be79258bed04b0fff87cca38c6371fc7
+[2026-03-30 20:06:07,180] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp hash=4d39010778c0e4181f10f96a2d218db5
+[2026-03-30 20:06:07,182] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf hash=c0cc85bb47d8753fac2dfa4a6c6fd9f1
+[2026-03-30 20:06:07,184] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.hwp hash=0f44e099dccb46fe956e6038065a5a6c
+[2026-03-30 20:06:07,185] INFO ingest - 생략 : 변경 없음 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.xlsx hash=9f29d56764420f009fb4d2479f5075ef
+[2026-03-30 20:08:37,847] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp type=hwp category=uncategorized hash=0f44e099dccb46fe956e6038065a5a6c
+[2026-03-30 20:08:37,847] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-03-30 20:08:37,865] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_1_html_t)
+[2026-03-30 20:08:39,418] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-03-30 20:08:39,420] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp tables=1 chroma_chunks=0
+[2026-03-30 20:08:39,427] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-03-30 20:08:39,429] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp type=hwp category=uncategorized hash=34bf6315cfa6ba17d776402247dbe823
+[2026-03-30 20:08:39,429] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-03-30 20:08:39,435] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_10_html_t)
+[2026-03-30 20:08:40,108] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-03-30 20:08:40,202] INFO ingest - 기존 Chroma 문서 삭제 완료: 10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-03-30 20:08:40,983] INFO ingest - ChromaDB '10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp' 텍스트 임베딩 완료 (1 chunks)
+[2026-03-30 20:08:40,983] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp tables=1 chroma_chunks=1
+[2026-03-30 20:08:40,988] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-03-30 20:08:40,990] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp type=hwp category=uncategorized hash=7116b93d2dfdac0e7f98f63dc85b1d36
+[2026-03-30 20:08:40,991] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-03-30 20:08:40,999] INFO ingest - 기존 테이블 2개 삭제 완료 (prefix=tbl_2_html_t)
+[2026-03-30 20:08:41,668] INFO ingest - 추출된 2개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-03-30 20:08:41,721] INFO ingest - 기존 Chroma 문서 삭제 완료: 2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-03-30 20:08:42,184] INFO ingest - ChromaDB '2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp' 텍스트 임베딩 완료 (2 chunks)
+[2026-03-30 20:08:42,185] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp tables=2 chroma_chunks=2
+[2026-03-30 20:08:42,195] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-03-30 20:08:42,198] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp type=hwp category=uncategorized hash=924acae4b213f6803e729369336a9364
+[2026-03-30 20:08:42,198] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-03-30 20:08:42,211] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_3_html_t)
+[2026-03-30 20:08:42,983] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-03-30 20:08:43,035] INFO ingest - 기존 Chroma 문서 삭제 완료: 3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-03-30 20:08:43,398] INFO ingest - ChromaDB '3. 텍폴 신입생 장학금 3월-130만원.hwp' 텍스트 임베딩 완료 (1 chunks)
+[2026-03-30 20:08:43,398] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp tables=1 chroma_chunks=1
+[2026-03-30 20:08:43,403] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-03-30 20:08:43,405] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp type=hwp category=uncategorized hash=e9774e8e47af883bdcc27617ec48daf3
+[2026-03-30 20:08:43,406] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-03-30 20:08:43,419] INFO ingest - 기존 테이블 3개 삭제 완료 (prefix=tbl_4_html_t)
+[2026-03-30 20:08:45,529] INFO ingest - 추출된 3개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-03-30 20:08:45,628] INFO ingest - 기존 Chroma 문서 삭제 완료: 4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-03-30 20:08:46,156] INFO ingest - ChromaDB '4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp' 텍스트 임베딩 완료 (3 chunks)
+[2026-03-30 20:08:46,157] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp tables=3 chroma_chunks=3
+[2026-03-30 20:08:46,161] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-03-30 20:08:46,163] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx type=xlsx category=uncategorized hash=dcad9352185e968e37923bd0bceb5f04
+[2026-03-30 20:08:46,163] INFO ingest - [엑셀 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-03-30 20:08:46,833] INFO ingest - PostgreSQL 'tbl_5' 테이블 적재 완료
+[2026-03-30 20:08:46,834] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-03-30 20:08:46,836] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf type=pdf category=uncategorized hash=f19e45e0194753a4e6a9383a1e5d24b4
+[2026-03-30 20:08:46,837] INFO ingest - [PDF 하이브리드 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-03-30 20:08:46,842] WARNING ingest - 추출된 데이터가 없습니다. 스캔본 이미지일 수 있습니다. | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-03-30 20:08:46,842] INFO ingest - PDF 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf tables=0 chroma_chunks=0
+[2026-03-30 20:08:46,844] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-03-30 20:08:46,846] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp type=hwp category=uncategorized hash=be79258bed04b0fff87cca38c6371fc7
+[2026-03-30 20:08:46,846] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-03-30 20:08:46,852] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_7_html_t)
+[2026-03-30 20:08:47,492] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-03-30 20:08:47,493] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp tables=1 chroma_chunks=0
+[2026-03-30 20:08:47,497] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-03-30 20:08:47,499] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp type=hwp category=uncategorized hash=4d39010778c0e4181f10f96a2d218db5
+[2026-03-30 20:08:47,499] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-03-30 20:08:47,505] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_8_html_t)
+[2026-03-30 20:08:48,344] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-03-30 20:08:48,346] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp tables=1 chroma_chunks=0
+[2026-03-30 20:08:48,349] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-03-30 20:08:48,350] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf type=pdf category=uncategorized hash=c0cc85bb47d8753fac2dfa4a6c6fd9f1
+[2026-03-30 20:08:48,350] INFO ingest - [PDF 하이브리드 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-03-30 20:08:48,358] INFO ingest - 기존 테이블 2개 삭제 완료 (prefix=tbl_9_p)
+[2026-03-30 20:08:48,645] INFO ingest - 기존 Chroma 문서 삭제 완료: 9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-03-30 20:08:50,788] INFO ingest - ChromaDB '9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf' 텍스트 임베딩 완료 (32 chunks)
+[2026-03-30 20:08:50,788] INFO ingest - PDF 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf tables=2 chroma_chunks=32
+[2026-03-30 20:08:50,789] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-03-30 20:08:50,791] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.hwp type=hwp category=uncategorized hash=0f44e099dccb46fe956e6038065a5a6c
+[2026-03-30 20:08:50,791] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.hwp
+[2026-03-30 20:08:50,796] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=sample_html_t)
+[2026-03-30 20:08:51,721] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.hwp
+[2026-03-30 20:08:51,722] INFO ingest - HWP 처리 완료 | file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.hwp tables=1 chroma_chunks=0
+[2026-03-30 20:08:51,725] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.hwp
+[2026-03-30 20:08:51,727] INFO ingest - 시작 : file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.xlsx type=xlsx category=uncategorized hash=9f29d56764420f009fb4d2479f5075ef
+[2026-03-30 20:08:51,727] INFO ingest - [엑셀 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.xlsx
+[2026-03-30 20:08:51,774] INFO ingest - PostgreSQL 'sample' 테이블 적재 완료
+[2026-03-30 20:08:51,775] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.xlsx

@@ -1,0 +1,414 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "trigger": [
+          "app_mention"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C0APA6WQUD8",
+          "mode": "list",
+          "cachedResultName": "종프2-연습"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f19225ad-c0a2-4b98-8387-dac50b4a8508",
+      "name": "Slack Trigger",
+      "webhookId": "c17ace21-997f-45f9-8d4a-bcb5ae7cebb6",
+      "credentials": {
+        "slackApi": {
+          "id": "v1sSMcJs5n42MiCk",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a3888806-dec6-416a-819c-2925e66b8bdc",
+              "name": "question",
+              "value": "={{$json.text.replace(/^<@[^>]+>\\s*/, '')}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "b6688599-ac95-4b66-9235-e1bb61f8d15b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "code": {
+          "execute": {
+            "code": "const items = this.getInputData();\n\n// ===== 입력 연결 가져오기 =====\nlet model = await this.getInputConnectionData(\"ai_languageModel\", 0);\nlet sqlTool = await this.getInputConnectionData(\"ai_tool\", 0, 0);\nlet vectorTool = await this.getInputConnectionData(\"ai_tool\", 0, 1);\n\n// 배열로 들어오는 경우 첫 번째 값 사용\nif (Array.isArray(model)) model = model[0];\nif (Array.isArray(sqlTool)) sqlTool = sqlTool[0];\nif (Array.isArray(vectorTool)) vectorTool = vectorTool[0];\n\nconst output = [];\n\n// ===== LLM 라우팅 =====\nasync function llmRoute(question, model) {\n  const prompt = `\n너는 질문 라우터다.\n반드시 아래 둘 중 하나만 출력해라.\n\nsql\nvector\n\n판단 기준:\n- sql: 이름, 명단, 학과, 번호 등 정형 데이터 조회\n- vector: 문서, 파일, 장학금, 고지서, 확인서, 규정 등 문서 검색\n\n질문: ${question}\n`.trim();\n\n  try {\n    const res = await model.invoke(prompt);\n\n    const raw = Array.isArray(res?.content)\n      ? res.content.map(v => v.text || \"\").join(\" \").trim()\n      : String(res?.content || \"\").trim();\n\n    const normalized = raw.toLowerCase();\n\n    return {\n      llmRaw: raw,\n      route: normalized.includes(\"sql\") ? \"sql\" : \"vector\",\n    };\n  } catch (error) {\n    return {\n      llmRaw: `LLM routing failed: ${error.message}`,\n      route: \"vector\",\n    };\n  }\n}\n\n// ===== tool 결과 파싱 =====\nfunction parseToolResult(toolResult) {\n  let parsed = toolResult;\n\n  if (typeof toolResult === \"string\") {\n    try {\n      parsed = JSON.parse(toolResult);\n    } catch {\n      parsed = { raw: toolResult };\n    }\n  }\n\n  if (Array.isArray(parsed)) {\n    parsed = parsed[0] || {};\n  }\n\n  return parsed;\n}\n\n// ===== 메인 처리 =====\nfor (const item of items) {\n  const question =\n    item.json.question ||\n    item.json.text ||\n    item.json.message ||\n    item.json.user_question ||\n    \"\";\n\n  // 무조건 LLM으로 분기\n  const llmResult = await llmRoute(question, model);\n  const route = llmResult.route;\n  const llmRaw = llmResult.llmRaw;\n\n  //tool 호출\n  let toolResult;\n  if (route === \"sql\") {\n    toolResult = await sqlTool.invoke({ question });\n  } else {\n    toolResult = await vectorTool.invoke({ question });\n  }\n\n  const parsed = parseToolResult(toolResult);\n\n  // 👉 기존 출력 형태 유지\n  output.push({\n    json: {\n      ...item.json,\n      question,\n      route,\n      llm_raw: llmRaw,\n      tool_result: parsed,\n      document: parsed?.document || null,\n      full_text: parsed?.full_text || \"\",\n      message: parsed?.message || \"\",\n    },\n  });\n}\n\nreturn output;"
+          }
+        },
+        "inputs": {
+          "input": [
+            {
+              "type": "main",
+              "maxConnections": 1
+            },
+            {
+              "type": "ai_languageModel",
+              "maxConnections": 1
+            },
+            {
+              "type": "ai_tool",
+              "maxConnections": 2
+            }
+          ]
+        },
+        "outputs": {
+          "output": [
+            {
+              "type": "main"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.code",
+      "typeVersion": 1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "a0ee07c1-ce48-4a0a-aaf6-0563796c2bc8",
+      "name": "LangChain Code"
+    },
+    {
+      "parameters": {
+        "model": "qwen3:8b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        304,
+        208
+      ],
+      "id": "c5717f2f-1473-46e8-af27-087e202db0bb",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "YjPEFbTDB8gLPy6Y",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "PostgreSQL",
+        "method": "POST",
+        "url": "http://host.docker.internal:8001/query",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Content-Type\": \"application/json\"\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"question\": \"{{$json.question}}\",\n  \"route\": \"sql\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        560,
+        208
+      ],
+      "id": "bb424891-e0ed-410f-a2b7-eacf1c595672",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "toolDescription": "chromaDB",
+        "method": "POST",
+        "url": "http://host.docker.internal:8001/query",
+        "sendHeaders": true,
+        "specifyHeaders": "json",
+        "jsonHeaders": "{\n  \"Content-Type\": \"application/json\"\n}\n",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"question\": \"{{$json.question}}\",\n  \"route\": \"vector\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        656,
+        304
+      ],
+      "id": "8a220311-242d-4f0d-8ccc-40d36563e85f",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=사용자 질문: {{$json.question}}\n\n문서명: {{$json.document.file_name}}\n\n문서 전체 내용:\n{{$json.full_text}}\n\n너는 문서 적합성 판별기다.\n반드시 사용자 질문과 문서 전체 내용만 비교해서 판단하라.\n추측, 일반상식, 보완 해석, 문서 외 정보 사용은 금지한다.\n\n판단 기준:\n- 타당: 질문의 핵심 대상이 문서에 명시적으로 확인되고 질문과 직접 일치함\n- 부적합: 질문의 핵심 대상이 문서에 없거나 다른 대상 또는 다른 조건임\n- 불충분: 일부 단서만 있고 핵심 대상을 확정할 수 없음\n\n출력 형식:\n판단: 타당 / 부적합 / 불충분",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "message": "="
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        768,
+        0
+      ],
+      "id": "ba664658-c54e-4591-b720-6aa92fe7c010",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "qwen3:8b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        704,
+        208
+      ],
+      "id": "aaefdb4f-d12f-4a40-ba09-b1e66a81726a",
+      "name": "Ollama Chat Model1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "YjPEFbTDB8gLPy6Y",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "64e9cfea-4d27-4dca-83ab-cec4c376048a",
+              "leftValue": "={{ $json.text }}",
+              "rightValue": "판단: 타당",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "44842672-5613-450f-9bde-343be86a26ef",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0APA6WQUD8",
+          "mode": "list",
+          "cachedResultName": "종프2-연습"
+        },
+        "text": "=찾은 문서입니다.  \n문서명: {{$node[\"LangChain Code\"].json[\"document\"][\"file_name\"]}}  \n\n파일 경로: {{$node[\"LangChain Code\"].json[\"document\"][\"file_path\"]}}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        1328,
+        -96
+      ],
+      "id": "7724d0af-843a-49dc-afff-daf73c87b88d",
+      "name": "Send a message",
+      "webhookId": "6be90c7a-397a-4478-be48-2a35e43f1dd2",
+      "credentials": {
+        "slackApi": {
+          "id": "v1sSMcJs5n42MiCk",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0APA6WQUD8",
+          "mode": "list",
+          "cachedResultName": "종프2-연습"
+        },
+        "text": "관련 문서를 찾지 못했습니다.",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        1328,
+        96
+      ],
+      "id": "5f34e9a2-7239-4638-9bc7-deab9c41e2af",
+      "name": "Send a message1",
+      "webhookId": "9acffefb-4ac4-44e3-900b-bf1a97fad65b",
+      "credentials": {
+        "slackApi": {
+          "id": "v1sSMcJs5n42MiCk",
+          "name": "Slack account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Slack Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "LangChain Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "LangChain Code",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "ai_tool": [
+        [
+          {
+            "node": "LangChain Code",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "ai_tool": [
+        [
+          {
+            "node": "LangChain Code",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LangChain Code": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d7201f79-18fb-4843-8b84-634ed32f2136",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b603014552e09ec20205047e58476b75beeed7a0f0001dc7f004959e4222b2dc"
+  },
+  "id": "VKmvp8lcquFQZoJl",
+  "tags": []
+}

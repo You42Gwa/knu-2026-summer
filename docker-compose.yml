@@ -23,9 +23,9 @@ services:
     image: postgres:15
     container_name: rag_postgres
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: 1q2w3e4r  # 실제 사용 시 변경하세요
-      POSTGRES_DB: rag_database
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD를 루트 .env 파일에 설정하세요}
+      POSTGRES_DB: ${POSTGRES_DB:-rag_database}
     ports:
       - "5432:5432"
     volumes:

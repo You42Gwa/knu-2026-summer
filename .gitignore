@@ -1,5 +1,8 @@
 .env
 .venv/
+venv/
+backend/logs/
+.claude/
 __pycache__/
 *.pyc
 .DS_Store

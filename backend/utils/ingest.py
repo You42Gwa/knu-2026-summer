@@ -1,8 +1,12 @@
-'''
-pdf 파일과 같이 표와 텍스트가 섞여 있는 경우,
-표는 구조화 데이터로 PostgreSQL에 저장하고, 
-텍스트는 ChromaDB에 저장함.
-'''
+"""
+문서 수집 및 전처리 모듈.
+
+- PDF (텍스트): 표 → PostgreSQL, 텍스트(표 제외) → ChromaDB
+- PDF (스캔 이미지): OCR(pytesseract) → ChromaDB
+- HWP: hwp5html 변환 후 표 → PostgreSQL, 텍스트 → ChromaDB
+- XLSX: 시트별 → PostgreSQL
+- MD5 해시 기반 중복 방지 / RecursiveCharacterTextSplitter 청킹
+"""
 
 import os
 import sys
@@ -11,64 +15,211 @@ import subprocess
 import shutil
 import hashlib
 import logging
+import threading
 from datetime import datetime, timezone
 from logging.handlers import RotatingFileHandler
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 import pandas as pd
 import pdfplumber
 from bs4 import BeautifulSoup
 from sqlalchemy import text, inspect
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_ollama import OllamaEmbeddings
 
-# 현재 파일의 상위 폴더(backend)를 경로에 추가 (database.py 인식용)
+# OCR 선택적 임포트 (미설치 시 스캔 PDF 처리 불가 경고)
+try:
+    from pdf2image import convert_from_path
+    import pytesseract
+    HAS_OCR = True
+except ImportError:
+    HAS_OCR = False
+
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".env"))
+
 from database import engine, get_chroma_collection
 
-#  로깅 설정 함수
+# ---------------------------------------------------------------------------
+# 로깅
+# ---------------------------------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-LOG_DIR = os.path.join(BASE_DIR, "..", "logs")
+LOG_DIR  = os.path.join(BASE_DIR, "..", "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
-
-LOG_FILE = os.path.join(LOG_DIR, "ingest.log")
 
 logger = logging.getLogger("ingest")
 logger.setLevel(logging.INFO)
 
 if not logger.handlers:
-    formatter = logging.Formatter(
-        "[%(asctime)s] %(levelname)s %(name)s - %(message)s"
+    fmt = logging.Formatter("[%(asctime)s] %(levelname)s %(name)s - %(message)s")
+
+    fh = RotatingFileHandler(
+        os.path.join(LOG_DIR, "ingest.log"),
+        maxBytes=5 * 1024 * 1024,
+        backupCount=3,
+        encoding="utf-8",
     )
+    fh.setFormatter(fmt)
 
-    file_handler = RotatingFileHandler(
-        LOG_FILE, maxBytes=5 * 1024 * 1024, backupCount=3, encoding="utf-8"
-    )
-    file_handler.setFormatter(formatter)
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setFormatter(fmt)
 
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setFormatter(formatter)
+    logger.addHandler(fh)
+    logger.addHandler(ch)
 
-    logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
+if not HAS_OCR:
+    logger.warning("pdf2image/pytesseract 미설치 — 스캔 PDF는 OCR 없이 건너뜁니다.")
 
-# 공통적으로 사용되는 보조 함수들 추가
-def sanitize_table_name(file_name: str) -> str:
-    """
-    - 파일명을 PostgreSQL 테이블명으로 안전하게 변환.
-    - 영문/숫자/언더바(_) 외 문자는 _로 치환
-    - 비어 있으면 기본 이름(tbl_unnamed) 부여
-    - 숫자로 시작하면 'tbl_' 접두어 추가
-    """
-    table_name = re.sub(r"[^a-zA-Z0-9_]", "_", file_name)
-    if not table_name:
-        table_name = "tbl_unnamed"
-    if table_name[0].isdigit():
-        table_name = "tbl_" + table_name
-    return table_name
+# ---------------------------------------------------------------------------
+# 상수
+# ---------------------------------------------------------------------------
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+EMBED_MODEL     = os.getenv("EMBED_MODEL", "qwen3-embedding:0.6b")
+
+CHUNK_SIZE     = 500
+CHUNK_OVERLAP  = 100
+MIN_CHUNK_LEN  = 20
+CHROMA_BATCH   = 100
+INGEST_WORKERS = 2
+OCR_DPI        = 300
+OCR_LANG       = "kor+eng"
+
+_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=CHUNK_SIZE,
+    chunk_overlap=CHUNK_OVERLAP,
+    separators=["\n\n", "\n", ". ", " ", ""],
+)
+
+# ChromaDB 컬렉션 / 임베딩 싱글턴 (스레드 안전)
+_collection      = None
+_embeddings      = None
+_collection_lock = threading.Lock()
+
+def _get_collection():
+    global _collection
+    with _collection_lock:
+        if _collection is None:
+            _collection = get_chroma_collection("scholarship_rules")
+    return _collection
+
+def _get_embeddings() -> OllamaEmbeddings:
+    global _embeddings
+    with _collection_lock:
+        if _embeddings is None:
+            _embeddings = OllamaEmbeddings(base_url=OLLAMA_BASE_URL, model=EMBED_MODEL)
+    return _embeddings
+
+# ---------------------------------------------------------------------------
+# 유틸리티
+# ---------------------------------------------------------------------------
+def sanitize_table_name(name: str) -> str:
+    original = name
+    name = re.sub(r"[^\x00-\x7F]", "", name)   # 한글 등 non-ASCII 제거
+    name = re.sub(r"[^a-zA-Z0-9]", "_", name)  # 특수문자 → _
+    name = re.sub(r"_+", "_", name).strip("_") # 연속 _ 정리
+    name = name.lower()[:32].rstrip("_")        # 소문자 + 32자 제한 (해시 공간 확보)
+    if not name:
+        # 한글 전용 파일명 등 ASCII 결과가 없으면 MD5 앞 8자리로 식별
+        name = "tbl_" + hashlib.md5(original.encode("utf-8")).hexdigest()[:8]
+    elif name[0].isdigit():
+        name = "tbl_" + name
+    return name
+
+
+def sanitize_column_name(col: str) -> str:
+    """컬럼명에서 특수문자를 제거해 SQL 쿼리 오류를 방지한다. 한글·영문·숫자는 유지."""
+    col = str(col).strip()
+    if not col or col in ("None", "nan"):
+        return None
+    col = re.sub(r"[^\w가-힣]", "_", col, flags=re.UNICODE)
+    col = re.sub(r"_+", "_", col).strip("_")
+    col = col[:40]  # 컬럼명 길이 제한
+    if not col:
+        return None
+    if col[0].isdigit():
+        col = "col_" + col
+    return col
+
+
+def _cell_val(cell) -> str:
+    return str(cell).strip() if cell is not None else ""
+
+
+def _parse_table(raw_table: list[list]) -> "pd.DataFrame | None":
+    """병합 셀(None) 처리 + 2행 헤더 자동 탐지 후 DataFrame 반환."""
+    if not raw_table or len(raw_table) < 2:
+        return None
+
+    ncols = max(len(r) for r in raw_table)
+    # 모든 행을 ncols로 패딩
+    table = [list(r) + [None] * (ncols - len(r)) for r in raw_table]
+
+    # 유효 셀 비율 40% 이상인 첫 번째 행 → 헤더
+    header_idx = 0
+    for i, row in enumerate(table):
+        if sum(1 for c in row if _cell_val(c)) >= ncols * 0.4:
+            header_idx = i
+            break
+
+    h1 = table[header_idx]
+    data_start = header_idx + 1
+
+    # 다음 행이 서브헤더인지 확인
+    # 기준: h1에서 빈 위치의 50% 이상을 다음 행이 채움
+    if data_start < len(table):
+        h2 = table[data_start]
+        empty_pos = [j for j in range(ncols) if not _cell_val(h1[j])]
+        fills = sum(1 for j in empty_pos if _cell_val(h2[j]))
+        if empty_pos and fills >= len(empty_pos) * 0.5:
+            # h1 + h2 병합: h1이 비어있는 위치는 h2 값 사용
+            merged = [_cell_val(h2[j]) if not _cell_val(h1[j]) else _cell_val(h1[j])
+                      for j in range(ncols)]
+            data_start += 1
+        else:
+            merged = [_cell_val(c) for c in h1]
+    else:
+        merged = [_cell_val(c) for c in h1]
+
+    # 컬럼명: None 위치는 이전 값으로 채운 뒤 sanitize + 중복 처리
+    filled_headers: list[str] = []
+    last = ""
+    for v in merged:
+        last = v if v else last
+        filled_headers.append(last)
+
+    seen: dict[str, int] = {}
+    headers = []
+    for j, h in enumerate(filled_headers):
+        name = sanitize_column_name(h) or f"col_{j}"
+        if name in seen:
+            seen[name] += 1
+            name = f"{name}_{seen[name]}"
+        else:
+            seen[name] = 0
+        headers.append(name)
+
+    # 데이터 행 처리: 수평 병합(None) 채우기
+    def ffill_row(row):
+        result, last = [], None
+        for cell in row:
+            v = _cell_val(cell)
+            if v:
+                last = v
+            result.append(last)
+        return result
+
+    data_rows = [ffill_row(r) for r in table[data_start:]]
+
+    df = pd.DataFrame(data_rows, columns=headers)
+    df = df.replace("", None)
+    df = df.ffill(axis=0)          # 수직 병합 셀 채움
+    df = df.dropna(how="all").replace("\n", " ", regex=True)
+    return df if not df.empty else None
 
 
 def compute_file_md5(file_path: str, chunk_size: int = 8192) -> str:
-    """
-    - 파일 내용 기준 MD5 해시를 계산해서 이전에 처리했던 파일과 내용이 같은지 비교.
-    - 파일 전체를 한 번에 읽지 않고 chunk 단위로 읽어 메모리 부담 저하.,
-    """
     md5 = hashlib.md5()
     with open(file_path, "rb") as f:
         while chunk := f.read(chunk_size):
@@ -77,87 +228,70 @@ def compute_file_md5(file_path: str, chunk_size: int = 8192) -> str:
 
 
 def infer_category(file_path: str) -> str:
-    """
-    - 파일이 위치한 상위 폴더명을 카테고리로 분류.
-    - 문서 분류에 도움이 될 수 있다(상위 폴더가 기본 폴더(data) 일 시 uncategorizedf로 분류).
-    """
     parent = os.path.basename(os.path.dirname(file_path))
-    if parent.lower() == "data":
-        return "uncategorized"
-    return parent
+    return "uncategorized" if parent.lower() == "data" else parent
 
 
 def get_uploaded_at(file_path: str) -> str:
-    """
-    - 파일의 수정 시각을 ISO 형식 문자열로 반환하여 메타데이터로 사용.
-    - 해당 메타데이터는 ChromaDB 메타데이터에 저장.
-    """
     ts = os.path.getmtime(file_path)
     return datetime.fromtimestamp(ts, tz=timezone.utc).isoformat()
 
 
-def split_text_chunks(text: str, min_len: int = 5):
-    '''
-    - 긴 텍스트를 줄 단위의 청크로 분리
-    '''
-    return [line.strip() for line in text.splitlines() if len(line.strip()) > min_len]
-
-# utf-8만으로 인코딩 하는 것이 아니라 유사 시 cp949, euc-kr 으로도 인코팅 시도.
-def read_text_with_fallbacks(file_path: str, encodings=None) -> str:
-    if encodings is None:
-        encodings = ["utf-8", "cp949", "euc-kr"]
-
+def read_text_with_fallbacks(file_path: str, encodings=("utf-8", "cp949", "euc-kr")) -> str:
     with open(file_path, "rb") as f:
         raw = f.read()
-
     for enc in encodings:
         try:
             return raw.decode(enc)
         except UnicodeDecodeError:
             continue
-
     return raw.decode("utf-8", errors="replace")
 
-# 중복 방지용 manifest 테이블 r관련 기능
+
+def clean_pdf_text(raw: str) -> str:
+    """PDF 추출 텍스트 노이즈 제거."""
+    # \w 대신 [^\s] 사용 → 한국어 포함 모든 비공백 문자에서 하이픈 연결
+    raw = re.sub(r"([^\s])-\n([^\s])", r"\1\2", raw)
+    raw = re.sub(r"\n{3,}", "\n\n", raw)
+    # 단독 페이지 번호 줄 제거
+    raw = re.sub(r"^\s*\d+\s*$", "", raw, flags=re.MULTILINE)
+    return raw.strip()
+
+
+def split_into_chunks(raw: str, page: int | None = None) -> list[dict]:
+    return [
+        {"text": c, "page": page}
+        for c in _splitter.split_text(raw)
+        if len(c.strip()) >= MIN_CHUNK_LEN
+    ]
+
+# ---------------------------------------------------------------------------
+# manifest 관리
+# ---------------------------------------------------------------------------
 def ensure_manifest_table():
-    """
-    - 적재 이력을 저장할 ingestion_manifest 테이블(관리용)을 생성.
-    - 어떤 파일을 처리했는지 기록.
-    - 마지막 처리 당시의 해시값 저장.
-    - 성공/실패 상태 저장.
-    - 오류 메시지 저장.
-    - ChromaDB에 몇 개의 청크를 넣었는지 기록
-    """
-    query = """
-    CREATE TABLE IF NOT EXISTS ingestion_manifest (
-        source TEXT PRIMARY KEY,
-        source_path TEXT,
-        file_hash TEXT NOT NULL,
-        file_type TEXT,
-        category TEXT,
-        processed_at TIMESTAMP NOT NULL,
-        status TEXT NOT NULL,
-        error_message TEXT,
-        chroma_doc_count INTEGER DEFAULT 0
-    );
-    """
     with engine.begin() as conn:
-        conn.execute(text(query))
+        conn.execute(text("""
+            CREATE TABLE IF NOT EXISTS ingestion_manifest (
+                source           TEXT PRIMARY KEY,
+                source_path      TEXT,
+                file_hash        TEXT NOT NULL,
+                file_type        TEXT,
+                category         TEXT,
+                processed_at     TIMESTAMP NOT NULL,
+                status           TEXT NOT NULL,
+                error_message    TEXT,
+                chroma_doc_count INTEGER DEFAULT 0
+            )
+        """))
 
 
-def get_existing_file_hash(source: str):
-    """
-    - 파일명으로 이전에 처리한 해시값을 조회.
-    - 현재 파일의 해시와 비교해서 내용이 바뀌지 않았으면 적재를 생략.
-    """
-    query = text("""
-        SELECT file_hash
-        FROM ingestion_manifest
-        WHERE source = :source
-    """)
+def get_existing_file_hash(source: str) -> str | None:
     with engine.begin() as conn:
-        row = conn.execute(query, {"source": source}).fetchone()
-        return row[0] if row else None
+        row = conn.execute(
+            text("SELECT file_hash FROM ingestion_manifest WHERE source = :s"),
+            {"s": source},
+        ).fetchone()
+    return row[0] if row else None
 
 
 def upsert_manifest(
@@ -167,622 +301,414 @@ def upsert_manifest(
     file_type: str,
     category: str,
     status: str,
-    error_message: str = None,
+    error_message: str | None = None,
     chroma_doc_count: int = 0,
 ):
-    """
-    - ingestion_manifest 테이블에 파일 처리 결과를 저장하거나 갱신.
-    - 파일 경로, 해시, 확장자, 카테고리, 처리 시각, 성공/실패 여부, 오류 메시지, Chroma 적재 건수를 저장.
-    """
-    query = text("""
-        INSERT INTO ingestion_manifest (
-            source, source_path, file_hash, file_type, category,
-            processed_at, status, error_message, chroma_doc_count
-        )
-        VALUES (
-            :source, :source_path, :file_hash, :file_type, :category,
-            :processed_at, :status, :error_message, :chroma_doc_count
-        )
-        ON CONFLICT (source)
-        DO UPDATE SET
-            source_path = EXCLUDED.source_path,
-            file_hash = EXCLUDED.file_hash,
-            file_type = EXCLUDED.file_type,
-            category = EXCLUDED.category,
-            processed_at = EXCLUDED.processed_at,
-            status = EXCLUDED.status,
-            error_message = EXCLUDED.error_message,
-            chroma_doc_count = EXCLUDED.chroma_doc_count
-    """)
     with engine.begin() as conn:
-        conn.execute(query, {
-            "source": source,
-            "source_path": source_path,
-            "file_hash": file_hash,
-            "file_type": file_type,
-            "category": category,
-            "processed_at": datetime.now(),
-            "status": status,
-            "error_message": error_message,
+        conn.execute(text("""
+            INSERT INTO ingestion_manifest
+                (source, source_path, file_hash, file_type, category,
+                 processed_at, status, error_message, chroma_doc_count)
+            VALUES
+                (:source, :source_path, :file_hash, :file_type, :category,
+                 :processed_at, :status, :error_message, :chroma_doc_count)
+            ON CONFLICT (source) DO UPDATE SET
+                source_path      = EXCLUDED.source_path,
+                file_hash        = EXCLUDED.file_hash,
+                file_type        = EXCLUDED.file_type,
+                category         = EXCLUDED.category,
+                processed_at     = EXCLUDED.processed_at,
+                status           = EXCLUDED.status,
+                error_message    = EXCLUDED.error_message,
+                chroma_doc_count = EXCLUDED.chroma_doc_count
+        """), {
+            "source": source, "source_path": source_path,
+            "file_hash": file_hash, "file_type": file_type,
+            "category": category, "processed_at": datetime.now(),
+            "status": status, "error_message": error_message,
             "chroma_doc_count": chroma_doc_count,
         })
 
-# 자료 중복시 기존 테이블 갱신 후 삭제를 위한 함수.
+
+def _drop_table_and_type(conn, name: str):
+    """테이블과 연관 composite type을 함께 삭제."""
+    conn.execute(text(f'DROP TABLE IF EXISTS public."{name}" CASCADE'))
+    conn.execute(text(f'DROP TYPE IF EXISTS public."{name}" CASCADE'))
+
+
 def drop_tables_with_prefix(prefix: str):
-    """
-    - 특정 prefix로 시작하는 기존 PostgreSQL 테이블들을 삭제.
-    - 중복을 방지하기 위해서 동일 문서의 재적재 전에 기존 파생 테이블을 정리.
-    """
     inspector = inspect(engine)
-    table_names = inspector.get_table_names(schema="public")
-    targets = [t for t in table_names if t.startswith(prefix)]
-
-    if not targets:
-        return
-
+    targets = [t for t in inspector.get_table_names(schema="public") if t.startswith(prefix)]
     with engine.begin() as conn:
-        for table_name in targets:
-            conn.execute(text(f'DROP TABLE IF EXISTS public."{table_name}" CASCADE'))
+        for name in targets:
+            _drop_table_and_type(conn, name)
+    if targets:
+        logger.info("기존 테이블 %d개 삭제 (prefix=%s)", len(targets), prefix)
 
-    # 자료 중복시 기존 테이블 갱신 후 삭제
-    logger.info("기존 테이블 %d개 삭제 완료 (prefix=%s)", len(targets), prefix)
-
-# ---------------------------------------------------------
-# 1. 정형 데이터 (xlsx) -> PostgreSQL
-# ---------------------------------------------------------
-'''
-def ingest_xlsx_to_postgres(file_path):
-    print(f"[엑셀 처리 중] {file_path}")
-    try:
-        df = pd.read_excel(file_path, engine="openpyxl")
-        file_name = os.path.basename(file_path).split('.')[0]
-        
-        # 테이블명 정제 (영문, 숫자, 언더바만 허용)
-        table_name = re.sub(r'[^a-zA-Z0-9_]', '_', file_name)
-        if table_name[0].isdigit():
-            table_name = "tbl_" + table_name
-            
-        df.to_sql(table_name, engine, if_exists='replace', index=False)
-        print(f"  -> PostgreSQL '{table_name}' 테이블 적재 완료!")
-    except Exception as e:
-        print(f"  -> 엑셀 처리 에러: {e}")
-'''
-
-def ingest_xlsx_to_postgres(file_path):
-    # 처리하는 파일의 경로를 추가로 표시.
-    # Excel 파일을 PostgreSQL 테이블로 적재한다.
-    logger.info("[엑셀 처리 중] %s", file_path)
-    try:
-        df = pd.read_excel(file_path, engine="openpyxl")
-        file_name = os.path.basename(file_path).split('.')[0]
-
-        table_name = sanitize_table_name(file_name)
-
-        df.to_sql(table_name, engine, if_exists='replace', index=False)
-        # 적재를 한 DB의 종류와(여기서는 postgreSQL), 테이블 이름까지 로깅.
-        logger.info("PostgreSQL '%s' 테이블 적재 완료", table_name)
-    except Exception:
-        # 처리하는 파일의 이름을 로그에 남겨 오류 발생 시 원인 탐색을 용이하게 함.
-        logger.exception("엑셀 처리 에러 | file=%s", file_path)
-        raise
-
-# ---------------------------------------------------------
-# 2. 하이브리드 데이터 (pdf) -> 표는 PostgreSQL, 글은 ChromaDB
-# ---------------------------------------------------------
-'''
-def ingest_pdf_hybrid(file_path):
-    print(f"[PDF 하이브리드 처리 중] {file_path}")
-    full_text = []
-    table_count = 0
-    file_name = os.path.basename(file_path).split('.')[0]
-    safe_file_name = re.sub(r'[^a-zA-Z0-9_]', '_', file_name)
-    if safe_file_name[0].isdigit():
-        safe_file_name = "tbl_" + safe_file_name
-    
-    try:
-        with pdfplumber.open(file_path) as pdf:
-            for page_num, page in enumerate(pdf.pages):
-                # 1. 텍스트 추출 (ChromaDB용)
-                text_data = page.extract_text()
-                if text_data:
-                    full_text.append(text_data)
-                
-                # 2. 표(Table) 추출 (PostgreSQL용)
-                tables = page.extract_tables()
-                for table in tables:
-                    if not table or len(table) < 2:
-                        continue
-                    try:
-                        df = pd.DataFrame(table[1:], columns=table[0])
-                        df = df.dropna(how='all')
-                        df = df.replace('\n', ' ', regex=True)
-                        
-                        db_table_name = f"{safe_file_name}_p{page_num}_t{table_count}"
-                        df.to_sql(db_table_name, engine, if_exists='replace', index=False)
-                        table_count += 1
-                    except Exception as e:
-                        pass # 표 변환 에러 시 건너뜀
-
-        # 추출된 텍스트가 있다면 ChromaDB로 전송
-        if full_text:
-            text_chunks = [p.strip() for text_page in full_text for p in text_page.split('\n') if len(p.strip()) > 5]
-            if text_chunks:
-                save_to_chroma(file_path, text_chunks)
-            
-        if table_count > 0:
-            print(f"  -> 추출된 {table_count}개의 표를 PostgreSQL에 적재 완료!")
-        elif not full_text:
-            print("  -> 추출된 데이터가 없습니다. (스캔본 이미지일 수 있습니다)")
-            
-    except Exception as e:
-        print(f"  -> PDF 처리 에러: {e}")
-'''
-
-def ingest_pdf_hybrid(file_path: str, file_hash: str, category: str) -> int:
-    logger.info("[PDF 하이브리드 처리 중] %s", file_path)
-    '''
-    - pdf를 적재하는 함수.
-    - ChromaDB에 저장된 텍스트 청크 수 반환.
-    '''
-
-    file_name = os.path.basename(file_path).split(".")[0]
-    safe_file_name = sanitize_table_name(file_name)
-
-    # 같은 pdf파일을 재적재할때 이전의 테이블이 남지 않도록 해당 문서의 PostgreSQL 테이블을 제거.
-    drop_tables_with_prefix(f"{safe_file_name}_p")
-
-    # pdf 텍스트에서 추출한 청크 수와 페이지 번호를 담아 메타데이터로 사용.
-    chunk_records = []
-    table_count = 0
-
-    with pdfplumber.open(file_path) as pdf:
-        # 줄 단위로 ChromaDB 검색용 청크 분리.
-        # 페이지 번호를 함께 저장(메타데이터로)해 출처 추적에 사용
-        for page_num, page in enumerate(pdf.pages, start=1):
-            try:
-                text_data = page.extract_text()
-                if text_data:
-                    chunks = split_text_chunks(text_data)
-                    for chunk in chunks:
-                        chunk_records.append({
-                            "text": chunk,
-                            "page": page_num,
-                        })
-            except Exception:
-                logger.exception("PDF 텍스트 추출 실패 | file=%s page=%d", file_path, page_num)
-
-            try:
-                # 페이지 내부 표(테이블) 추출
-                tables = page.extract_tables()
-            except Exception:
-                logger.exception("PDF 표 목록 추출 실패 | file=%s page=%d", file_path, page_num)
-                continue
-
-            for table_idx, table in enumerate(tables):
-                if not table or len(table) < 2:
-                    continue
-
-                try:
-                    # 첫 행을 컬럼명으로 사용, 빈 행 제거, 개행 정리 후 SQL테이블로 저장.
-                    df = pd.DataFrame(table[1:], columns=table[0])
-                    df = df.dropna(how="all")
-                    df = df.replace("\n", " ", regex=True)
-
-                    db_table_name = f"{safe_file_name}_p{page_num}_t{table_count}"
-                    df.to_sql(db_table_name, engine, if_exists="replace", index=False)
-                    table_count += 1
-
-                except Exception:
-                    logger.exception(
-                        "PDF 표 저장 실패 | file=%s page=%d table_index=%d",
-                        file_path,
-                        page_num,
-                        table_idx,
-                    )
-
-    chroma_count = 0
-    if chunk_records:
-        chroma_count = save_to_chroma(file_path, chunk_records, file_hash, category)
-    # 표, 텍스트 없는 경우에는 스캔본 이미지일 수 있음.
-    elif table_count == 0:
-        logger.warning("추출된 데이터가 없습니다. 스캔본 이미지일 수 있습니다. | file=%s", file_path)
-
-    logger.info("PDF 처리 완료 | file=%s tables=%d chroma_chunks=%d", file_path, table_count, chroma_count)
-    return chroma_count
-
-# ---------------------------------------------------------
-# 3. 비정형 데이터 (hwp) -> HTML 변환 후 표/텍스트 완벽 분리 (BS4 수동 추출)
-# ---------------------------------------------------------
-'''
-def convert_hwp_to_html_and_ingest(file_path):
-    print(f"[HWP -> HTML 자동 변환 및 처리 중] {file_path}")
-    
-    file_name = os.path.basename(file_path).split('.')[0]
-    safe_file_name = re.sub(r'[^a-zA-Z0-9_]', '_', file_name)
-    if safe_file_name[0].isdigit():
-        safe_file_name = "tbl_" + safe_file_name
-        
-    # HTML이 저장될 임시 폴더
-    html_output_dir = os.path.join(os.path.dirname(file_path), f"temp_{safe_file_name}")
-    
-    try:
-        # 1. HWP -> HTML 변환
-        subprocess.run(
-            ['hwp5html', '--output', html_output_dir, file_path],
-            capture_output=True, text=True, shell=True
-        )
-        
-        index_html_path = os.path.join(html_output_dir, "index.xhtml")
-        
-        if not os.path.exists(index_html_path):
-            print("  -> HTML 변환 실패 (지원되지 않는 HWP 버전이거나 암호화 문서입니다)")
-            return
-            
-        # 2. 변환된 HTML 파일 읽기
-        with open(index_html_path, 'r', encoding='utf-8') as f:
-            html_content = f.read()
-            
-        soup = BeautifulSoup(html_content, 'html.parser')
-        
-        # --- [A] 표(Table) 수동 추출하여 PostgreSQL에 넣기 ---
-        table_count = 0
-        tables = soup.find_all('table')
-        
-        for i, table in enumerate(tables):
-            rows = table.find_all('tr')
-            table_data = []
-            
-            for row in rows:
-                # 각 칸(td, th)을 찾아서 안에 있는 지저분한 태그를 무시하고 텍스트만 뽑음
-                cols = row.find_all(['td', 'th'])
-                col_text = [col.get_text(strip=True) for col in cols]
-                
-                # 빈 행이 아니면 데이터에 추가
-                if any(col_text):
-                    table_data.append(col_text)
-            
-            # 표가 2줄 이상(제목+내용)일 때만 DB에 넣기
-            if len(table_data) >= 2:
-                try:
-                    # 병합된 셀(colspan) 때문에 열 개수가 안 맞을 수 있으므로 빈칸으로 채워줌
-                    max_cols = max(len(r) for r in table_data)
-                    normalized_data = [r + [''] * (max_cols - len(r)) for r in table_data]
-                    
-                    # 첫 번째 줄을 컬럼명(헤더)으로 지정
-                    df = pd.DataFrame(normalized_data[1:], columns=normalized_data[0])
-                    
-                    df.columns = [
-                    str(c).strip() if str(c).strip() not in ['', 'None', 'nan'] else f"unnamed_{j}" 
-                    for j, c in enumerate(df.columns)
-                    ]
-                    
-                    db_table_name = f"{safe_file_name}_html_t{i}"
-                    df.to_sql(db_table_name, engine, if_exists='replace', index=False)
-                    table_count += 1
-                except Exception as e:
-                    print(f"  -> {i}번째 표 파싱 중 에러 (건너뜀): {e}")
-                    
-        if table_count > 0:
-            print(f"  -> 추출된 {table_count}개의 HWP 표를 PostgreSQL에 적재 완료!")
-
-        # --- [B] 순수 텍스트(Text) 추출하여 ChromaDB에 넣기 ---
-        # 표 부분은 이미 DB에 넣었으므로 HTML에서 표 태그를 통째로 삭제
-        for table in soup.find_all('table'):
-            table.decompose()
-            
-        text_data = soup.get_text(separator='\n')
-        paragraphs = [p.strip() for p in text_data.split('\n') if len(p.strip()) > 5]
-        
-        if paragraphs:
-            save_to_chroma(file_path, paragraphs)
-            
-    except Exception as e:
-        print(f"  -> HWP 파싱 에러: {e}")
-        
-    finally:
-        # 임시 생성된 폴더 삭제
-        if os.path.exists(html_output_dir):
-            shutil.rmtree(html_output_dir, ignore_errors=True)
-'''
-
-def convert_hwp_to_html_and_ingest(file_path: str, file_hash: str, category: str) -> int:
-    """
-    - HWP 파일을 HTML로 변환한 뒤, 표와 본문을 분리해 저장.
-    - hwp5html로 HWP를 HTML로 변환.
-    - HTML에서 표는 PostgreSQL로 저장.
-    - 표를 제거한 본문 텍스트는 ChromaDB로 저장.
-
-    - ChromaDB에 저장된 텍스트 청크의0 수 반환.
-    """
-    
-    logger.info("[HWP -> HTML 자동 변환 및 처리 중] %s", file_path)
-
-    file_name = os.path.basename(file_path).split(".")[0]
-    safe_file_name = sanitize_table_name(file_name)
-
-    # 같은 파일을 다시 적재할 경우, 이전에 생성된 테이블이 남지 않도록 기존 파생 테이블을 먼저 삭제.
-    drop_tables_with_prefix(f"{safe_file_name}_html_t")
-
-    # HWP를 바로 파싱하지 않고 HTML로 변환한 결과를 임시 폴더에 저장.
-    html_output_dir = os.path.join(os.path.dirname(file_path), f"temp_{safe_file_name}")
-
-    try:
-        # 변환 실패 시 즉시 종료.
-        result = subprocess.run(
-            ["hwp5html", "--output", html_output_dir, file_path],
-            capture_output=True,
-            text=True,
-            shell=False,
-            check=False,
-        )
-
-        if result.returncode != 0:
-            logger.error(
-                "HWP -> HTML 변환 실패 | file=%s returncode=%s stderr=%s",
-                file_path,
-                result.returncode,
-                result.stderr.strip() if result.stderr else "",
-            )
-            return 0
-
-        index_html_path = os.path.join(html_output_dir, "index.xhtml")
-        if not os.path.exists(index_html_path):
-            logger.error("HTML 변환 실패 (index.xhtml 없음) | file=%s", file_path)
-            return 0
-
-        html_content = read_text_with_fallbacks(index_html_path)
-        soup = BeautifulSoup(html_content, "html.parser")
-
-        table_count = 0
-        tables = soup.find_all("table")
-
-        for i, table in enumerate(tables):
-            rows = table.find_all("tr")
-            table_data = []
-
-            for row in rows:
-                cols = row.find_all(["td", "th"])
-                col_text = [col.get_text(strip=True) for col in cols]
-                if any(col_text):
-                    table_data.append(col_text)
-
-            if len(table_data) < 2:
-                continue
-
-            try:
-                # 병합 셀(colspan) 등으로 행마다 열 수가 다를 수 있기 때문에, 가장 긴 행 기준으로 빈칸을 채워 데이터프레임 형태를 맞춤.
-                max_cols = max(len(r) for r in table_data)
-                normalized_data = [r + [""] * (max_cols - len(r)) for r in table_data]
-
-                df = pd.DataFrame(normalized_data[1:], columns=normalized_data[0])
-
-                # 비어 있는 컬럼명은 unnamed_* 형태로 보정.
-                df.columns = [
-                    str(c).strip() if str(c).strip() not in ["", "None", "nan"] else f"unnamed_{j}"
-                    for j, c in enumerate(df.columns)
-                ]
-
-                db_table_name = f"{safe_file_name}_html_t{i}"
-                df.to_sql(db_table_name, engine, if_exists="replace", index=False)
-                table_count += 1
-
-            except Exception:
-                logger.exception("HWP 표 저장 실패 | file=%s table_index=%d", file_path, i)
-
-        if table_count > 0:
-            logger.info("추출된 %d개의 HWP 표를 PostgreSQL에 적재 완료 | file=%s", table_count, file_path)
-
-        # 표는 이미 PostgreSQL에 저장했기 때문에, 본문 텍스트만 남기기 위해 table 태그를 제거.
-        for table in soup.find_all("table"):
-            table.decompose()
-
-        text_data = soup.get_text(separator="\n")
-        paragraphs = split_text_chunks(text_data)
-
-        chunk_records = [{"text": p, "page": None} for p in paragraphs]
-        chroma_count = 0
-        if chunk_records:
-            chroma_count = save_to_chroma(file_path, chunk_records, file_hash, category)
-
-        logger.info("HWP 처리 완료 | file=%s tables=%d chroma_chunks=%d", file_path, table_count, chroma_count)
-        return chroma_count
-
-    # 변환 과정에서 생성한 임시 폴더는 작업 후 무조건 정리됨(찌꺼기 파일 방지).
-    finally:
-        if os.path.exists(html_output_dir):
-            shutil.rmtree(html_output_dir, ignore_errors=True)
-
-# ---------------------------------------------------------
-# 공통 저장 로직 (ChromaDB)
-# ---------------------------------------------------------
-'''
-def save_to_chroma(file_path, text_chunks):
-    collection = get_chroma_collection("scholarship_rules")
-    doc_name = os.path.basename(file_path)
-    ids = [f"{doc_name}_chunk_{i}" for i in range(len(text_chunks))]
-    metadatas = [{"source": doc_name} for _ in range(len(text_chunks))]
-    
-    collection.add(
-        documents=text_chunks,
-        metadatas=metadatas,
-        ids=ids
-    )
-    print(f"  -> ChromaDB '{doc_name}' ({len(text_chunks)}조각) 텍스트 임베딩 완료!")
-'''
-# 메타데이터 확장을 위해  \save_to_chroma 함수 교체
-def save_to_chroma(file_path: str, chunk_records, file_hash: str, category: str) -> int:
-    """
-    - 텍스트 청크 ChromaDB에 저장하는 함수.
-    - 같은 source 문서가 이미 있으면 먼저 삭제.
-    - 현재 파일 기준으로 metadata를 구성.
-    - upsert 방식으로 문서와 metadata를 저장.
-
-    - 메타데이터에 저장되는 정보
-    - source, source_path
-    - file_type, category
-    - file_hash
-    - chunk_index
-    - uploaded_at, ingested_at
-    - page (페이지가 존재하는 문서의 경우)
-    """
-    
-    collection = get_chroma_collection("scholarship_rules")
-    doc_name = os.path.basename(file_path)
-    abs_path = os.path.abspath(file_path)
-    ext = os.path.splitext(file_path)[1].lower().lstrip(".")
+# ---------------------------------------------------------------------------
+# ChromaDB 저장
+# ---------------------------------------------------------------------------
+def save_to_chroma(
+    file_path: str,
+    chunk_records: list[dict],
+    file_hash: str,
+    category: str,
+) -> int:
+    collection  = _get_collection()
+    doc_name    = os.path.basename(file_path)
+    abs_path    = os.path.abspath(file_path)
+    ext         = os.path.splitext(file_path)[1].lower().lstrip(".")
     uploaded_at = get_uploaded_at(file_path)
     ingested_at = datetime.now(timezone.utc).isoformat()
 
     try:
         collection.delete(where={"source": doc_name})
-        logger.info("기존 Chroma 문서 삭제 완료: %s", doc_name)
     except Exception:
-        logger.info("기존 Chroma 문서 없음 또는 삭제 스킵: %s", doc_name)
+        pass
 
-    documents = []
-    metadatas = []
-    ids = []
+    documents, metadatas, ids = [], [], []
+    # 파일명에서 확장자 제거해 문서 레이블로 사용
+    doc_label = os.path.splitext(doc_name)[0]
 
     for idx, item in enumerate(chunk_records):
-        text_value = item["text"].strip()
-        if not text_value:
+        text_val = item["text"].strip()
+        if len(text_val) < MIN_CHUNK_LEN:
             continue
+        # 청크 앞에 문서 출처 추가 → 검색 시 문서 맥락 포함
+        text_val = f"[문서: {doc_label}]\n{text_val}"
 
-        page = item.get("page")
-
-        # 검색 결과의 출처 추적과 필터링을 위해 파일 정보와 청크 단위 정보를 메타데이터에 저장.
-        metadata = {
-            "source": doc_name,
+        meta = {
+            "source":      doc_name,
             "source_path": abs_path,
-            "file_type": ext,
-            "category": category,
-            "file_hash": file_hash,
+            "file_type":   ext,
+            "category":    category,
+            "file_hash":   file_hash,
             "chunk_index": idx,
             "uploaded_at": uploaded_at,
             "ingested_at": ingested_at,
         }
-        # 페이지 정보가 있는 문서는 페이지를 함께 저장해 몇 페이지에서 나온 내용인지 추적 가능하게 함.
-        if page is not None:
-            metadata["page"] = page
+        if item.get("page") is not None:
+            meta["page"] = item["page"]
 
-        documents.append(text_value)
-        metadatas.append(metadata)
+        documents.append(text_val)
+        metadatas.append(meta)
         ids.append(f"{doc_name}::chunk::{idx}")
 
     if not documents:
-        logger.info("Chroma 저장 대상 텍스트 없음: %s", doc_name)
+        logger.info("Chroma 저장 대상 없음 | file=%s", doc_name)
         return 0
 
-    collection.upsert(
-        documents=documents,
-        metadatas=metadatas,
-        ids=ids,
-    )
+    # qwen3-embedding으로 임베딩 생성 후 명시적으로 전달 (ChromaDB 기본 임베딩과 혼용 방지)
+    for i in range(0, len(documents), CHROMA_BATCH):
+        batch_docs = documents[i : i + CHROMA_BATCH]
+        batch_embeddings = _get_embeddings().embed_documents(batch_docs)
+        collection.upsert(
+            documents=batch_docs,
+            embeddings=batch_embeddings,
+            metadatas=metadatas[i : i + CHROMA_BATCH],
+            ids=ids[i : i + CHROMA_BATCH],
+        )
 
-    logger.info("ChromaDB '%s' 텍스트 임베딩 완료 (%d chunks)", doc_name, len(documents))
+    logger.info("ChromaDB 저장 완료 | file=%s chunks=%d", doc_name, len(documents))
     return len(documents)
 
-# ---------------------------------------------------------
-# 메인 실행부
-# ---------------------------------------------------------
-'''
-def process_file(file_path):
-    ext = file_path.split('.')[-1].lower()
-    
-    if ext == 'xlsx':
-        ingest_xlsx_to_postgres(file_path)
-    elif ext == 'pdf':
-        ingest_pdf_hybrid(file_path)
-    elif ext == 'hwp':
-        convert_hwp_to_html_and_ingest(file_path)
-    else:
-        print(f"지원하지 않는 확장자입니다: {ext}")
-'''
+# ---------------------------------------------------------------------------
+# XLSX → PostgreSQL (다중 시트 지원)
+# ---------------------------------------------------------------------------
+def ingest_xlsx_to_postgres(file_path: str):
+    logger.info("[XLSX] %s", file_path)
+    base_name = sanitize_table_name(os.path.basename(file_path).rsplit(".", 1)[0])
 
-# process_file 함수 교체 - 로깅, 중복 방지, manifest 기록 등 추가
+    xl = pd.ExcelFile(file_path, engine="openpyxl")
+    sheets = xl.sheet_names
+
+    for sheet_name in sheets:
+        # header=None으로 읽어 제목행을 _parse_table이 처리하게 함
+        raw_df = xl.parse(sheet_name, header=None)
+        if raw_df.empty:
+            logger.info("빈 시트 건너뜀 | sheet=%s", sheet_name)
+            continue
+
+        raw_table = [
+            [None if (v is None or (isinstance(v, float) and __import__('math').isnan(v))) else v
+             for v in row]
+            for row in raw_df.values.tolist()
+        ]
+        df = _parse_table(raw_table)
+        if df is None:
+            logger.warning("XLSX 파싱 결과 없음 | sheet=%s", sheet_name)
+            continue
+
+        table_name = (
+            f"{base_name}_{sanitize_table_name(sheet_name)}"
+            if len(sheets) > 1
+            else base_name
+        )
+        with engine.begin() as conn:
+            _drop_table_and_type(conn, table_name)
+        df.to_sql(table_name, engine, if_exists="fail", index=False)
+        logger.info("[XLSX] '%s' 적재 완료 | sheet=%s rows=%d", table_name, sheet_name, len(df))
+
+# ---------------------------------------------------------------------------
+# PDF 페이지별 텍스트 추출 (스캔 감지 + OCR 폴백)
+# ---------------------------------------------------------------------------
+def _extract_page_texts(file_path: str) -> dict[int, str]:
+    """
+    페이지 번호 → 텍스트 딕셔너리 반환.
+    텍스트 레이어가 없는 페이지는 OCR로 추출한다.
+    """
+    page_texts: dict[int, str] = {}
+    scanned_pages: list[int] = []
+
+    with pdfplumber.open(file_path) as pdf:
+        for page_num, page in enumerate(pdf.pages, start=1):
+            try:
+                # 표 영역 bbox 수집
+                table_bboxes = [tbl.bbox for tbl in page.find_tables()]
+
+                if table_bboxes:
+                    # 표 영역의 객체를 제외하고 텍스트 추출 (중복 방지)
+                    def not_in_table(obj):
+                        for bbox in table_bboxes:
+                            if (obj.get("x0", 0) >= bbox[0] - 1 and
+                                    obj.get("x1", 0) <= bbox[2] + 1 and
+                                    obj.get("top", 0) >= bbox[1] - 1 and
+                                    obj.get("bottom", 0) <= bbox[3] + 1):
+                                return False
+                        return True
+
+                    raw = page.filter(not_in_table).extract_text() or ""
+                else:
+                    raw = page.extract_text() or ""
+
+            except Exception:
+                logger.exception("pdfplumber 텍스트 추출 실패 | page=%d", page_num)
+                raw = ""
+
+            if raw.strip():
+                page_texts[page_num] = raw
+            else:
+                scanned_pages.append(page_num)
+
+    # OCR 처리 (스캔 페이지) — 페이지 단위로 변환해 메모리 절약
+    if scanned_pages:
+        if not HAS_OCR:
+            logger.warning(
+                "스캔 페이지 %s 감지됐으나 pytesseract/pdf2image 미설치로 건너뜀 | file=%s",
+                scanned_pages, file_path,
+            )
+        else:
+            logger.info("OCR 시작 | file=%s 스캔 페이지=%s", file_path, scanned_pages)
+            for page_num in scanned_pages:
+                try:
+                    images = convert_from_path(
+                        file_path, dpi=OCR_DPI,
+                        first_page=page_num, last_page=page_num,
+                    )
+                    ocr_text = pytesseract.image_to_string(images[0], lang=OCR_LANG)
+                    if ocr_text.strip():
+                        page_texts[page_num] = ocr_text
+                        logger.info("OCR 완료 | page=%d chars=%d", page_num, len(ocr_text))
+                except Exception:
+                    logger.exception("OCR 실패 | page=%d", page_num)
+
+    return page_texts
+
+# ---------------------------------------------------------------------------
+# PDF → 표: PostgreSQL / 텍스트: ChromaDB
+# ---------------------------------------------------------------------------
+def ingest_pdf_hybrid(file_path: str, file_hash: str, category: str) -> int:
+    logger.info("[PDF] %s", file_path)
+
+    safe_name = sanitize_table_name(os.path.basename(file_path).rsplit(".", 1)[0])
+    drop_tables_with_prefix(f"{safe_name}_p")
+
+    # 페이지별 텍스트 추출 (OCR 포함)
+    page_texts = _extract_page_texts(file_path)
+
+    chunk_records: list[dict] = []
+    for page_num, raw_text in page_texts.items():
+        cleaned = clean_pdf_text(raw_text)
+        chunk_records.extend(split_into_chunks(cleaned, page=page_num))
+
+    # 표 추출 → PostgreSQL
+    table_count = 0
+    with pdfplumber.open(file_path) as pdf:
+        for page_num, page in enumerate(pdf.pages, start=1):
+            try:
+                tables = page.extract_tables()
+            except Exception:
+                logger.exception("PDF 표 추출 실패 | page=%d", page_num)
+                continue
+
+            for t_idx, table in enumerate(tables):
+                try:
+                    df = _parse_table(table)
+                    if df is None:
+                        continue
+                    tbl = f"{safe_name}_p{page_num}_t{table_count}"
+                    with engine.begin() as conn:
+                        _drop_table_and_type(conn, tbl)
+                    df.to_sql(tbl, engine, if_exists="fail", index=False)
+                    logger.info("[PDF] 표 저장 | tbl=%s rows=%d", tbl, len(df))
+                    table_count += 1
+                except Exception:
+                    logger.exception("[PDF] 표 저장 실패 | page=%d t=%d", page_num, t_idx)
+
+    if not chunk_records and table_count == 0:
+        logger.warning("추출 데이터 없음 | file=%s", file_path)
+
+    chroma_count = save_to_chroma(file_path, chunk_records, file_hash, category) if chunk_records else 0
+    logger.info("PDF 완료 | file=%s tables=%d chunks=%d", file_path, table_count, chroma_count)
+    return chroma_count
+
+# ---------------------------------------------------------------------------
+# HWP → HTML → 표: PostgreSQL / 텍스트: ChromaDB
+# ---------------------------------------------------------------------------
+def convert_hwp_to_html_and_ingest(file_path: str, file_hash: str, category: str) -> int:
+    logger.info("[HWP] %s", file_path)
+
+    safe_name = sanitize_table_name(os.path.basename(file_path).rsplit(".", 1)[0])
+    drop_tables_with_prefix(f"{safe_name}_html_t")
+
+    html_dir = os.path.join(os.path.dirname(file_path), f"temp_{safe_name}")
+
+    try:
+        result = subprocess.run(
+            ["hwp5html", "--output", html_dir, file_path],
+            capture_output=True, text=True, check=False,
+        )
+        if result.returncode != 0:
+            logger.error(
+                "HWP 변환 실패 | file=%s rc=%s err=%s",
+                file_path, result.returncode, (result.stderr or "").strip(),
+            )
+            return 0
+
+        index_html = os.path.join(html_dir, "index.xhtml")
+        if not os.path.exists(index_html):
+            logger.error("index.xhtml 없음 | file=%s", file_path)
+            return 0
+
+        soup = BeautifulSoup(read_text_with_fallbacks(index_html), "html.parser")
+
+        table_count = 0
+        for i, table in enumerate(soup.find_all("table")):
+            rows = table.find_all("tr")
+            table_data = [
+                [col.get_text(strip=True) for col in row.find_all(["td", "th"])]
+                for row in rows
+            ]
+            table_data = [r for r in table_data if any(r)]
+            if len(table_data) < 2:
+                continue
+            try:
+                max_cols = max(len(r) for r in table_data)
+                normalized = [r + [None] * (max_cols - len(r)) for r in table_data]
+                df = _parse_table(normalized)
+                if df is None:
+                    continue
+                tbl = f"{safe_name}_html_t{i}"
+                with engine.begin() as conn:
+                    _drop_table_and_type(conn, tbl)
+                df.to_sql(tbl, engine, if_exists="fail", index=False)
+                logger.info("[HWP] 표 저장 | tbl=%s rows=%d", tbl, len(df))
+                table_count += 1
+            except Exception:
+                logger.exception("[HWP] 표 저장 실패 | file=%s t=%d", file_path, i)
+
+        for tag in soup.find_all("table"):
+            tag.decompose()
+
+        body_text = soup.get_text(separator="\n")
+        chunk_records = split_into_chunks(body_text)
+
+        chroma_count = save_to_chroma(file_path, chunk_records, file_hash, category) if chunk_records else 0
+        logger.info("HWP 완료 | file=%s tables=%d chunks=%d", file_path, table_count, chroma_count)
+        return chroma_count
+
+    finally:
+        if os.path.exists(html_dir):
+            shutil.rmtree(html_dir, ignore_errors=True)
+
+# ---------------------------------------------------------------------------
+# 단일 파일 처리 진입점
+# ---------------------------------------------------------------------------
+def _cleanup_stale_hwp_tables(safe_name: str):
+    """PDF로 교체된 파일의 잔여 HWP html_t 테이블 삭제."""
+    drop_tables_with_prefix(f"{safe_name}_html_t")
+
+
 def process_file(file_path: str):
-    """
-    단일 파일을 처리하는 메인 진입점.
-
-    1) 파일 경로/확장자/카테고리/해시 계산.
-    2) manifest에서 기존 해시와 비교해 변경 여부 확인.
-    3) 파일 형식별 처리 함수 호출.
-    4) 성공/실패 결과를 manifest에 기록.
-
-    매개변수 : file_path: 처리할 원본 파일의 경로
-    """
-    source = os.path.basename(file_path)
+    source      = os.path.basename(file_path)
     source_path = os.path.abspath(file_path)
-    ext = os.path.splitext(file_path)[1].lower().lstrip(".")
-    category = infer_category(file_path)
-    file_hash = compute_file_md5(file_path)
+    ext         = os.path.splitext(file_path)[1].lower().lstrip(".")
+    category    = infer_category(file_path)
+    file_hash   = compute_file_md5(file_path)
 
-    # 이전 처리 이력과 현재 파일 해시를 비교하여 내용이 바뀌지 않았다면 재적재하지 않고 바로 종료.
-    existing_hash = get_existing_file_hash(source)
-    if existing_hash == file_hash:
-        logger.info("생략 : 변경 없음 | file=%s hash=%s", file_path, file_hash)
+    if get_existing_file_hash(source) == file_hash:
+        logger.info("생략(변경 없음) | file=%s", file_path)
         return
 
-    logger.info("시작 : file=%s type=%s category=%s hash=%s", file_path, ext, category, file_hash)
+    logger.info("시작 | file=%s type=%s category=%s", file_path, ext, category)
 
     try:
         chroma_doc_count = 0
 
         if ext == "xlsx":
             ingest_xlsx_to_postgres(file_path)
-
         elif ext == "pdf":
+            safe_name = sanitize_table_name(os.path.basename(file_path).rsplit(".", 1)[0])
+            _cleanup_stale_hwp_tables(safe_name)
             chroma_doc_count = ingest_pdf_hybrid(file_path, file_hash, category)
-
         elif ext == "hwp":
             chroma_doc_count = convert_hwp_to_html_and_ingest(file_path, file_hash, category)
-
         else:
-            logger.warning("지원하지 않는 확장자입니다: %s", ext)
+            logger.warning("지원하지 않는 확장자 | file=%s", file_path)
             return
-        
-        # 정상 처리된 경우 manifest에 성공 상태와 처리 결과를 저장.
-        upsert_manifest(
-            source=source,
-            source_path=source_path,
-            file_hash=file_hash,
-            file_type=ext,
-            category=category,
-            status="SUCCESS",
-            error_message=None,
-            chroma_doc_count=chroma_doc_count,
-        )
 
-        logger.info("[DONE] file=%s", file_path)
+        upsert_manifest(source, source_path, file_hash, ext, category, "SUCCESS",
+                        chroma_doc_count=chroma_doc_count)
+        logger.info("완료 | file=%s", file_path)
 
     except Exception as e:
-        # 예외가 발생해도 실패 이력은 manifest에 저장.
-        upsert_manifest(
-            source=source,
-            source_path=source_path,
-            file_hash=file_hash,
-            file_type=ext,
-            category=category,
-            status="FAILED",
-            error_message=str(e),
-            chroma_doc_count=0,
-        )
-        logger.exception("[FAILED] file=%s", file_path)
+        upsert_manifest(source, source_path, file_hash, ext, category, "FAILED",
+                        error_message=str(e))
+        logger.exception("실패 | file=%s", file_path)
 
+# ---------------------------------------------------------------------------
+# 직접 실행 시: data/ 폴더 병렬 처리
+# ---------------------------------------------------------------------------
 if __name__ == "__main__":
-    # 스크립트를 직접 실행했을 때의 시작 지점.
-    # 먼저 manifest 테이블을 준비한 뒤, data 폴더의 지원 확장자 파일들을 순회하며 하나씩 처리.
-    # manifest 테이블이 없으면 중복 검사/처리 결과 기록이 불가능하므로 파일 처리 전에 반드시 먼저 생성(ensure_manifest_table()호출로).
+    import glob
+
     ensure_manifest_table()
+
     data_folder = os.path.join(os.path.dirname(__file__), "..", "data")
-    
     if not os.path.exists(data_folder):
-        print(f"'{data_folder}' 폴더를 찾을 수 없습니다. backend 폴더 안에 data 폴더를 만들어주세요.")
-    else:
-        files = os.listdir(data_folder)
-        for f in files:
-            if not f.startswith('.') and f.lower().endswith(('xlsx', 'pdf', 'hwp')):
-                file_path = os.path.join(data_folder, f)
-                process_file(file_path)
-                
-        print("\n모든 파일의 적재가 완료되었습니다!")
+        print(f"'{data_folder}' 폴더가 없습니다.")
+        sys.exit(1)
+
+    file_paths = []
+    for ext in ("xlsx", "pdf", "hwp"):
+        file_paths.extend(
+            glob.glob(os.path.join(data_folder, "**", f"*.{ext}"), recursive=True)
+        )
+    file_paths = [f for f in file_paths if not os.path.basename(f).startswith(".")]
+
+    if not file_paths:
+        print("처리할 파일이 없습니다.")
+        sys.exit(0)
+
+    print(f"총 {len(file_paths)}개 파일 병렬 처리 시작 (workers={INGEST_WORKERS})")
+
+    with ThreadPoolExecutor(max_workers=INGEST_WORKERS) as executor:
+        futures = {executor.submit(process_file, fp): fp for fp in file_paths}
+        for future in as_completed(futures):
+            fp = futures[future]
+            try:
+                future.result()
+            except Exception:
+                logger.exception("처리 실패 | file=%s", fp)
+
+    print("\n모든 파일 처리 완료!")

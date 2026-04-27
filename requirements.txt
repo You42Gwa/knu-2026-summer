@@ -1,17 +1,37 @@
+# ── Environment ───────────────────────────────────────────────────────────────
+python-dotenv
+
+# ── Web Framework ─────────────────────────────────────────────────────────────
 fastapi
-uvicorn
+uvicorn[standard]
 pydantic
+
+# ── LangChain ─────────────────────────────────────────────────────────────────
 langchain
 langchain-community
-psycopg2-binary
-sqlalchemy
-chromadb
+langchain-core
+langchain-ollama
+langchain-text-splitters
+
+# ── Database ──────────────────────────────────────────────────────────────────
+psycopg2-binary       # PostgreSQL 드라이버
+sqlalchemy            # ORM / 쿼리 빌더
+chromadb              # 벡터 DB (HTTP 클라이언트)
+langchain-chroma      # LangChain Chroma 통합 (최신)
+
+# ── Document Parsing ──────────────────────────────────────────────────────────
 pandas
-openpyxl
-python-docx
-pdfplumber
-olefile
-pyhwp
-beautifulsoup4
+openpyxl              # xlsx 읽기
+python-docx           # docx 읽기
+pdfplumber            # PDF 텍스트 / 표 추출
+pdf2image             # PDF → 이미지 변환 (스캔 PDF OCR용)
+                      #   Windows: poppler 별도 설치 필요
+                      #   https://github.com/oschwartz10612/poppler-windows/releases
+pytesseract           # OCR 엔진 래퍼
+                      #   Tesseract 별도 설치 필요 (kor 언어팩 포함 버전)
+                      #   https://github.com/UB-Mannheim/tesseract/wiki
+olefile               # HWP 바이너리 파싱 보조
+pyhwp                 # HWP 파일 지원 (hwp5html CLI 포함)
+beautifulsoup4        # HWP→HTML 파싱
 lxml
 html5lib

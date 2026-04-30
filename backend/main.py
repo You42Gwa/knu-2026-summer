@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import glob
 import os
 import re
@@ -28,7 +30,7 @@ from sqlalchemy import text
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from database import engine
-from utils.ingest import process_file, ensure_manifest_table
+from utils.ingest import process_file, ensure_manifest_table, sanitize_table_name
 
 # ---------------------------------------------------------------------------
 # Config
@@ -238,6 +240,32 @@ def _get_table_schema() -> str:
 
     parts = []
     with engine.connect() as conn:
+        # 테이블명 → 원본 파일명 매핑 (LLM 힌트용)
+        tbl_to_source: dict[str, str] = {}
+        try:
+            for (source,) in conn.execute(text(
+                "SELECT source FROM ingestion_manifest"
+            )).fetchall():
+                safe = sanitize_table_name(os.path.splitext(source)[0])
+                tbl_to_source[safe] = source
+        except Exception:
+            pass
+
+        # ingestion_manifest 먼저 추가 (문서 목록 조회용)
+        try:
+            manifest_sample = str([
+                dict(r._mapping) for r in conn.execute(text(
+                    "SELECT source, file_type, status FROM ingestion_manifest LIMIT 3"
+                )).fetchall()
+            ])
+        except Exception:
+            manifest_sample = ""
+        parts.append(
+            "ingestion_manifest(source, source_path, file_hash, file_type, category, processed_at, status, chroma_doc_count)\n"
+            "  -- 수집된 파일 목록. source=원본파일명, source_path=절대경로\n"
+            f"  예시: {manifest_sample}"
+        )
+
         tables = conn.execute(text(
             "SELECT tablename FROM pg_tables "
             "WHERE schemaname = 'public' AND tablename != 'ingestion_manifest' "
@@ -249,12 +277,19 @@ def _get_table_schema() -> str:
                 "WHERE table_name = :t ORDER BY ordinal_position"
             ), {"t": tbl}).fetchall()
             col_str = ", ".join(f"{c}" for c, d in cols)
-            # 샘플 1행 포함 → LLM이 컬럼 내용 파악 가능
             sample = conn.execute(text(
                 f'SELECT * FROM "{tbl}" LIMIT 1'
             )).fetchone()
             sample_str = str(dict(sample._mapping)) if sample else ""
-            parts.append(f"{tbl}({col_str})\n  예시: {sample_str}")
+
+            # 원본 파일명 힌트: sanitize된 테이블 prefix와 ingestion_manifest 매핑
+            source_hint = ""
+            for safe_prefix, source in tbl_to_source.items():
+                if tbl == safe_prefix or tbl.startswith(safe_prefix + "_"):
+                    source_hint = f" [원본파일: {source}]"
+                    break
+
+            parts.append(f"{tbl}{source_hint}({col_str})\n  예시: {sample_str}")
 
     schema = "\n".join(parts)
     _schema_cache = (schema, now)
@@ -268,6 +303,19 @@ _SAFE_SQL_PATTERN = re.compile(
 
 def _is_safe_sql(sql: str) -> bool:
     return sql.strip().upper().startswith("SELECT") and not _SAFE_SQL_PATTERN.search(sql)
+
+
+def _format_sql_result(rows) -> str:
+    if not rows:
+        return "조회된 데이터가 없습니다."
+    if len(rows) == 1:
+        return "\n".join(f"{k}: {v}" for k, v in dict(rows[0]._mapping).items() if v is not None)
+    header = list(rows[0]._mapping.keys())
+    lines = [" | ".join(header)]
+    lines.append("-" * len(lines[0]))
+    for r in rows:
+        lines.append(" | ".join(str(v) if v is not None else "-" for v in r))
+    return "\n".join(lines)
 
 
 async def _answer_sql(question: str, allow_vector_fallback: bool = True) -> str:
@@ -306,9 +354,7 @@ async def _answer_sql(question: str, allow_vector_fallback: bool = True) -> str:
     if not raw_result:
         return "조회된 데이터가 없습니다."
 
-    return (await get_llm_rag().ainvoke(
-        _SQL_ANSWER_TEMPLATE.format(question=question, result=raw_result)
-    )).strip()
+    return _format_sql_result(rows)
 
 # ---------------------------------------------------------------------------
 # 파일 탐색 (재귀)
@@ -327,13 +373,19 @@ async def lifespan(app: FastAPI):
     ensure_manifest_table()
     logger.info("manifest 테이블 확인 완료")
 
-    # LLM 워밍업 (첫 요청 지연 방지)
+    # LLM + 임베딩 워밍업 (첫 요청 지연 방지)
     try:
-        logger.info("LLM 워밍업 중...")
+        logger.info("LLM 워밍업 중... (model=%s)", OLLAMA_MODEL)
         await get_llm_rag().ainvoke("안녕")
         logger.info("LLM 워밍업 완료")
-    except Exception:
-        logger.warning("LLM 워밍업 실패 (Ollama 미실행 가능)")
+    except Exception as e:
+        logger.warning("LLM 워밍업 실패 | model=%s err=%s", OLLAMA_MODEL, e)
+    try:
+        logger.info("임베딩 모델 워밍업 중... (model=%s)", EMBED_MODEL)
+        OllamaEmbeddings(base_url=OLLAMA_BASE_URL, model=EMBED_MODEL).embed_query("안녕")
+        logger.info("임베딩 워밍업 완료")
+    except Exception as e:
+        logger.warning("임베딩 워밍업 실패 | model=%s err=%s", EMBED_MODEL, e)
 
     yield
 

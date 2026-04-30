@@ -439,6 +439,8 @@ def ingest_xlsx_to_postgres(file_path: str):
             logger.warning("XLSX 파싱 결과 없음 | sheet=%s", sheet_name)
             continue
 
+        df["manifest_source"] = os.path.basename(file_path)
+
         table_name = (
             f"{base_name}_{sanitize_table_name(sheet_name)}"
             if len(sheets) > 1
@@ -447,6 +449,12 @@ def ingest_xlsx_to_postgres(file_path: str):
         with engine.begin() as conn:
             _drop_table_and_type(conn, table_name)
         df.to_sql(table_name, engine, if_exists="fail", index=False)
+        with engine.begin() as conn:
+            conn.execute(text(
+                f'ALTER TABLE "{table_name}" '
+                f'ADD CONSTRAINT "fk_{table_name}_manifest" '
+                f'FOREIGN KEY (manifest_source) REFERENCES ingestion_manifest(source) ON DELETE CASCADE'
+            ))
         logger.info("[XLSX] '%s' 적재 완료 | sheet=%s rows=%d", table_name, sheet_name, len(df))
 
 # ---------------------------------------------------------------------------
@@ -546,10 +554,17 @@ def ingest_pdf_hybrid(file_path: str, file_hash: str, category: str) -> int:
                     df = _parse_table(table)
                     if df is None:
                         continue
+                    df["manifest_source"] = os.path.basename(file_path)
                     tbl = f"{safe_name}_p{page_num}_t{table_count}"
                     with engine.begin() as conn:
                         _drop_table_and_type(conn, tbl)
                     df.to_sql(tbl, engine, if_exists="fail", index=False)
+                    with engine.begin() as conn:
+                        conn.execute(text(
+                            f'ALTER TABLE "{tbl}" '
+                            f'ADD CONSTRAINT "fk_{tbl}_manifest" '
+                            f'FOREIGN KEY (manifest_source) REFERENCES ingestion_manifest(source) ON DELETE CASCADE'
+                        ))
                     logger.info("[PDF] 표 저장 | tbl=%s rows=%d", tbl, len(df))
                     table_count += 1
                 except Exception:
@@ -608,10 +623,17 @@ def convert_hwp_to_html_and_ingest(file_path: str, file_hash: str, category: str
                 df = _parse_table(normalized)
                 if df is None:
                     continue
+                df["manifest_source"] = os.path.basename(file_path)
                 tbl = f"{safe_name}_html_t{i}"
                 with engine.begin() as conn:
                     _drop_table_and_type(conn, tbl)
                 df.to_sql(tbl, engine, if_exists="fail", index=False)
+                with engine.begin() as conn:
+                    conn.execute(text(
+                        f'ALTER TABLE "{tbl}" '
+                        f'ADD CONSTRAINT "fk_{tbl}_manifest" '
+                        f'FOREIGN KEY (manifest_source) REFERENCES ingestion_manifest(source) ON DELETE CASCADE'
+                    ))
                 logger.info("[HWP] 표 저장 | tbl=%s rows=%d", tbl, len(df))
                 table_count += 1
             except Exception:
@@ -651,6 +673,9 @@ def process_file(file_path: str):
         return
 
     logger.info("시작 | file=%s type=%s category=%s", file_path, ext, category)
+
+    # FK 참조 대상이 먼저 존재해야 하므로 ingest 전에 pre-insert
+    upsert_manifest(source, source_path, file_hash, ext, category, "IN_PROGRESS")
 
     try:
         chroma_doc_count = 0

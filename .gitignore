@@ -1,5 +1,8 @@
 .env
 .venv/
+venv/
+backend/logs/
+.claude/
 __pycache__/
 *.pyc
 .DS_Store
@@ -7,3 +10,4 @@ __pycache__/
 backend/data/*
 data/*
 !backend/data/.gitkeep
+result/*

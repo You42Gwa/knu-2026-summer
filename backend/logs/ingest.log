@@ -174,3 +174,199 @@
 [2026-03-30 20:08:51,727] INFO ingest - [엑셀 처리 중] C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.xlsx
 [2026-03-30 20:08:51,774] INFO ingest - PostgreSQL 'sample' 테이블 적재 완료
 [2026-03-30 20:08:51,775] INFO ingest - [DONE] file=C:\Users\Colgate\knu-2026-summer\backend\utils\..\data\sample.xlsx
+[2026-04-04 14:37:30,168] INFO ingest - 시작 : file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp type=hwp category=uncategorized hash=0f44e099dccb46fe956e6038065a5a6c
+[2026-04-04 14:37:30,169] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-04-04 14:37:30,251] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_1_html_t)
+[2026-04-04 14:37:31,375] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-04-04 14:37:31,378] INFO ingest - HWP 처리 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp tables=1 chroma_chunks=0
+[2026-04-04 14:37:31,435] INFO ingest - [DONE] file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-04-04 14:37:31,466] INFO ingest - 시작 : file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp type=hwp category=uncategorized hash=34bf6315cfa6ba17d776402247dbe823
+[2026-04-04 14:37:31,466] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-04-04 14:37:31,517] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_10_html_t)
+[2026-04-04 14:37:32,100] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-04-04 14:37:32,374] INFO ingest - 기존 Chroma 문서 삭제 완료: 10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-04-04 14:37:33,904] INFO ingest - ChromaDB '10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp' 텍스트 임베딩 완료 (1 chunks)
+[2026-04-04 14:37:33,904] INFO ingest - HWP 처리 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp tables=1 chroma_chunks=1
+[2026-04-04 14:37:33,942] INFO ingest - [DONE] file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-04-04 14:37:33,955] INFO ingest - 시작 : file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp type=hwp category=uncategorized hash=7116b93d2dfdac0e7f98f63dc85b1d36
+[2026-04-04 14:37:33,955] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-04-04 14:37:34,018] INFO ingest - 기존 테이블 2개 삭제 완료 (prefix=tbl_2_html_t)
+[2026-04-04 14:37:34,701] INFO ingest - 추출된 2개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-04-04 14:37:34,751] INFO ingest - 기존 Chroma 문서 삭제 완료: 2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-04-04 14:37:35,426] INFO ingest - ChromaDB '2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp' 텍스트 임베딩 완료 (2 chunks)
+[2026-04-04 14:37:35,427] INFO ingest - HWP 처리 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp tables=2 chroma_chunks=2
+[2026-04-04 14:37:35,477] INFO ingest - [DONE] file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-04-04 14:37:35,484] INFO ingest - 시작 : file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx type=xlsx category=uncategorized hash=1ee897fd4637a3af54f009d78c14f9f9
+[2026-04-04 14:37:35,485] INFO ingest - [엑셀 처리 중] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-04-04 14:37:36,327] INFO ingest - PostgreSQL 'tbl_2025_______' 테이블 적재 완료
+[2026-04-04 14:37:36,361] INFO ingest - [DONE] file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-04-04 14:37:36,393] INFO ingest - 시작 : file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf type=pdf category=uncategorized hash=37d1595637a7993b89464625f38a2d36
+[2026-04-04 14:37:36,394] INFO ingest - [PDF 하이브리드 처리 중] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-04-04 14:37:36,436] INFO ingest - 기존 테이블 2개 삭제 완료 (prefix=tbl_2025_095_______21_____p)
+[2026-04-04 14:37:36,821] ERROR ingest - PDF 표 저장 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf page=1 table_index=2
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 372, in ingest_pdf_hybrid
+    df.to_sql(db_table_name, engine, if_exists="replace", index=False)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\generic.py", line 3052, in to_sql
+    return sql.to_sql(
+           ~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<8 lines>...
+        method=method,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\io\sql.py", line 841, in to_sql
+    return pandas_sql.to_sql(
+           ~~~~~~~~~~~~~~~~~^
+        frame,
+        ^^^^^^
+    ...<9 lines>...
+        **engine_kwargs,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\io\sql.py", line 2027, in to_sql
+    table = self.prep_table(
+        frame=frame,
+    ...<5 lines>...
+        dtype=dtype,
+    )
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\io\sql.py", line 1922, in prep_table
+    table = SQLTable(
+        name,
+    ...<6 lines>...
+        dtype=dtype,
+    )
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\io\sql.py", line 960, in __init__
+    self.table = self._create_table_setup()
+                 ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\io\sql.py", line 1288, in _create_table_setup
+    return Table(self.name, meta, *columns, schema=schema)
+  File "<string>", line 2, in __new__
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\sqlalchemy\util\deprecations.py", line 281, in warned
+    return fn(*args, **kwargs)  # type: ignore[no-any-return]
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\sqlalchemy\sql\schema.py", line 429, in __new__
+    return cls._new(*args, **kw)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\sqlalchemy\sql\schema.py", line 483, in _new
+    with util.safe_reraise():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 121, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\sqlalchemy\sql\schema.py", line 479, in _new
+    table.__init__(name, metadata, *args, _no_init=False, **kw)  # type: ignore[misc] # noqa: E501
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\sqlalchemy\sql\schema.py", line 873, in __init__
+    self._init_items(
+    ~~~~~~~~~~~~~~~~^
+        *args,
+        ^^^^^^
+    ...<3 lines>...
+        all_names={},
+        ^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\sqlalchemy\sql\schema.py", line 233, in _init_items
+    spwd(self, **kw)
+    ~~~~^^^^^^^^^^^^
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\sqlalchemy\sql\base.py", line 1421, in _set_parent_with_dispatch
+    self._set_parent(parent, **kw)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\sqlalchemy\sql\schema.py", line 2359, in _set_parent
+    raise exc.DuplicateColumnError(
+    ...<5 lines>...
+    )
+sqlalchemy.exc.DuplicateColumnError: A column with name 'nan' is already present in table 'tbl_2025_095_______21_____p1_t1'.
+[2026-04-04 14:37:37,058] INFO ingest - 기존 Chroma 문서 삭제 완료: 2025-095_(주)플래시21 추승철.pdf
+[2026-04-04 14:37:39,709] INFO ingest - ChromaDB '2025-095_(주)플래시21 추승철.pdf' 텍스트 임베딩 완료 (43 chunks)
+[2026-04-04 14:37:39,710] INFO ingest - PDF 처리 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf tables=2 chroma_chunks=43
+[2026-04-04 14:37:39,753] INFO ingest - [DONE] file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-04-04 14:37:39,770] INFO ingest - 시작 : file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp type=hwp category=uncategorized hash=924acae4b213f6803e729369336a9364
+[2026-04-04 14:37:39,771] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-04-04 14:37:39,820] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_3_html_t)
+[2026-04-04 14:37:40,378] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-04-04 14:37:40,430] INFO ingest - 기존 Chroma 문서 삭제 완료: 3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-04-04 14:37:41,156] INFO ingest - ChromaDB '3. 텍폴 신입생 장학금 3월-130만원.hwp' 텍스트 임베딩 완료 (1 chunks)
+[2026-04-04 14:37:41,157] INFO ingest - HWP 처리 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp tables=1 chroma_chunks=1
+[2026-04-04 14:37:41,178] INFO ingest - [DONE] file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-04-04 14:37:41,192] INFO ingest - 시작 : file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp type=hwp category=uncategorized hash=e9774e8e47af883bdcc27617ec48daf3
+[2026-04-04 14:37:41,192] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-04-04 14:37:41,221] INFO ingest - 기존 테이블 3개 삭제 완료 (prefix=tbl_4_html_t)
+[2026-04-04 14:37:43,185] INFO ingest - 추출된 3개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-04-04 14:37:43,258] INFO ingest - 기존 Chroma 문서 삭제 완료: 4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-04-04 14:37:44,213] INFO ingest - ChromaDB '4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp' 텍스트 임베딩 완료 (3 chunks)
+[2026-04-04 14:37:44,215] INFO ingest - HWP 처리 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp tables=3 chroma_chunks=3
+[2026-04-04 14:37:44,272] INFO ingest - [DONE] file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-04-04 14:37:44,311] INFO ingest - 시작 : file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx type=xlsx category=uncategorized hash=dcad9352185e968e37923bd0bceb5f04
+[2026-04-04 14:37:44,312] INFO ingest - [엑셀 처리 중] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-04-04 14:37:44,603] INFO ingest - PostgreSQL 'tbl_5' 테이블 적재 완료
+[2026-04-04 14:37:44,630] INFO ingest - [DONE] file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-04-04 14:37:44,643] INFO ingest - 시작 : file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf type=pdf category=uncategorized hash=f19e45e0194753a4e6a9383a1e5d24b4
+[2026-04-04 14:37:44,644] INFO ingest - [PDF 하이브리드 처리 중] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-04-04 14:37:44,650] WARNING ingest - 추출된 데이터가 없습니다. 스캔본 이미지일 수 있습니다. | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-04-04 14:37:44,650] INFO ingest - PDF 처리 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf tables=0 chroma_chunks=0
+[2026-04-04 14:37:44,677] INFO ingest - [DONE] file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-04-04 14:37:44,688] INFO ingest - 시작 : file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp type=hwp category=uncategorized hash=be79258bed04b0fff87cca38c6371fc7
+[2026-04-04 14:37:44,688] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-04-04 14:37:44,713] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_7_html_t)
+[2026-04-04 14:37:45,288] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-04-04 14:37:45,289] INFO ingest - HWP 처리 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp tables=1 chroma_chunks=0
+[2026-04-04 14:37:45,319] INFO ingest - [DONE] file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-04-04 14:37:45,329] INFO ingest - 시작 : file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp type=hwp category=uncategorized hash=4d39010778c0e4181f10f96a2d218db5
+[2026-04-04 14:37:45,330] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-04-04 14:37:45,355] INFO ingest - 기존 테이블 1개 삭제 완료 (prefix=tbl_8_html_t)
+[2026-04-04 14:37:46,114] INFO ingest - 추출된 1개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-04-04 14:37:46,115] INFO ingest - HWP 처리 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp tables=1 chroma_chunks=0
+[2026-04-04 14:37:46,144] INFO ingest - [DONE] file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-04-04 14:37:46,154] INFO ingest - 시작 : file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf type=pdf category=uncategorized hash=c0cc85bb47d8753fac2dfa4a6c6fd9f1
+[2026-04-04 14:37:46,154] INFO ingest - [PDF 하이브리드 처리 중] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-04-04 14:37:46,181] INFO ingest - 기존 테이블 2개 삭제 완료 (prefix=tbl_9_p)
+[2026-04-04 14:37:46,571] INFO ingest - 기존 Chroma 문서 삭제 완료: 9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-04-04 14:37:48,989] INFO ingest - ChromaDB '9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf' 텍스트 임베딩 완료 (32 chunks)
+[2026-04-04 14:37:48,990] INFO ingest - PDF 처리 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf tables=2 chroma_chunks=32
+[2026-04-04 14:37:49,024] INFO ingest - [DONE] file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-04-04 14:37:49,032] INFO ingest - 시작 : file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp type=hwp category=uncategorized hash=de1a47c31db95b4ecb3d5e405998b670
+[2026-04-04 14:37:49,032] INFO ingest - [HWP -> HTML 자동 변환 및 처리 중] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-04-04 14:37:50,548] INFO ingest - 추출된 4개의 HWP 표를 PostgreSQL에 적재 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-04-04 14:37:50,609] INFO ingest - 기존 Chroma 문서 삭제 완료: 대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-04-04 14:37:57,606] INFO ingest - ChromaDB '대구공고 동문검색 키오스크 구축사업 입찰공고.hwp' 텍스트 임베딩 완료 (136 chunks)
+[2026-04-04 14:37:57,606] INFO ingest - HWP 처리 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp tables=4 chroma_chunks=136
+[2026-04-04 14:37:57,640] INFO ingest - [DONE] file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-04-04 14:37:57,653] INFO ingest - 시작 : file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf type=pdf category=uncategorized hash=7a2b62953e72561ea4d243791d01eb9a
+[2026-04-04 14:37:57,654] INFO ingest - [PDF 하이브리드 처리 중] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-04-04 14:37:57,676] INFO ingest - 기존 테이블 2개 삭제 완료 (prefix=__________2026_0310_p)
+[2026-04-04 14:37:57,992] INFO ingest - 기존 Chroma 문서 삭제 완료: 장학회 지출결의서_2026_0310.pdf
+[2026-04-04 14:37:59,043] INFO ingest - ChromaDB '장학회 지출결의서_2026_0310.pdf' 텍스트 임베딩 완료 (8 chunks)
+[2026-04-04 14:37:59,043] INFO ingest - PDF 처리 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf tables=2 chroma_chunks=8
+[2026-04-04 14:37:59,066] INFO ingest - [DONE] file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-04-28 14:10:53,522] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp hash=0f44e099dccb46fe956e6038065a5a6c
+[2026-04-28 14:10:53,530] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp hash=34bf6315cfa6ba17d776402247dbe823
+[2026-04-28 14:10:53,538] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp hash=7116b93d2dfdac0e7f98f63dc85b1d36
+[2026-04-28 14:10:53,549] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx hash=1ee897fd4637a3af54f009d78c14f9f9
+[2026-04-28 14:10:53,555] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf hash=37d1595637a7993b89464625f38a2d36
+[2026-04-28 14:10:53,562] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp hash=924acae4b213f6803e729369336a9364
+[2026-04-28 14:10:53,571] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp hash=e9774e8e47af883bdcc27617ec48daf3
+[2026-04-28 14:10:53,583] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx hash=dcad9352185e968e37923bd0bceb5f04
+[2026-04-28 14:10:53,587] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf hash=f19e45e0194753a4e6a9383a1e5d24b4
+[2026-04-28 14:10:53,594] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp hash=be79258bed04b0fff87cca38c6371fc7
+[2026-04-28 14:10:53,602] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp hash=4d39010778c0e4181f10f96a2d218db5
+[2026-04-28 14:10:53,608] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf hash=c0cc85bb47d8753fac2dfa4a6c6fd9f1
+[2026-04-28 14:10:53,615] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp hash=de1a47c31db95b4ecb3d5e405998b670
+[2026-04-28 14:10:53,624] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf hash=7a2b62953e72561ea4d243791d01eb9a
+[2026-04-28 14:14:33,732] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp hash=0f44e099dccb46fe956e6038065a5a6c
+[2026-04-28 14:14:33,734] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp hash=34bf6315cfa6ba17d776402247dbe823
+[2026-04-28 14:14:33,746] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp hash=7116b93d2dfdac0e7f98f63dc85b1d36
+[2026-04-28 14:14:33,749] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx hash=1ee897fd4637a3af54f009d78c14f9f9
+[2026-04-28 14:14:33,752] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf hash=37d1595637a7993b89464625f38a2d36
+[2026-04-28 14:14:33,754] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp hash=924acae4b213f6803e729369336a9364
+[2026-04-28 14:14:33,757] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp hash=e9774e8e47af883bdcc27617ec48daf3
+[2026-04-28 14:14:33,759] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx hash=dcad9352185e968e37923bd0bceb5f04
+[2026-04-28 14:14:33,761] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf hash=f19e45e0194753a4e6a9383a1e5d24b4
+[2026-04-28 14:14:33,763] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp hash=be79258bed04b0fff87cca38c6371fc7
+[2026-04-28 14:14:33,766] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp hash=4d39010778c0e4181f10f96a2d218db5
+[2026-04-28 14:14:33,768] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf hash=c0cc85bb47d8753fac2dfa4a6c6fd9f1
+[2026-04-28 14:14:33,771] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp hash=de1a47c31db95b4ecb3d5e405998b670
+[2026-04-28 14:14:33,774] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf hash=7a2b62953e72561ea4d243791d01eb9a

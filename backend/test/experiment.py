@@ -71,7 +71,7 @@ eval_data = [
 
 def run_experiment():
     print("\n" + "="*50)
-    print(" 🚀 [논문 실험] 하이브리드 VECTOR 50문항 자동 평가 시작")
+    print(" 🚀 50문항 자동 평가 시작")
     print("="*50 + "\n")
 
     results = []
@@ -148,5 +148,59 @@ def run_experiment():
     print(f"📂 결과 파일: {save_path}")
     print("="*50)
 
+def question():
+    print("\n" + "="*50)
+    print(" 🚀 개별 질문 평가 시작")
+    print("="*50 + "\n")
+
+    headers = {"X-API-Key": API_KEY}
+    type = input("질문의 유형(SQL or VECTOR) : ")
+    ques = input("질문의 내용 : ")
+    ans = input("목표 정답(빈칸 가능) : ")
+    
+    while(type == "SQL" or type == "VECTOR"):
+        
+        start_time = time.time()
+        try:
+            # 1. API 호출
+            resp = requests.post(API_URL, json={"question": ques}, headers=headers, timeout=60)
+            elapsed_time = round(time.time() - start_time, 2)
+
+            if resp.status_code == 200:
+                data = resp.json()
+                ai_ans = data.get("answer", "")
+                pred_route = data.get("source", "").upper() # "vector" -> "VECTOR"
+                
+                # 2. 라우팅 정확도 체크
+                is_route_ok = "O" if type == pred_route else "X"
+                
+                # 3. 답변 내 정답 포함 여부 (단순 텍스트 매칭)
+                # 정답 숫자나 핵심 단어가 AI 답변에 들어있는지 확인
+                ans_check = "O" if str(ans).split(',')[0].replace("원","").replace("건","").strip() in ai_ans else "△"
+                
+            else:
+                ai_ans, pred_route, is_route_ok, ans_check, elapsed_time = f"Error: {resp.status_code}", "ERR", "X", "X", 0
+
+        except Exception as e:
+            elapsed_time = round(time.time() - start_time, 2)  # 실제 소요시간 기록
+            ai_ans = f"Exception: {str(e)}"
+            pred_route, is_route_ok, ans_check = "ERR", "X", "X"
+            
+        # [실시간 출력] 개별 문항 결과 상세화
+        print(f"[라우팅] 목표: {type} \n[라우팅] 결과: {pred_route} \n[라우팅] -> [{is_route_ok}]")
+        print(f"[답변] 목표: {ans} \n[답변] 결과: {ai_ans} \n[답변] -> [{ans_check}]")
+        print(f"[시간] {elapsed_time}s")
+        print("-" * 30)
+        
+        type = input("질문의 유형(SQL or VECTOR) : ")
+        ques = input("질문의 내용 : ")
+        ans = input("목표 정답(빈칸 가능) : ")
+
+
+
 if __name__ == "__main__":
-    run_experiment()
+    what = input("입력 1 or 2 (test set : 1 / 개별 질문 : 2) : ")
+    if what == "1":
+        run_experiment()
+    elif what =="2":
+        question()

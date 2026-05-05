@@ -45,7 +45,7 @@ services:
   # 4. 자동화 워크플로우 툴 (n8n)
   n8n:
     image: n8nio/n8n:latest
-    container_name: n8n_server_test
+    container_name: n8n_server
     ports:
       - "5678:5678"
     environment:

@@ -11,3 +11,4 @@ backend/data/*
 data/*
 !backend/data/.gitkeep
 result/*
+backend/logs/*

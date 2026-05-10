@@ -4,7 +4,7 @@
 
 - **과제명**: 로컬 LLM을 활용한 하이브리드 RAG 기반 사내 문서 처리 및 의사결정 지원 시스템
 - **추진 배경**: 기존 텍스트 위주의 단순 RAG는 예산 계산 등 정형 데이터 기반의 수치 연산에서 할루시네이션을 유발함. 정형(표·수치)과 비정형(규정·문서) 데이터를 분리 저장하고 질의 유형에 따라 자동 라우팅하여 정확도를 높임.
-- **최종 목표**: 오픈소스 로컬 LLM(Ollama)과 하이브리드 DB(PostgreSQL + ChromaDB)를 결합하여 Slack 기반 자동화 챗봇 에이전트 구축.
+- **최종 목표**: 오픈소스 로컬 LLM(Ollama)과 하이브리드 DB(Parquet + ChromaDB)를 결합하여 Slack 기반 자동화 챗봇 에이전트 구축.
 
 ---
 
@@ -38,24 +38,33 @@ Slack 메시지
   └─▶ n8n (트리거 / 전처리)
         └─▶ POST /chat  (FastAPI + X-API-Key 인증)
               └─▶ 키워드 기반 라우팅 판단
-                    ├─ SQL  ──▶ 스키마 조회 → SQL 생성(LLM) → PostgreSQL 실행 → Python 포맷팅 응답
+                    ├─ PANDAS ─▶ Parquet 로드 → pandas 코드 생성(LLM) → 인메모리 실행 → 결과 포맷팅
                     └─ VECTOR ─▶ ChromaDB 검색 (bge-m3) → LLM 답변 생성
                                                              │
                                                        Ollama (gemma4:e4b)
   ◀─ n8n ◀─ FastAPI 응답 ◀──────────────────────────────────────────────┘
 ```
 
+### 라우팅 기준
+
+| 경로 | 트리거 키워드 예시 | 처리 방식 |
+|---|---|---|
+| **PANDAS** | 몇 명, 인원, 금액, 명단, 조회 | LLM이 pandas 코드 생성 → DataFrame 인메모리 실행 |
+| **VECTOR** | 방법, 절차, 기준, 규정, 설명해 | ChromaDB 의미 검색 → LLM 답변 생성 |
+
+> VECTOR 경로에서 유의미한 결과가 없으면 PANDAS 경로로 폴백합니다.
+
 ### 문서 적재 파이프라인
 
 ```
 POST /ingest  또는  python utils/ingest.py
-  ├─ PDF (텍스트) ─▶ 표 → PostgreSQL (manifest_source FK 포함)  /  텍스트(표 제외) → ChromaDB
+  ├─ PDF (텍스트) ─▶ 표 → Parquet + .meta.json  /  텍스트(표 제외) → ChromaDB
   ├─ PDF (스캔)   ─▶ pytesseract OCR (페이지별) → ChromaDB
-  ├─ HWP         ─▶ hwp5html 변환 → 표 → PostgreSQL (manifest_source FK 포함)  /  본문 → ChromaDB
-  └─ XLSX        ─▶ 시트별 → PostgreSQL (manifest_source FK 포함)
+  ├─ HWP         ─▶ hwp5html 변환 → 표 → Parquet + .meta.json  /  본문 → ChromaDB
+  └─ XLSX        ─▶ 시트별 → Parquet + .meta.json
 
-* 모든 데이터 테이블의 manifest_source 컬럼은 ingestion_manifest.source를 FK로 참조
-  → LLM이 "이 데이터가 어느 파일에서 왔는지" SQL JOIN으로 조회 가능
+* PostgreSQL은 ingestion_manifest 테이블만 유지 (중복 적재 방지용 MD5 해시 추적)
+* 적재 완료 후 _load_dataframes()로 인메모리 namespace 갱신
 ```
 
 ---
@@ -63,19 +72,30 @@ POST /ingest  또는  python utils/ingest.py
 ## 4. 폴더 구조
 
 ```
+knu-2026-summer-rag/
 ├── backend/
-│   ├── main.py          # FastAPI 서버 (라우팅, /chat, /ingest 엔드포인트)
-│   ├── database.py      # PostgreSQL / ChromaDB 연결 설정
-│   ├── .env             # [Git Ignored] 실제 환경변수 (backend/.env.example 참고)
-│   ├── data/            # [Git Ignored] 입력 문서 (hwp, pdf, xlsx)
-│   ├── logs/            # ingest.log (자동 생성)
-│   └── utils/
-│       └── ingest.py    # 문서 파싱 및 DB 적재 파이프라인
-├── .env                 # [Git Ignored] Docker Compose용 환경변수 (.env.example 참고)
-├── .env.example         # 환경변수 템플릿 (복사 후 값 설정)
-├── docker-compose.yml   # Ollama / PostgreSQL / ChromaDB / n8n 일괄 실행
-├── my_workflow.json     # n8n Slack 워크플로우
-├── requirements.txt     # Python 의존성
+│   ├── main.py              # FastAPI 서버 (라우팅, /chat, /ingest 엔드포인트)
+│   ├── database.py          # PostgreSQL / ChromaDB 연결 설정
+│   ├── check_chroma.py      # ChromaDB 상태 확인 유틸리티
+│   ├── .env                 # [Git Ignored] 실제 환경변수 (backend/.env.example 참고)
+│   ├── data/                # [Git Ignored] 입력 문서 (hwp, pdf, xlsx)
+│   ├── dataframes/          # Parquet 캐시 + 메타데이터 (적재 시 자동 생성)
+│   │   ├── df_tbl_*.parquet     # 문서에서 추출된 표 데이터
+│   │   └── df_tbl_*.meta.json   # 원본 파일명·레이블 추적 메타데이터
+│   ├── logs/
+│   │   └── ingest.log       # 적재 처리 로그 (자동 생성, 5MB 로테이션)
+│   ├── utils/
+│   │   └── ingest.py        # 문서 파싱 및 DB 적재 파이프라인
+│   └── tests/
+│       ├── eval.py          # 평가 스크립트 (키워드 기반 정답률 측정)
+│       ├── goldset.json     # 평가 질의셋 (easy / medium / hard 50개+)
+│       ├── check_integrity.py   # 데이터 무결성 검증
+│       └── make_goldset.py  # 평가 질의셋 생성기
+├── .env                     # [Git Ignored] Docker Compose용 환경변수 (.env.example 참고)
+├── .env.example             # 환경변수 템플릿 (복사 후 값 설정)
+├── docker-compose.yml       # Ollama / PostgreSQL / ChromaDB / n8n 일괄 실행
+├── my_workflow.json         # n8n Slack 워크플로우
+├── requirements.txt         # Python 의존성
 └── README.md
 ```
 
@@ -134,7 +154,7 @@ docker compose up -d
 | 서비스 | 포트 | 용도 |
 |---|---|---|
 | Ollama | 11434 | 로컬 LLM 서버 |
-| PostgreSQL | 5432 | 정형 데이터 저장 |
+| PostgreSQL | 5432 | ingestion_manifest (중복 방지) |
 | ChromaDB | 8000 | 벡터 DB |
 | n8n | 5678 | 워크플로우 자동화 |
 
@@ -196,6 +216,9 @@ curl -X POST http://localhost:8080/ingest/all \
 python utils/ingest.py
 ```
 
+> 적재가 완료되면 `backend/dataframes/`에 Parquet 파일과 `.meta.json`이 생성됩니다.  
+> 동일 파일을 다시 적재하면 MD5 해시로 중복을 감지하여 건너뜁니다.
+
 ---
 
 ## 6. API 엔드포인트
@@ -222,11 +245,11 @@ curl -X POST http://localhost:8080/chat \
 ```json
 {
   "answer": "2024년 장학금 예산 총액은 ...",
-  "source": "sql"
+  "source": "pandas"
 }
 ```
 
-> `source` 필드: `"sql"` (정형 데이터 조회) | `"vector"` (문서 검색)
+> `source` 필드: `"pandas"` (정형 데이터 pandas 조회) | `"vector"` (문서 의미 검색)
 
 **`/health` 응답 예시**
 
@@ -234,7 +257,7 @@ curl -X POST http://localhost:8080/chat \
 {
   "status": "ok",
   "llm_model": "gemma4:e4b",
-  "embed_model": "qwen3-embedding:0.6b",
+  "embed_model": "bge-m3",
   "ollama": "ok",
   "chromadb": "ok"
 }
@@ -263,7 +286,29 @@ curl -X POST http://localhost:8080/chat \
 
 ---
 
-## 8. 협업 규칙
+## 8. 평가 (Evaluation)
+
+`backend/tests/`에 평가 도구가 포함되어 있습니다.
+
+```bash
+cd backend
+# 전체 평가 실행
+python tests/eval.py
+
+# 난이도별 필터링
+python tests/eval.py --difficulty easy
+python tests/eval.py --difficulty hard
+
+# 카테고리별 필터링 (sql_명단, sql_금액, vector_규정 등)
+python tests/eval.py --category sql_금액
+```
+
+`goldset.json`은 easy / medium / hard 3단계로 구성된 50개+ 질의셋으로,  
+정형(pandas) / 비정형(vector) / 경계(negative) 케이스를 모두 포함합니다.
+
+---
+
+## 9. 협업 규칙
 
 ### Git 브랜치 전략
 ```
@@ -281,7 +326,7 @@ main ← develop ← feature/기능명
 
 ---
 
-## 9. 정량적 성과 목표
+## 10. 정량적 성과 목표
 
 | 지표 | 목표 |
 |---|---|
@@ -291,7 +336,7 @@ main ← develop ← feature/기능명
 
 ---
 
-## 10. 팀원
+## 11. 팀원
 
 | 역할 | 담당 |
 |---|---|

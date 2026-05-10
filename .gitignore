@@ -8,5 +8,7 @@ __pycache__/
 .DS_Store
 
 backend/data/*
+backend/dataframes/
+backend/tests/*.json
 data/*
 !backend/data/.gitkeep

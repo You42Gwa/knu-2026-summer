@@ -18,7 +18,7 @@
 ### AI & Database
 ![Ollama](https://img.shields.io/badge/Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)
 ![Gemma](https://img.shields.io/badge/Gemma4-4285F4?style=for-the-badge&logo=google&logoColor=white)
-![BGE](https://img.shields.io/badge/BGE--M3_Embedding-FF6A00?style=for-the-badge&logo=huggingface&logoColor=white)
+![Qwen3](https://img.shields.io/badge/Qwen3--Embedding-FF6A00?style=for-the-badge&logo=huggingface&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 ![ChromaDB](https://img.shields.io/badge/ChromaDB-FF6D5A?style=for-the-badge&logo=chroma&logoColor=white)
 
@@ -38,7 +38,7 @@ Slack 메시지
   └─▶ n8n (트리거 / 전처리)
         └─▶ POST /chat  (FastAPI + X-API-Key 인증)
               └─▶ 키워드 기반 라우팅 판단
-                    ├─ PANDAS ─▶ Parquet 로드 → pandas 코드 생성(LLM) → 인메모리 실행 → 결과 포맷팅
+                    ├─ PANDAS ─▶ Parquet 로드 → ①이름 전수 검색 / ②키워드 직접 조회 / ③LLM 코드 생성(폴백) → 인메모리 실행 → 결과 포맷팅
                     └─ VECTOR ─▶ ChromaDB 검색 (bge-m3) → LLM 답변 생성
                                                              │
                                                        Ollama (gemma4:e4b)
@@ -49,7 +49,7 @@ Slack 메시지
 
 | 경로 | 트리거 키워드 예시 | 처리 방식 |
 |---|---|---|
-| **PANDAS** | 몇 명, 인원, 금액, 명단, 조회 | LLM이 pandas 코드 생성 → DataFrame 인메모리 실행 |
+| **PANDAS** | 몇 명, 인원, 금액, 명단, 조회 | ①이름 전수 검색 → ②키워드 직접 조회 → ③LLM pandas 코드 생성(폴백) |
 | **VECTOR** | 방법, 절차, 기준, 규정, 설명해 | ChromaDB 의미 검색 → LLM 답변 생성 |
 
 > VECTOR 경로에서 유의미한 결과가 없으면 PANDAS 경로로 폴백합니다.
@@ -169,8 +169,8 @@ docker compose up -d
 # LLM (생성 모델)
 docker exec ollama_server ollama pull gemma4:e4b
 
-# 임베딩 모델 (MTEB 다국어, 1024차원)
-docker exec ollama_server ollama pull bge-m3
+# 임베딩 모델
+docker exec ollama_server ollama pull qwen3-embedding:0.6b
 ```
 
 ---
@@ -257,7 +257,8 @@ curl -X POST http://localhost:8080/chat \
 {
   "status": "ok",
   "llm_model": "gemma4:e4b",
-  "embed_model": "bge-m3",
+  "embed_model": "qwen3-embedding:0.6b",
+  "dataframes": 5,
   "ollama": "ok",
   "chromadb": "ok"
 }
@@ -280,7 +281,7 @@ curl -X POST http://localhost:8080/chat \
 | `CHROMA_PORT` | `8000` | ChromaDB 포트 |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama 서버 주소 |
 | `OLLAMA_MODEL` | `gemma4:e4b` | 생성 LLM 모델 |
-| `EMBED_MODEL` | `bge-m3` | 임베딩 모델 |
+| `EMBED_MODEL` | `qwen3-embedding:0.6b` | 임베딩 모델 |
 | `API_KEY` | *(비어있으면 인증 없음)* | `/chat`, `/ingest` 엔드포인트 보호용 API Key |
 | `INGEST_ALLOWED_BASE` | `backend/data/` 절대경로 | `/ingest` API가 접근 가능한 최상위 디렉토리 |
 
@@ -299,8 +300,8 @@ python tests/eval.py
 python tests/eval.py --difficulty easy
 python tests/eval.py --difficulty hard
 
-# 카테고리별 필터링 (sql_명단, sql_금액, vector_규정 등)
-python tests/eval.py --category sql_금액
+# 카테고리별 필터링 (sql_명단, sql_금액, sql_인원, vector_규정 등)
+python tests/eval.py --category sql_명단
 ```
 
 `goldset.json`은 easy / medium / hard 3단계로 구성된 50개+ 질의셋으로,  

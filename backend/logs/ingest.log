@@ -372,3 +372,1226 @@ sqlalchemy.exc.DuplicateColumnError: A column with name 'nan' is already present
 [2026-04-28 14:14:33,774] INFO ingest - 생략 : 변경 없음 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf hash=7a2b62953e72561ea4d243791d01eb9a
 [2026-05-05 13:53:12,435] WARNING ingest - pdf2image/pytesseract 미설치 — 스캔 PDF는 OCR 없이 건너뜁니다.
 [2026-05-05 13:53:15,466] WARNING ingest - pdf2image/pytesseract 미설치 — 스캔 PDF는 OCR 없이 건너뜁니다.
+[2026-05-05 15:39:29,103] INFO ingest - 생략(변경 없음) | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-05 15:39:29,108] INFO ingest - 생략(변경 없음) | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-05 15:39:29,115] INFO ingest - 생략(변경 없음) | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-05-05 15:39:29,116] INFO ingest - 생략(변경 없음) | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-05 15:39:29,125] INFO ingest - 생략(변경 없음) | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-05 15:39:29,132] INFO ingest - 생략(변경 없음) | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-05-05 15:39:29,138] INFO ingest - 생략(변경 없음) | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-05 15:39:29,145] INFO ingest - 생략(변경 없음) | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-05 15:39:29,154] INFO ingest - 생략(변경 없음) | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-05 15:39:29,158] INFO ingest - 생략(변경 없음) | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-05 15:39:29,169] INFO ingest - 생략(변경 없음) | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-05 15:39:29,171] INFO ingest - 생략(변경 없음) | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-05 15:39:29,183] INFO ingest - 생략(변경 없음) | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-05-05 15:39:29,184] INFO ingest - 생략(변경 없음) | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-05 15:39:53,671] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx type=xlsx category=uncategorized
+[2026-05-05 15:39:53,671] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx type=xlsx category=uncategorized
+[2026-05-05 15:39:53,719] INFO ingest - [XLSX] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-05 15:39:53,751] INFO ingest - [XLSX] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-05 15:39:54,712] INFO ingest - [XLSX] 'tbl_5_2025_1_1_1400' 적재 완료 | sheet=Sheet1 rows=65
+[2026-05-05 15:39:54,727] INFO ingest - [XLSX] 'tbl_2025' 적재 완료 | sheet=기부금 내역 데이터 변환 및 활용 rows=158
+[2026-05-05 15:39:54,762] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-05 15:39:54,763] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf type=pdf category=uncategorized
+[2026-05-05 15:39:54,778] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-05 15:39:54,779] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf type=pdf category=uncategorized
+[2026-05-05 15:39:54,804] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-05-05 15:39:54,831] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-05 15:39:55,067] INFO ingest - OCR 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf 스캔 페이지=[1]
+[2026-05-05 15:39:55,495] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_21_p1_t0 rows=1
+[2026-05-05 15:39:55,637] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_21_p1_t1 rows=6
+[2026-05-05 15:39:55,745] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_21_p1_t2 rows=6
+[2026-05-05 15:39:58,783] INFO ingest - OCR 완료 | page=1 chars=353
+[2026-05-05 15:40:02,774] INFO ingest - ChromaDB 저장 완료 | file=6. 기능대회 지원금 - 500만원.pdf chunks=1
+[2026-05-05 15:40:02,775] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf tables=0 chunks=1
+[2026-05-05 15:40:02,822] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-05 15:40:02,824] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf type=pdf category=uncategorized
+[2026-05-05 15:40:02,856] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-05 15:40:03,433] INFO ingest - [PDF] 표 저장 | tbl=tbl_9_2024_1_2_570_p1_t0 rows=6
+[2026-05-05 15:40:03,662] INFO ingest - ChromaDB 저장 완료 | file=2025-095_(주)플래시21 추승철.pdf chunks=3
+[2026-05-05 15:40:03,662] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf tables=3 chunks=3
+[2026-05-05 15:40:03,681] INFO ingest - [PDF] 표 저장 | tbl=tbl_9_2024_1_2_570_p1_t1 rows=17
+[2026-05-05 15:40:03,698] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-05-05 15:40:03,698] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf type=pdf category=uncategorized
+[2026-05-05 15:40:03,731] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-05-05 15:40:04,009] INFO ingest - [PDF] 표 저장 | tbl=tbl_2026_0310_p1_t0 rows=1
+[2026-05-05 15:40:04,206] INFO ingest - [PDF] 표 저장 | tbl=tbl_2026_0310_p1_t1 rows=26
+[2026-05-05 15:40:04,393] INFO ingest - ChromaDB 저장 완료 | file=9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf chunks=1
+[2026-05-05 15:40:04,394] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf tables=2 chunks=1
+[2026-05-05 15:40:04,415] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-05 15:40:04,416] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp type=hwp category=uncategorized
+[2026-05-05 15:40:04,440] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-05 15:40:04,993] INFO ingest - ChromaDB 저장 완료 | file=장학회 지출결의서_2026_0310.pdf chunks=1
+[2026-05-05 15:40:04,993] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf tables=2 chunks=1
+[2026-05-05 15:40:05,015] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-05-05 15:40:05,016] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp type=hwp category=uncategorized
+[2026-05-05 15:40:05,040] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-05 15:40:05,707] INFO ingest - [HWP] 표 저장 | tbl=tbl_1_2024_760_html_t0 rows=36
+[2026-05-05 15:40:05,708] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp tables=1 chunks=0
+[2026-05-05 15:40:05,757] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-05 15:40:05,758] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp type=hwp category=uncategorized
+[2026-05-05 15:40:05,790] INFO ingest - [HWP] 표 저장 | tbl=tbl_10_120_html_t0 rows=6
+[2026-05-05 15:40:05,807] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-05 15:40:06,353] INFO ingest - ChromaDB 저장 완료 | file=10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp chunks=1
+[2026-05-05 15:40:06,354] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp tables=1 chunks=1
+[2026-05-05 15:40:06,408] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-05 15:40:06,409] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp type=hwp category=uncategorized
+[2026-05-05 15:40:06,449] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-05 15:40:06,508] INFO ingest - [HWP] 표 저장 | tbl=tbl_2_2023_1_2_580_html_t0 rows=8
+[2026-05-05 15:40:06,633] INFO ingest - [HWP] 표 저장 | tbl=tbl_2_2023_1_2_580_html_t1 rows=8
+[2026-05-05 15:40:07,208] INFO ingest - [HWP] 표 저장 | tbl=tbl_3_3_130_html_t0 rows=6
+[2026-05-05 15:40:07,369] INFO ingest - ChromaDB 저장 완료 | file=2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp chunks=1
+[2026-05-05 15:40:07,370] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp tables=2 chunks=1
+[2026-05-05 15:40:07,399] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-05 15:40:07,401] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp type=hwp category=uncategorized
+[2026-05-05 15:40:07,441] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-05 15:40:07,978] INFO ingest - ChromaDB 저장 완료 | file=3. 텍폴 신입생 장학금 3월-130만원.hwp chunks=1
+[2026-05-05 15:40:07,978] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp tables=1 chunks=1
+[2026-05-05 15:40:08,000] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-05 15:40:08,001] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp type=hwp category=uncategorized
+[2026-05-05 15:40:08,024] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-05 15:40:08,725] INFO ingest - [HWP] 표 저장 | tbl=tbl_7_2024_html_t0 rows=14
+[2026-05-05 15:40:08,726] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp tables=1 chunks=0
+[2026-05-05 15:40:08,749] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-05 15:40:08,750] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp type=hwp category=uncategorized
+[2026-05-05 15:40:08,775] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-05-05 15:40:08,851] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_8_html_t)
+[2026-05-05 15:40:09,417] INFO ingest - [HWP] 표 저장 | tbl=tbl_4_2024_200_html_t0 rows=36
+[2026-05-05 15:40:09,559] INFO ingest - [HWP] 표 저장 | tbl=tbl_4_2024_200_html_t1 rows=36
+[2026-05-05 15:40:09,868] INFO ingest - [HWP] 표 저장 | tbl=tbl_4_2024_200_html_t2 rows=20
+[2026-05-05 15:40:10,025] INFO ingest - [HWP] 표 저장 | tbl=tbl_8_html_t0 rows=34
+[2026-05-05 15:40:10,027] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp tables=1 chunks=0
+[2026-05-05 15:40:10,051] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-05-05 15:40:10,052] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp type=hwp category=uncategorized
+[2026-05-05 15:40:10,093] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-05 15:40:10,570] INFO ingest - ChromaDB 저장 완료 | file=4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp chunks=1
+[2026-05-05 15:40:10,570] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp tables=3 chunks=1
+[2026-05-05 15:40:10,593] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-05 15:40:11,411] INFO ingest - [HWP] 표 저장 | tbl=tbl_797ee9af_html_t0 rows=2
+[2026-05-05 15:40:11,543] INFO ingest - [HWP] 표 저장 | tbl=tbl_797ee9af_html_t1 rows=4
+[2026-05-05 15:40:11,707] INFO ingest - [HWP] 표 저장 | tbl=tbl_797ee9af_html_t2 rows=5
+[2026-05-05 15:40:11,942] INFO ingest - [HWP] 표 저장 | tbl=tbl_797ee9af_html_t3 rows=4
+[2026-05-05 15:40:13,543] INFO ingest - ChromaDB 저장 완료 | file=대구공고 동문검색 키오스크 구축사업 입찰공고.hwp chunks=9
+[2026-05-05 15:40:13,544] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp tables=4 chunks=9
+[2026-05-05 15:40:13,585] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-05 18:37:20,023] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx type=xlsx category=uncategorized
+[2026-05-05 18:37:20,023] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx type=xlsx category=uncategorized
+[2026-05-05 18:37:20,053] INFO ingest - [XLSX] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-05 18:37:20,079] INFO ingest - [XLSX] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-05 18:37:20,578] INFO ingest - [XLSX] 'tbl_2025_기부금_내역' 적재 완료 | sheet=기부금 내역 데이터 변환 및 활용 rows=158
+[2026-05-05 18:37:20,597] INFO ingest - [XLSX] 'tbl_5_공무원반_명단_1400만원' 적재 완료 | sheet=Sheet1 rows=65
+[2026-05-05 18:37:20,620] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-05 18:37:20,621] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf type=pdf category=uncategorized
+[2026-05-05 18:37:20,638] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-05 18:37:20,639] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf type=pdf category=uncategorized
+[2026-05-05 18:37:20,682] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-05 18:37:20,691] INFO ingest - OCR 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf 스캔 페이지=[1]
+[2026-05-05 18:37:20,705] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-05-05 18:37:21,358] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t0 rows=1
+[2026-05-05 18:37:21,472] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t1 rows=6
+[2026-05-05 18:37:21,612] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t2 rows=6
+[2026-05-05 18:37:24,219] INFO ingest - OCR 완료 | page=1 chars=353
+[2026-05-05 18:37:25,941] INFO ingest - ChromaDB 저장 완료 | file=2025-095_(주)플래시21 추승철.pdf chunks=3
+[2026-05-05 18:37:25,941] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf tables=3 chunks=3
+[2026-05-05 18:37:25,944] INFO ingest - ChromaDB 저장 완료 | file=6. 기능대회 지원금 - 500만원.pdf chunks=1
+[2026-05-05 18:37:25,945] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf tables=0 chunks=1
+[2026-05-05 18:37:25,972] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-05-05 18:37:25,973] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf type=pdf category=uncategorized
+[2026-05-05 18:37:25,990] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-05 18:37:25,991] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf type=pdf category=uncategorized
+[2026-05-05 18:37:26,023] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-05 18:37:26,093] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-05-05 18:37:26,591] INFO ingest - [PDF] 표 저장 | tbl=tbl_9_2024학년도_하반기_1_2학년_성적우수자_대구공고_동문장학금_대상자_p1_t0 rows=6
+[2026-05-05 18:37:26,774] INFO ingest - [PDF] 표 저장 | tbl=장학회_지출결의서_2026_0310_p1_t0 rows=1
+[2026-05-05 18:37:26,899] INFO ingest - [PDF] 표 저장 | tbl=tbl_9_2024학년도_하반기_1_2학년_성적우수자_대구공고_동문장학금_대상자_p1_t1 rows=17
+[2026-05-05 18:37:26,998] INFO ingest - [PDF] 표 저장 | tbl=장학회_지출결의서_2026_0310_p1_t1 rows=26
+[2026-05-05 18:37:28,387] INFO ingest - ChromaDB 저장 완료 | file=9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf chunks=1
+[2026-05-05 18:37:28,388] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf tables=2 chunks=1
+[2026-05-05 18:37:28,442] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-05 18:37:28,442] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp type=hwp category=uncategorized
+[2026-05-05 18:37:28,492] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-05 18:37:29,369] INFO ingest - ChromaDB 저장 완료 | file=장학회 지출결의서_2026_0310.pdf chunks=1
+[2026-05-05 18:37:29,369] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf tables=2 chunks=1
+[2026-05-05 18:37:29,432] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-05-05 18:37:29,433] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp type=hwp category=uncategorized
+[2026-05-05 18:37:29,490] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-05 18:37:29,519] INFO ingest - [HWP] 표 저장 | tbl=tbl_1_2024학년도_신입생_동문회_장학금_지급_대상자_760만원_html_t0 rows=36
+[2026-05-05 18:37:29,520] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp tables=1 chunks=0
+[2026-05-05 18:37:29,565] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-05 18:37:29,566] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp type=hwp category=uncategorized
+[2026-05-05 18:37:29,594] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-05 18:37:30,248] INFO ingest - [HWP] 표 저장 | tbl=tbl_10_텍폴_신입생_학년말_성적우수_장학금_120만원_html_t0 rows=6
+[2026-05-05 18:37:30,344] INFO ingest - [HWP] 표 저장 | tbl=tbl_2_2023학년도_하반기_성적우수자_대구공고_동문장학금_수여_대상자_58_html_t0 rows=8
+[2026-05-05 18:37:30,611] INFO ingest - [HWP] 표 저장 | tbl=tbl_2_2023학년도_하반기_성적우수자_대구공고_동문장학금_수여_대상자_58_html_t1 rows=8
+[2026-05-05 18:37:31,918] INFO ingest - ChromaDB 저장 완료 | file=10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp chunks=1
+[2026-05-05 18:37:31,918] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp tables=1 chunks=1
+[2026-05-05 18:37:31,962] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-05 18:37:31,964] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp type=hwp category=uncategorized
+[2026-05-05 18:37:32,007] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-05 18:37:32,536] INFO ingest - ChromaDB 저장 완료 | file=2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp chunks=1
+[2026-05-05 18:37:32,536] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp tables=2 chunks=1
+[2026-05-05 18:37:32,578] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-05 18:37:32,579] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp type=hwp category=uncategorized
+[2026-05-05 18:37:32,679] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-05 18:37:32,787] INFO ingest - [HWP] 표 저장 | tbl=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t0 rows=6
+[2026-05-05 18:37:33,786] INFO ingest - ChromaDB 저장 완료 | file=3. 텍폴 신입생 장학금 3월-130만원.hwp chunks=1
+[2026-05-05 18:37:33,786] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp tables=1 chunks=1
+[2026-05-05 18:37:33,829] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-05 18:37:33,830] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp type=hwp category=uncategorized
+[2026-05-05 18:37:33,858] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-05 18:37:34,817] INFO ingest - [HWP] 표 저장 | tbl=tbl_7_2024학년도_검도부_명단_html_t0 rows=14
+[2026-05-05 18:37:34,818] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp tables=1 chunks=0
+[2026-05-05 18:37:34,867] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-05 18:37:34,870] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp type=hwp category=uncategorized
+[2026-05-05 18:37:34,942] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-05-05 18:37:34,971] INFO ingest - [HWP] 표 저장 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t0 rows=36
+[2026-05-05 18:37:35,175] INFO ingest - [HWP] 표 저장 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t1 rows=36
+[2026-05-05 18:37:35,383] INFO ingest - [HWP] 표 저장 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t2 rows=20
+[2026-05-05 18:37:35,925] INFO ingest - [HWP] 표 저장 | tbl=tbl_8_학교운동부_출전선수_대상자_명단_html_t0 rows=34
+[2026-05-05 18:37:35,928] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp tables=1 chunks=0
+[2026-05-05 18:37:35,955] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-05-05 18:37:35,956] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp type=hwp category=uncategorized
+[2026-05-05 18:37:35,984] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-05 18:37:36,428] INFO ingest - ChromaDB 저장 완료 | file=4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp chunks=1
+[2026-05-05 18:37:36,429] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp tables=3 chunks=1
+[2026-05-05 18:37:36,455] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-05 18:37:37,456] INFO ingest - [HWP] 표 저장 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t0 rows=2
+[2026-05-05 18:37:37,635] INFO ingest - [HWP] 표 저장 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t1 rows=4
+[2026-05-05 18:37:37,840] INFO ingest - [HWP] 표 저장 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t2 rows=5
+[2026-05-05 18:37:38,031] INFO ingest - [HWP] 표 저장 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t3 rows=4
+[2026-05-05 18:37:39,899] INFO ingest - ChromaDB 저장 완료 | file=대구공고 동문검색 키오스크 구축사업 입찰공고.hwp chunks=9
+[2026-05-05 18:37:39,900] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp tables=4 chunks=9
+[2026-05-05 18:37:39,944] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 20:09:20,228] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx type=xlsx category=uncategorized
+[2026-05-06 20:09:20,229] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx type=xlsx category=uncategorized
+[2026-05-06 20:09:20,276] INFO ingest - [XLSX] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-06 20:09:20,295] INFO ingest - [XLSX] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-06 20:09:21,281] INFO ingest - [XLSX] 'tbl_5_공무원반_명단_1400만원' 적재 완료 | sheet=Sheet1 rows=65
+[2026-05-06 20:09:21,304] INFO ingest - [XLSX] 'tbl_2025_기부금_내역' 적재 완료 | sheet=기부금 내역 데이터 변환 및 활용 rows=158
+[2026-05-06 20:09:21,323] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-06 20:09:21,332] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf type=pdf category=uncategorized
+[2026-05-06 20:09:21,345] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-06 20:09:21,348] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf type=pdf category=uncategorized
+[2026-05-06 20:09:21,375] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-05-06 20:09:21,396] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 20:09:21,408] INFO ingest - OCR 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf 스캔 페이지=[1]
+[2026-05-06 20:09:21,415] INFO ingest - 기존 테이블 3개 삭제 (prefix=tbl_2025_095_플래시21_추승철_p)
+[2026-05-06 20:09:22,106] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t0 rows=1
+[2026-05-06 20:09:22,248] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t1 rows=6
+[2026-05-06 20:09:22,420] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t2 rows=6
+[2026-05-06 20:09:25,402] INFO ingest - OCR 완료 | page=1 chars=353
+[2026-05-06 20:09:40,610] INFO ingest - ChromaDB 저장 완료 | file=6. 기능대회 지원금 - 500만원.pdf chunks=1
+[2026-05-06 20:09:40,610] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf tables=0 chunks=1
+[2026-05-06 20:09:40,619] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 20:09:40,652] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 20:09:40,661] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf type=pdf category=uncategorized
+[2026-05-06 20:09:40,699] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-06 20:09:41,403] INFO ingest - [PDF] 표 저장 | tbl=tbl_9_2024학년도_하반기_1_2학년_성적우수자_대구공고_동문장학금_대상자_p1_t0 rows=6
+[2026-05-06 20:09:41,677] INFO ingest - [PDF] 표 저장 | tbl=tbl_9_2024학년도_하반기_1_2학년_성적우수자_대구공고_동문장학금_대상자_p1_t1 rows=17
+[2026-05-06 20:09:41,725] INFO ingest - ChromaDB 저장 완료 | file=2025-095_(주)플래시21 추승철.pdf chunks=3
+[2026-05-06 20:09:41,725] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf tables=3 chunks=3
+[2026-05-06 20:09:41,749] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_2025_095_플래시21_추승철_p1_t0 chunks=0
+[2026-05-06 20:09:41,759] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_2025_095_플래시21_추승철_p1_t1 chunks=0
+[2026-05-06 20:09:41,767] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_2025_095_플래시21_추승철_p1_t2 chunks=0
+[2026-05-06 20:09:41,803] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-05-06 20:09:41,813] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf type=pdf category=uncategorized
+[2026-05-06 20:09:41,862] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-05-06 20:09:41,912] INFO ingest - 기존 테이블 2개 삭제 (prefix=장학회_지출결의서_2026_0310_p)
+[2026-05-06 20:09:42,316] INFO ingest - [PDF] 표 저장 | tbl=장학회_지출결의서_2026_0310_p1_t0 rows=1
+[2026-05-06 20:09:42,519] INFO ingest - [PDF] 표 저장 | tbl=장학회_지출결의서_2026_0310_p1_t1 rows=26
+[2026-05-06 20:09:43,558] INFO ingest - ChromaDB 저장 완료 | file=9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf chunks=1
+[2026-05-06 20:09:43,558] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf tables=2 chunks=1
+[2026-05-06 20:09:43,566] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-06 20:09:43,620] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-06 20:09:43,632] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:09:43,678] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 20:09:44,140] INFO ingest - ChromaDB 저장 완료 | file=장학회 지출결의서_2026_0310.pdf chunks=1
+[2026-05-06 20:09:44,141] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf tables=2 chunks=1
+[2026-05-06 20:09:44,159] INFO ingest - [표→Chroma] 테이블 변환 | tbl=장학회_지출결의서_2026_0310_p1_t0 chunks=0
+[2026-05-06 20:09:44,169] INFO ingest - [표→Chroma] 테이블 변환 | tbl=장학회_지출결의서_2026_0310_p1_t1 chunks=0
+[2026-05-06 20:09:44,200] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-05-06 20:09:44,206] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:09:44,237] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 20:09:45,038] INFO ingest - [HWP] 표 저장 | tbl=tbl_10_텍폴_신입생_학년말_성적우수_장학금_120만원_html_t0 rows=6
+[2026-05-06 20:09:45,180] INFO ingest - [HWP] 표 저장 | tbl=tbl_1_2024학년도_신입생_동문회_장학금_지급_대상자_760만원_html_t0 rows=36
+[2026-05-06 20:09:45,181] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp tables=1 chunks=0
+[2026-05-06 20:09:45,190] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 20:09:45,293] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 20:09:45,325] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:09:45,421] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 20:09:46,418] INFO ingest - [HWP] 표 저장 | tbl=tbl_2_2023학년도_하반기_성적우수자_대구공고_동문장학금_수여_대상자_58_html_t0 rows=8
+[2026-05-06 20:09:46,691] INFO ingest - ChromaDB 저장 완료 | file=10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp chunks=1
+[2026-05-06 20:09:46,691] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp tables=1 chunks=1
+[2026-05-06 20:09:46,699] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 20:09:46,710] INFO ingest - [HWP] 표 저장 | tbl=tbl_2_2023학년도_하반기_성적우수자_대구공고_동문장학금_수여_대상자_58_html_t1 rows=8
+[2026-05-06 20:09:46,729] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 20:09:46,740] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:09:46,793] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-06 20:09:46,888] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t)
+[2026-05-06 20:09:47,585] INFO ingest - [HWP] 표 저장 | tbl=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t0 rows=6
+[2026-05-06 20:09:48,093] INFO ingest - ChromaDB 저장 완료 | file=2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp chunks=1
+[2026-05-06 20:09:48,093] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp tables=2 chunks=1
+[2026-05-06 20:09:48,105] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 20:09:48,155] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 20:09:48,165] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:09:48,219] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-06 20:09:49,440] INFO ingest - ChromaDB 저장 완료 | file=3. 텍폴 신입생 장학금 3월-130만원.hwp chunks=1
+[2026-05-06 20:09:49,440] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp tables=1 chunks=1
+[2026-05-06 20:09:49,459] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t0 chunks=0
+[2026-05-06 20:09:49,489] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-06 20:09:49,497] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp type=hwp category=uncategorized
+[2026-05-06 20:09:49,527] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-06 20:09:49,564] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_7_2024학년도_검도부_명단_html_t)
+[2026-05-06 20:09:50,406] INFO ingest - [HWP] 표 저장 | tbl=tbl_7_2024학년도_검도부_명단_html_t0 rows=14
+[2026-05-06 20:09:50,407] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp tables=1 chunks=0
+[2026-05-06 20:09:50,425] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_7_2024학년도_검도부_명단_html_t0 chunks=0
+[2026-05-06 20:09:50,479] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-06 20:09:50,492] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp type=hwp category=uncategorized
+[2026-05-06 20:09:50,528] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-05-06 20:09:50,547] INFO ingest - [HWP] 표 저장 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t0 rows=36
+[2026-05-06 20:09:50,579] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_8_학교운동부_출전선수_대상자_명단_html_t)
+[2026-05-06 20:09:50,739] INFO ingest - [HWP] 표 저장 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t1 rows=36
+[2026-05-06 20:09:50,962] INFO ingest - [HWP] 표 저장 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t2 rows=20
+[2026-05-06 20:09:51,615] INFO ingest - [HWP] 표 저장 | tbl=tbl_8_학교운동부_출전선수_대상자_명단_html_t0 rows=34
+[2026-05-06 20:09:51,617] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp tables=1 chunks=0
+[2026-05-06 20:09:51,638] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_8_학교운동부_출전선수_대상자_명단_html_t0 chunks=0
+[2026-05-06 20:09:51,683] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-05-06 20:09:51,688] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp type=hwp category=uncategorized
+[2026-05-06 20:09:51,760] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 20:09:52,060] INFO ingest - ChromaDB 저장 완료 | file=4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp chunks=1
+[2026-05-06 20:09:52,060] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp tables=3 chunks=1
+[2026-05-06 20:09:52,080] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_ht chunks=0
+[2026-05-06 20:09:52,104] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-06 20:09:53,348] INFO ingest - [HWP] 표 저장 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t0 rows=2
+[2026-05-06 20:09:53,557] INFO ingest - [HWP] 표 저장 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t1 rows=4
+[2026-05-06 20:09:53,780] INFO ingest - [HWP] 표 저장 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t2 rows=5
+[2026-05-06 20:09:54,024] INFO ingest - [HWP] 표 저장 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t3 rows=4
+[2026-05-06 20:09:56,039] INFO ingest - ChromaDB 저장 완료 | file=대구공고 동문검색 키오스크 구축사업 입찰공고.hwp chunks=9
+[2026-05-06 20:09:56,040] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp tables=4 chunks=9
+[2026-05-06 20:09:56,049] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 20:09:56,081] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 20:45:42,271] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx type=xlsx category=uncategorized
+[2026-05-06 20:45:42,272] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx type=xlsx category=uncategorized
+[2026-05-06 20:45:42,341] INFO ingest - [XLSX] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-06 20:45:42,341] INFO ingest - [XLSX] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-06 20:45:43,135] INFO ingest - [XLSX] 'tbl_2025_기부금_내역' 적재 완료 | sheet=기부금 내역 데이터 변환 및 활용 rows=158
+[2026-05-06 20:45:43,161] INFO ingest - [XLSX] 'tbl_5_공무원반_명단_1400만원' 적재 완료 | sheet=Sheet1 rows=65
+[2026-05-06 20:45:43,183] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-06 20:45:43,185] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf type=pdf category=uncategorized
+[2026-05-06 20:45:43,220] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-06 20:45:43,221] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf type=pdf category=uncategorized
+[2026-05-06 20:45:43,254] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-05-06 20:45:43,272] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 20:45:43,286] INFO ingest - OCR 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf 스캔 페이지=[1]
+[2026-05-06 20:45:43,319] INFO ingest - 기존 테이블 3개 삭제 (prefix=tbl_2025_095_플래시21_추승철_p)
+[2026-05-06 20:45:44,203] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t0 rows=1
+[2026-05-06 20:45:44,205] ERROR ingest - [PDF] 표 저장/마크다운 변환 실패 | page=1 t=1
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 640, in ingest_pdf_hybrid
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:44,374] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t1 rows=6
+[2026-05-06 20:45:44,375] ERROR ingest - [PDF] 표 저장/마크다운 변환 실패 | page=1 t=2
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 640, in ingest_pdf_hybrid
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:44,536] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t2 rows=6
+[2026-05-06 20:45:44,537] ERROR ingest - [PDF] 표 저장/마크다운 변환 실패 | page=1 t=3
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 640, in ingest_pdf_hybrid
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:47,498] INFO ingest - OCR 완료 | page=1 chars=353
+[2026-05-06 20:45:48,967] INFO ingest - ChromaDB 저장 완료 | file=2025-095_(주)플래시21 추승철.pdf chunks=3
+[2026-05-06 20:45:48,969] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf tables=3 chunks=3
+[2026-05-06 20:45:48,991] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_2025_095_플래시21_추승철_p1_t0 chunks=0
+[2026-05-06 20:45:49,007] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_2025_095_플래시21_추승철_p1_t2 chunks=0
+[2026-05-06 20:45:49,019] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_2025_095_플래시21_추승철_p1_t1 chunks=0
+[2026-05-06 20:45:49,081] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-05-06 20:45:49,082] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf type=pdf category=uncategorized
+[2026-05-06 20:45:49,142] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-06 20:45:49,565] INFO ingest - ChromaDB 저장 완료 | file=6. 기능대회 지원금 - 500만원.pdf chunks=1
+[2026-05-06 20:45:49,565] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf tables=0 chunks=1
+[2026-05-06 20:45:49,575] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 20:45:49,602] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 20:45:49,603] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf type=pdf category=uncategorized
+[2026-05-06 20:45:49,732] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-05-06 20:45:49,795] INFO ingest - 기존 테이블 2개 삭제 (prefix=장학회_지출결의서_2026_0310_p)
+[2026-05-06 20:45:49,828] INFO ingest - [PDF] 표 저장 | tbl=tbl_9_2024학년도_하반기_1_2학년_성적우수자_대구공고_동문장학금_대상자_p1_t0 rows=6
+[2026-05-06 20:45:49,860] ERROR ingest - [PDF] 표 저장/마크다운 변환 실패 | page=1 t=0
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 640, in ingest_pdf_hybrid
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:50,131] INFO ingest - [PDF] 표 저장 | tbl=장학회_지출결의서_2026_0310_p1_t0 rows=1
+[2026-05-06 20:45:50,132] ERROR ingest - [PDF] 표 저장/마크다운 변환 실패 | page=1 t=0
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 640, in ingest_pdf_hybrid
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:50,275] INFO ingest - [PDF] 표 저장 | tbl=tbl_9_2024학년도_하반기_1_2학년_성적우수자_대구공고_동문장학금_대상자_p1_t1 rows=17
+[2026-05-06 20:45:50,276] ERROR ingest - [PDF] 표 저장/마크다운 변환 실패 | page=1 t=1
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 640, in ingest_pdf_hybrid
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:50,453] INFO ingest - [PDF] 표 저장 | tbl=장학회_지출결의서_2026_0310_p1_t1 rows=26
+[2026-05-06 20:45:50,454] ERROR ingest - [PDF] 표 저장/마크다운 변환 실패 | page=1 t=1
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 640, in ingest_pdf_hybrid
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:51,898] INFO ingest - ChromaDB 저장 완료 | file=9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf chunks=1
+[2026-05-06 20:45:51,898] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf tables=2 chunks=1
+[2026-05-06 20:45:51,908] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-06 20:45:51,940] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-06 20:45:51,943] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:45:52,011] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 20:45:52,524] INFO ingest - ChromaDB 저장 완료 | file=장학회 지출결의서_2026_0310.pdf chunks=1
+[2026-05-06 20:45:52,525] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf tables=2 chunks=1
+[2026-05-06 20:45:52,542] INFO ingest - [표→Chroma] 테이블 변환 | tbl=장학회_지출결의서_2026_0310_p1_t0 chunks=0
+[2026-05-06 20:45:52,554] INFO ingest - [표→Chroma] 테이블 변환 | tbl=장학회_지출결의서_2026_0310_p1_t1 chunks=0
+[2026-05-06 20:45:52,582] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-05-06 20:45:52,583] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:45:52,610] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 20:45:53,335] ERROR ingest - [HWP] 표 처리 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp t=0
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 724, in convert_hwp_to_html_and_ingest
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:53,338] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp tables=0 chunks=0
+[2026-05-06 20:45:53,348] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 20:45:53,462] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 20:45:53,465] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:45:53,528] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 20:45:53,556] ERROR ingest - [HWP] 표 처리 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp t=0
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 724, in convert_hwp_to_html_and_ingest
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:53,927] ERROR ingest - HWP 변환 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp rc=3221225786 err=Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Scripts\hwp5html.exe\__main__.py", line 2, in <module>
+    from hwp5.hwp5html import main
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\hwp5\hwp5html.py", line 34, in <module>
+    from .cli import init_logger
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\hwp5\cli.py", line 30, in <module>
+    from .xmlmodel import Hwp5File
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\hwp5\xmlmodel.py", line 58, in <module>
+    from .xmlformat import startelement
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\hwp5\xmlformat.py", line 23, in <module>
+    from xml.sax.saxutils import escape
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\xml\sax\__init__.py", line 22, in <module>
+    from .xmlreader import InputSource
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\xml\sax\xmlreader.py", line 11, in <module>
+    class XMLReader:
+    ...<77 lines>...
+            raise SAXNotRecognizedException("Property '%s' not recognized" % name)
+KeyboardInterrupt
+[2026-05-06 20:45:53,937] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 20:45:53,974] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 20:45:53,976] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:45:54,128] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-06 20:45:54,171] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t)
+[2026-05-06 20:45:55,120] INFO ingest - ChromaDB 저장 완료 | file=10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp chunks=1
+[2026-05-06 20:45:55,121] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp tables=0 chunks=1
+[2026-05-06 20:45:55,139] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 20:45:55,186] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 20:45:55,187] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:45:55,208] ERROR ingest - [HWP] 표 처리 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp t=0
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 724, in convert_hwp_to_html_and_ingest
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:55,228] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-06 20:45:56,414] INFO ingest - ChromaDB 저장 완료 | file=3. 텍폴 신입생 장학금 3월-130만원.hwp chunks=1
+[2026-05-06 20:45:56,415] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp tables=0 chunks=1
+[2026-05-06 20:45:56,431] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t0 chunks=0
+[2026-05-06 20:45:56,458] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-06 20:45:56,459] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp type=hwp category=uncategorized
+[2026-05-06 20:45:56,478] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-06 20:45:56,521] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_7_2024학년도_검도부_명단_html_t)
+[2026-05-06 20:45:57,486] ERROR ingest - [HWP] 표 처리 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp t=0
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 724, in convert_hwp_to_html_and_ingest
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:57,489] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp tables=0 chunks=0
+[2026-05-06 20:45:57,509] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_7_2024학년도_검도부_명단_html_t0 chunks=0
+[2026-05-06 20:45:57,537] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-06 20:45:57,538] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp type=hwp category=uncategorized
+[2026-05-06 20:45:57,568] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-05-06 20:45:57,620] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_8_학교운동부_출전선수_대상자_명단_html_t)
+[2026-05-06 20:45:57,880] ERROR ingest - [HWP] 표 처리 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp t=0
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 724, in convert_hwp_to_html_and_ingest
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:58,043] ERROR ingest - [HWP] 표 처리 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp t=1
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 724, in convert_hwp_to_html_and_ingest
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:58,189] ERROR ingest - [HWP] 표 처리 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp t=2
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 724, in convert_hwp_to_html_and_ingest
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:58,878] ERROR ingest - [HWP] 표 처리 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp t=0
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 724, in convert_hwp_to_html_and_ingest
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:45:58,888] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp tables=0 chunks=0
+[2026-05-06 20:45:58,911] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_8_학교운동부_출전선수_대상자_명단_html_t0 chunks=0
+[2026-05-06 20:45:58,963] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-05-06 20:45:58,964] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp type=hwp category=uncategorized
+[2026-05-06 20:45:59,054] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 20:45:59,454] INFO ingest - ChromaDB 저장 완료 | file=4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp chunks=1
+[2026-05-06 20:45:59,547] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp tables=0 chunks=1
+[2026-05-06 20:45:59,664] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_ht chunks=0
+[2026-05-06 20:45:59,696] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-06 20:46:01,220] ERROR ingest - [HWP] 표 처리 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp t=0
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 724, in convert_hwp_to_html_and_ingest
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:46:01,414] ERROR ingest - [HWP] 표 처리 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp t=1
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 724, in convert_hwp_to_html_and_ingest
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:46:01,579] ERROR ingest - [HWP] 표 처리 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp t=2
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 724, in convert_hwp_to_html_and_ingest
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:46:01,756] ERROR ingest - [HWP] 표 처리 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp t=3
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 158, in import_optional_dependency
+    module = importlib.import_module(name)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3568.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1395, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1324, in _find_and_load_unlocked
+ModuleNotFoundError: No module named 'tabulate'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 724, in convert_hwp_to_html_and_ingest
+    md_table = df.to_markdown(index=False)
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\core\frame.py", line 2983, in to_markdown
+    tabulate = import_optional_dependency("tabulate")
+  File "C:\Users\des\Desktop\workspace\project\backend\venv\Lib\site-packages\pandas\compat\_optional.py", line 161, in import_optional_dependency
+    raise ImportError(msg) from err
+ImportError: `Import tabulate` failed.  Use pip or conda to install the tabulate package.
+[2026-05-06 20:46:03,913] INFO ingest - ChromaDB 저장 완료 | file=대구공고 동문검색 키오스크 구축사업 입찰공고.hwp chunks=9
+[2026-05-06 20:46:03,913] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp tables=0 chunks=9
+[2026-05-06 20:46:03,925] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 20:46:03,948] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 20:47:19,295] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx type=xlsx category=uncategorized
+[2026-05-06 20:47:19,295] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx type=xlsx category=uncategorized
+[2026-05-06 20:47:19,336] INFO ingest - [XLSX] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-06 20:47:19,358] INFO ingest - [XLSX] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-06 20:47:19,989] INFO ingest - [XLSX] 'tbl_2025_기부금_내역' 적재 완료 | sheet=기부금 내역 데이터 변환 및 활용 rows=158
+[2026-05-06 20:47:20,008] INFO ingest - [XLSX] 'tbl_5_공무원반_명단_1400만원' 적재 완료 | sheet=Sheet1 rows=65
+[2026-05-06 20:47:20,026] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-06 20:47:20,027] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf type=pdf category=uncategorized
+[2026-05-06 20:47:20,042] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-06 20:47:20,042] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf type=pdf category=uncategorized
+[2026-05-06 20:47:20,071] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-05-06 20:47:20,083] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 20:47:20,101] INFO ingest - OCR 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf 스캔 페이지=[1]
+[2026-05-06 20:47:20,122] INFO ingest - 기존 테이블 3개 삭제 (prefix=tbl_2025_095_플래시21_추승철_p)
+[2026-05-06 20:47:21,077] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t0 rows=1
+[2026-05-06 20:47:21,209] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t1 rows=6
+[2026-05-06 20:47:21,359] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t2 rows=6
+[2026-05-06 20:47:22,859] ERROR ingest - 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 781, in process_file
+    chroma_doc_count = ingest_pdf_hybrid(file_path, file_hash, category)
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 654, in ingest_pdf_hybrid
+    chroma_count = save_to_chroma(file_path, chunk_records, file_hash, category) if chunk_records else 0
+                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 401, in save_to_chroma
+    text_val = item["text"].strip()
+               ~~~~^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+[2026-05-06 20:47:22,863] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf type=pdf category=uncategorized
+[2026-05-06 20:47:22,897] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-06 20:47:23,419] INFO ingest - [PDF] 표 저장 | tbl=tbl_9_2024학년도_하반기_1_2학년_성적우수자_대구공고_동문장학금_대상자_p1_t0 rows=6
+[2026-05-06 20:47:23,569] INFO ingest - [PDF] 표 저장 | tbl=tbl_9_2024학년도_하반기_1_2학년_성적우수자_대구공고_동문장학금_대상자_p1_t1 rows=17
+[2026-05-06 20:47:24,053] ERROR ingest - 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 781, in process_file
+    chroma_doc_count = ingest_pdf_hybrid(file_path, file_hash, category)
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 654, in ingest_pdf_hybrid
+    chroma_count = save_to_chroma(file_path, chunk_records, file_hash, category) if chunk_records else 0
+                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 401, in save_to_chroma
+    text_val = item["text"].strip()
+               ~~~~^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+[2026-05-06 20:47:24,056] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf type=pdf category=uncategorized
+[2026-05-06 20:47:24,089] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-05-06 20:47:24,128] INFO ingest - 기존 테이블 2개 삭제 (prefix=장학회_지출결의서_2026_0310_p)
+[2026-05-06 20:47:24,402] INFO ingest - [PDF] 표 저장 | tbl=장학회_지출결의서_2026_0310_p1_t0 rows=1
+[2026-05-06 20:47:24,553] INFO ingest - [PDF] 표 저장 | tbl=장학회_지출결의서_2026_0310_p1_t1 rows=26
+[2026-05-06 20:47:24,564] INFO ingest - OCR 완료 | page=1 chars=353
+[2026-05-06 20:47:25,194] ERROR ingest - 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 781, in process_file
+    chroma_doc_count = ingest_pdf_hybrid(file_path, file_hash, category)
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 654, in ingest_pdf_hybrid
+    chroma_count = save_to_chroma(file_path, chunk_records, file_hash, category) if chunk_records else 0
+                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 401, in save_to_chroma
+    text_val = item["text"].strip()
+               ~~~~^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+[2026-05-06 20:47:25,196] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:47:25,236] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 20:47:26,415] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_1_2024학년도_신입생_동문회_장학금_지급_대상자_760만원_html_t0 rows=36
+[2026-05-06 20:47:27,456] INFO ingest - ChromaDB 저장 완료 | file=6. 기능대회 지원금 - 500만원.pdf chunks=1
+[2026-05-06 20:47:27,457] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf tables=0 chunks=1
+[2026-05-06 20:47:27,464] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 20:47:27,488] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 20:47:27,489] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:47:27,511] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 20:47:28,425] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_10_텍폴_신입생_학년말_성적우수_장학금_120만원_html_t0 rows=6
+[2026-05-06 20:47:29,586] INFO ingest - ChromaDB 저장 완료 | file=1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp chunks=13
+[2026-05-06 20:47:29,587] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp tables=1 chunks=13
+[2026-05-06 20:47:29,597] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 20:47:29,621] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 20:47:29,622] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:47:29,697] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 20:47:30,209] INFO ingest - ChromaDB 저장 완료 | file=10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp chunks=3
+[2026-05-06 20:47:30,209] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp tables=1 chunks=3
+[2026-05-06 20:47:30,220] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 20:47:30,246] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 20:47:30,247] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:47:30,271] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-06 20:47:30,305] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t)
+[2026-05-06 20:47:30,530] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_2_2023학년도_하반기_성적우수자_대구공고_동문장학금_수여_대상자_58_html_t0 rows=8
+[2026-05-06 20:47:30,713] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_2_2023학년도_하반기_성적우수자_대구공고_동문장학금_수여_대상자_58_html_t1 rows=8
+[2026-05-06 20:47:31,564] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t0 rows=6
+[2026-05-06 20:47:33,187] INFO ingest - ChromaDB 저장 완료 | file=2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp chunks=10
+[2026-05-06 20:47:33,187] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp tables=2 chunks=10
+[2026-05-06 20:47:33,197] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 20:47:33,239] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 20:47:33,241] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:47:33,305] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-06 20:47:33,742] INFO ingest - ChromaDB 저장 완료 | file=3. 텍폴 신입생 장학금 3월-130만원.hwp chunks=3
+[2026-05-06 20:47:33,743] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp tables=1 chunks=3
+[2026-05-06 20:47:33,767] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t0 chunks=1
+[2026-05-06 20:47:35,538] INFO ingest - ChromaDB 저장 완료 | file=3. 텍폴 신입생 장학금 3월-130만원.hwp chunks=1
+[2026-05-06 20:47:35,539] INFO ingest - [표→Chroma] 저장 완료 | file=3. 텍폴 신입생 장학금 3월-130만원.hwp total_chunks=1
+[2026-05-06 20:47:35,622] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-06 20:47:35,686] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp type=hwp category=uncategorized
+[2026-05-06 20:47:35,731] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-06 20:47:35,790] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_7_2024학년도_검도부_명단_html_t)
+[2026-05-06 20:47:35,927] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t0 rows=36
+[2026-05-06 20:47:36,092] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t1 rows=36
+[2026-05-06 20:47:36,267] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t2 rows=20
+[2026-05-06 20:47:36,766] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_7_2024학년도_검도부_명단_html_t0 rows=14
+[2026-05-06 20:47:40,915] INFO ingest - ChromaDB 저장 완료 | file=4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp chunks=26
+[2026-05-06 20:47:40,915] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp tables=3 chunks=26
+[2026-05-06 20:47:40,942] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_ht chunks=1
+[2026-05-06 20:47:41,411] INFO ingest - ChromaDB 저장 완료 | file=7. 2024학년도 검도부 명단.hwp chunks=3
+[2026-05-06 20:47:41,411] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp tables=1 chunks=3
+[2026-05-06 20:47:41,432] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_7_2024학년도_검도부_명단_html_t0 chunks=1
+[2026-05-06 20:47:44,890] INFO ingest - ChromaDB 저장 완료 | file=4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp chunks=1
+[2026-05-06 20:47:44,891] INFO ingest - [표→Chroma] 저장 완료 | file=4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp total_chunks=1
+[2026-05-06 20:47:44,892] INFO ingest - ChromaDB 저장 완료 | file=7. 2024학년도 검도부 명단.hwp chunks=1
+[2026-05-06 20:47:44,893] INFO ingest - [표→Chroma] 저장 완료 | file=7. 2024학년도 검도부 명단.hwp total_chunks=1
+[2026-05-06 20:47:44,928] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-06 20:47:44,929] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp type=hwp category=uncategorized
+[2026-05-06 20:47:44,959] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-06 20:47:44,960] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp type=hwp category=uncategorized
+[2026-05-06 20:47:45,024] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-05-06 20:47:45,059] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 20:47:45,078] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_8_학교운동부_출전선수_대상자_명단_html_t)
+[2026-05-06 20:47:46,197] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_8_학교운동부_출전선수_대상자_명단_html_t0 rows=34
+[2026-05-06 20:47:46,921] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t0 rows=2
+[2026-05-06 20:47:47,096] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t1 rows=4
+[2026-05-06 20:47:47,281] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t2 rows=5
+[2026-05-06 20:47:47,461] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t3 rows=4
+[2026-05-06 20:47:48,533] INFO ingest - ChromaDB 저장 완료 | file=8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp chunks=9
+[2026-05-06 20:47:48,537] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp tables=1 chunks=9
+[2026-05-06 20:47:48,653] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_8_학교운동부_출전선수_대상자_명단_html_t0 chunks=1
+[2026-05-06 20:47:52,995] INFO ingest - ChromaDB 저장 완료 | file=대구공고 동문검색 키오스크 구축사업 입찰공고.hwp chunks=44
+[2026-05-06 20:47:52,996] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp tables=4 chunks=44
+[2026-05-06 20:47:53,006] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 20:47:53,031] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 20:47:54,508] INFO ingest - ChromaDB 저장 완료 | file=8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp chunks=1
+[2026-05-06 20:47:54,508] INFO ingest - [표→Chroma] 저장 완료 | file=8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp total_chunks=1
+[2026-05-06 20:47:54,531] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-05-06 20:50:30,957] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx type=xlsx category=uncategorized
+[2026-05-06 20:50:30,958] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx type=xlsx category=uncategorized
+[2026-05-06 20:50:30,987] INFO ingest - [XLSX] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-06 20:50:31,018] INFO ingest - [XLSX] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-06 20:50:31,543] INFO ingest - [XLSX] 'tbl_2025_기부금_내역' 적재 완료 | sheet=기부금 내역 데이터 변환 및 활용 rows=158
+[2026-05-06 20:50:31,585] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-06 20:50:31,586] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf type=pdf category=uncategorized
+[2026-05-06 20:50:31,606] INFO ingest - [XLSX] 'tbl_5_공무원반_명단_1400만원' 적재 완료 | sheet=Sheet1 rows=65
+[2026-05-06 20:50:31,637] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-05-06 20:50:31,647] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-06 20:50:31,648] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf type=pdf category=uncategorized
+[2026-05-06 20:50:31,691] INFO ingest - 기존 테이블 3개 삭제 (prefix=tbl_2025_095_플래시21_추승철_p)
+[2026-05-06 20:50:31,876] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 20:50:31,999] INFO ingest - OCR 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf 스캔 페이지=[1]
+[2026-05-06 20:50:32,402] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t0 rows=1
+[2026-05-06 20:50:32,548] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t1 rows=6
+[2026-05-06 20:50:32,706] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t2 rows=6
+[2026-05-06 20:50:33,669] ERROR ingest - 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 788, in process_file
+    chroma_doc_count = ingest_pdf_hybrid(file_path, file_hash, category)
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 659, in ingest_pdf_hybrid
+    chroma_count = save_to_chroma(file_path, chunk_records, file_hash, category)
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 401, in save_to_chroma
+    text_val = item["text"].strip()
+               ~~~~^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+[2026-05-06 20:50:33,672] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf type=pdf category=uncategorized
+[2026-05-06 20:50:33,707] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-06 20:50:34,153] INFO ingest - [PDF] 표 저장 | tbl=tbl_9_2024학년도_하반기_1_2학년_성적우수자_대구공고_동문장학금_대상자_p1_t0 rows=6
+[2026-05-06 20:50:34,328] INFO ingest - [PDF] 표 저장 | tbl=tbl_9_2024학년도_하반기_1_2학년_성적우수자_대구공고_동문장학금_대상자_p1_t1 rows=17
+[2026-05-06 20:50:34,369] ERROR ingest - 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 788, in process_file
+    chroma_doc_count = ingest_pdf_hybrid(file_path, file_hash, category)
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 659, in ingest_pdf_hybrid
+    chroma_count = save_to_chroma(file_path, chunk_records, file_hash, category)
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 401, in save_to_chroma
+    text_val = item["text"].strip()
+               ~~~~^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+[2026-05-06 20:50:34,372] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf type=pdf category=uncategorized
+[2026-05-06 20:50:34,421] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-05-06 20:50:34,459] INFO ingest - 기존 테이블 2개 삭제 (prefix=장학회_지출결의서_2026_0310_p)
+[2026-05-06 20:50:34,753] INFO ingest - [PDF] 표 저장 | tbl=장학회_지출결의서_2026_0310_p1_t0 rows=1
+[2026-05-06 20:50:34,877] INFO ingest - [PDF] 표 저장 | tbl=장학회_지출결의서_2026_0310_p1_t1 rows=26
+[2026-05-06 20:50:34,908] ERROR ingest - 실패 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+Traceback (most recent call last):
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 788, in process_file
+    chroma_doc_count = ingest_pdf_hybrid(file_path, file_hash, category)
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 659, in ingest_pdf_hybrid
+    chroma_count = save_to_chroma(file_path, chunk_records, file_hash, category)
+  File "C:\Users\des\Desktop\workspace\project\backend\utils\ingest.py", line 401, in save_to_chroma
+    text_val = item["text"].strip()
+               ~~~~^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+[2026-05-06 20:50:34,909] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:50:34,936] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 20:50:36,136] INFO ingest - OCR 완료 | page=1 chars=353
+[2026-05-06 20:50:36,549] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_1_2024학년도_신입생_동문회_장학금_지급_대상자_760만원_html_t0 rows=36
+[2026-05-06 20:50:39,091] INFO ingest - ChromaDB 저장 완료 | file=6. 기능대회 지원금 - 500만원.pdf chunks=1
+[2026-05-06 20:50:39,091] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf tables=0 chunks=1
+[2026-05-06 20:50:39,097] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 20:50:39,127] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 20:50:39,128] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:50:39,199] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 20:50:40,237] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_10_텍폴_신입생_학년말_성적우수_장학금_120만원_html_t0 rows=6
+[2026-05-06 20:50:41,235] INFO ingest - ChromaDB 저장 완료 | file=1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp chunks=13
+[2026-05-06 20:50:41,236] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp tables=1 chunks=13
+[2026-05-06 20:50:41,247] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 20:50:41,277] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 20:50:41,278] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:50:41,305] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 20:50:42,399] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_2_2023학년도_하반기_성적우수자_대구공고_동문장학금_수여_대상자_58_html_t0 rows=8
+[2026-05-06 20:50:42,405] INFO ingest - ChromaDB 저장 완료 | file=10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp chunks=3
+[2026-05-06 20:50:42,406] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp tables=1 chunks=3
+[2026-05-06 20:50:42,416] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 20:50:42,456] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 20:50:42,457] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:50:42,547] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-06 20:50:42,598] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t)
+[2026-05-06 20:50:42,630] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_2_2023학년도_하반기_성적우수자_대구공고_동문장학금_수여_대상자_58_html_t1 rows=8
+[2026-05-06 20:50:43,365] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t0 rows=6
+[2026-05-06 20:50:44,916] INFO ingest - ChromaDB 저장 완료 | file=2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp chunks=10
+[2026-05-06 20:50:44,917] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp tables=2 chunks=10
+[2026-05-06 20:50:44,933] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 20:50:44,957] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 20:50:44,958] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp type=hwp category=uncategorized
+[2026-05-06 20:50:45,044] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-06 20:50:45,582] INFO ingest - ChromaDB 저장 완료 | file=3. 텍폴 신입생 장학금 3월-130만원.hwp chunks=3
+[2026-05-06 20:50:45,582] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp tables=1 chunks=3
+[2026-05-06 20:50:45,606] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t0 chunks=1
+[2026-05-06 20:50:47,111] INFO ingest - ChromaDB 저장 완료 | file=3. 텍폴 신입생 장학금 3월-130만원.hwp chunks=1
+[2026-05-06 20:50:47,111] INFO ingest - [표→Chroma] 저장 완료 | file=3. 텍폴 신입생 장학금 3월-130만원.hwp total_chunks=1
+[2026-05-06 20:50:47,178] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-06 20:50:47,243] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp type=hwp category=uncategorized
+[2026-05-06 20:50:47,288] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-06 20:50:47,398] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_7_2024학년도_검도부_명단_html_t)
+[2026-05-06 20:50:47,478] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t0 rows=36
+[2026-05-06 20:50:47,675] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t1 rows=36
+[2026-05-06 20:50:47,870] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t2 rows=20
+[2026-05-06 20:50:48,404] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_7_2024학년도_검도부_명단_html_t0 rows=14
+[2026-05-06 20:50:52,799] INFO ingest - ChromaDB 저장 완료 | file=4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp chunks=26
+[2026-05-06 20:50:52,800] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp tables=3 chunks=26
+[2026-05-06 20:50:52,822] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_ht chunks=1
+[2026-05-06 20:50:54,050] INFO ingest - ChromaDB 저장 완료 | file=7. 2024학년도 검도부 명단.hwp chunks=3
+[2026-05-06 20:50:54,050] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp tables=1 chunks=3
+[2026-05-06 20:50:54,076] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_7_2024학년도_검도부_명단_html_t0 chunks=1
+[2026-05-06 20:50:55,882] INFO ingest - ChromaDB 저장 완료 | file=4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp chunks=1
+[2026-05-06 20:50:55,882] INFO ingest - [표→Chroma] 저장 완료 | file=4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp total_chunks=1
+[2026-05-06 20:50:55,883] INFO ingest - ChromaDB 저장 완료 | file=7. 2024학년도 검도부 명단.hwp chunks=1
+[2026-05-06 20:50:55,884] INFO ingest - [표→Chroma] 저장 완료 | file=7. 2024학년도 검도부 명단.hwp total_chunks=1
+[2026-05-06 20:50:55,925] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-06 20:50:55,926] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp type=hwp category=uncategorized
+[2026-05-06 20:50:55,944] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-06 20:50:55,945] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp type=hwp category=uncategorized
+[2026-05-06 20:50:55,975] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-05-06 20:50:55,994] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 20:50:56,026] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_8_학교운동부_출전선수_대상자_명단_html_t)
+[2026-05-06 20:50:57,075] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_8_학교운동부_출전선수_대상자_명단_html_t0 rows=34
+[2026-05-06 20:50:57,744] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t0 rows=2
+[2026-05-06 20:50:57,939] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t1 rows=4
+[2026-05-06 20:50:58,129] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t2 rows=5
+[2026-05-06 20:50:58,278] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t3 rows=4
+[2026-05-06 20:50:59,542] INFO ingest - ChromaDB 저장 완료 | file=8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp chunks=9
+[2026-05-06 20:50:59,542] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp tables=1 chunks=9
+[2026-05-06 20:50:59,567] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_8_학교운동부_출전선수_대상자_명단_html_t0 chunks=1
+[2026-05-06 20:51:03,198] INFO ingest - ChromaDB 저장 완료 | file=대구공고 동문검색 키오스크 구축사업 입찰공고.hwp chunks=44
+[2026-05-06 20:51:03,198] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp tables=4 chunks=44
+[2026-05-06 20:51:03,209] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 20:51:03,238] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 20:51:03,881] INFO ingest - ChromaDB 저장 완료 | file=8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp chunks=1
+[2026-05-06 20:51:03,881] INFO ingest - [표→Chroma] 저장 완료 | file=8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp total_chunks=1
+[2026-05-06 20:51:03,930] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-05-06 21:03:37,398] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx type=xlsx category=uncategorized
+[2026-05-06 21:03:37,398] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx type=xlsx category=uncategorized
+[2026-05-06 21:03:37,467] INFO ingest - [XLSX] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-06 21:03:37,489] INFO ingest - [XLSX] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-06 21:03:38,110] INFO ingest - [XLSX] 'tbl_5_공무원반_명단_1400만원' 적재 완료 | sheet=Sheet1 rows=65
+[2026-05-06 21:03:38,131] INFO ingest - [XLSX] 'tbl_2025_기부금_내역' 적재 완료 | sheet=기부금 내역 데이터 변환 및 활용 rows=158
+[2026-05-06 21:03:38,152] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\5. 공무원반(청솔반) 명단(2025.1.1.)-1400만원.xlsx
+[2026-05-06 21:03:38,153] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf type=pdf category=uncategorized
+[2026-05-06 21:03:38,173] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025 기부금 내역.xlsx
+[2026-05-06 21:03:38,174] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf type=pdf category=uncategorized
+[2026-05-06 21:03:38,202] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-05-06 21:03:38,220] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 21:03:38,231] INFO ingest - OCR 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf 스캔 페이지=[1]
+[2026-05-06 21:03:38,245] INFO ingest - 기존 테이블 3개 삭제 (prefix=tbl_2025_095_플래시21_추승철_p)
+[2026-05-06 21:03:38,865] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t0 rows=1
+[2026-05-06 21:03:39,010] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t1 rows=6
+[2026-05-06 21:03:39,165] INFO ingest - [PDF] 표 저장 | tbl=tbl_2025_095_플래시21_추승철_p1_t2 rows=6
+[2026-05-06 21:03:41,623] INFO ingest - OCR 완료 | page=1 chars=353
+[2026-05-06 21:03:55,193] INFO ingest - ChromaDB 저장 완료 | file=6. 기능대회 지원금 - 500만원.pdf chunks=1
+[2026-05-06 21:03:55,193] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf tables=0 chunks=1
+[2026-05-06 21:03:55,200] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 21:03:55,225] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\6. 기능대회 지원금 - 500만원.pdf
+[2026-05-06 21:03:55,226] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf type=pdf category=uncategorized
+[2026-05-06 21:03:55,263] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-06 21:03:55,791] INFO ingest - [PDF] 표 저장 | tbl=tbl_9_2024학년도_하반기_1_2학년_성적우수자_대구공고_동문장학금_대상자_p1_t0 rows=6
+[2026-05-06 21:03:55,959] INFO ingest - [PDF] 표 저장 | tbl=tbl_9_2024학년도_하반기_1_2학년_성적우수자_대구공고_동문장학금_대상자_p1_t1 rows=17
+[2026-05-06 21:03:56,540] INFO ingest - ChromaDB 저장 완료 | file=2025-095_(주)플래시21 추승철.pdf chunks=6
+[2026-05-06 21:03:56,540] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf tables=3 chunks=6
+[2026-05-06 21:03:56,558] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_2025_095_플래시21_추승철_p1_t0 chunks=1
+[2026-05-06 21:03:56,568] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_2025_095_플래시21_추승철_p1_t2 chunks=1
+[2026-05-06 21:03:56,579] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_2025_095_플래시21_추승철_p1_t1 chunks=1
+[2026-05-06 21:03:58,891] INFO ingest - ChromaDB 저장 완료 | file=9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf chunks=3
+[2026-05-06 21:03:58,892] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf tables=2 chunks=3
+[2026-05-06 21:03:58,899] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-06 21:03:58,931] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\9. 2024학년도 하반기 1,2학년 성적우수자 대구공고 동문장학금 대상자 명단(본캠)-570만원.pdf
+[2026-05-06 21:03:58,932] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf type=pdf category=uncategorized
+[2026-05-06 21:03:58,968] INFO ingest - [PDF] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-05-06 21:03:59,041] INFO ingest - 기존 테이블 2개 삭제 (prefix=장학회_지출결의서_2026_0310_p)
+[2026-05-06 21:03:59,406] INFO ingest - [PDF] 표 저장 | tbl=장학회_지출결의서_2026_0310_p1_t0 rows=1
+[2026-05-06 21:03:59,731] INFO ingest - [PDF] 표 저장 | tbl=장학회_지출결의서_2026_0310_p1_t1 rows=26
+[2026-05-06 21:03:59,761] INFO ingest - ChromaDB 저장 완료 | file=2025-095_(주)플래시21 추승철.pdf chunks=3
+[2026-05-06 21:03:59,762] INFO ingest - [표→Chroma] 저장 완료 | file=2025-095_(주)플래시21 추승철.pdf total_chunks=3
+[2026-05-06 21:03:59,806] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2025-095_(주)플래시21 추승철.pdf
+[2026-05-06 21:03:59,807] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp type=hwp category=uncategorized
+[2026-05-06 21:03:59,847] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 21:04:01,185] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_1_2024학년도_신입생_동문회_장학금_지급_대상자_760만원_html_t0 rows=36
+[2026-05-06 21:04:01,194] INFO ingest - ChromaDB 저장 완료 | file=장학회 지출결의서_2026_0310.pdf chunks=3
+[2026-05-06 21:04:01,194] INFO ingest - PDF 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf tables=2 chunks=3
+[2026-05-06 21:04:01,212] INFO ingest - [표→Chroma] 테이블 변환 | tbl=장학회_지출결의서_2026_0310_p1_t0 chunks=1
+[2026-05-06 21:04:01,224] INFO ingest - [표→Chroma] 테이블 변환 | tbl=장학회_지출결의서_2026_0310_p1_t1 chunks=1
+[2026-05-06 21:04:04,576] INFO ingest - ChromaDB 저장 완료 | file=1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp chunks=13
+[2026-05-06 21:04:04,576] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp tables=1 chunks=13
+[2026-05-06 21:04:04,585] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 21:04:04,613] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.hwp
+[2026-05-06 21:04:04,614] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp type=hwp category=uncategorized
+[2026-05-06 21:04:04,691] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 21:04:05,253] INFO ingest - ChromaDB 저장 완료 | file=장학회 지출결의서_2026_0310.pdf chunks=2
+[2026-05-06 21:04:05,254] INFO ingest - [표→Chroma] 저장 완료 | file=장학회 지출결의서_2026_0310.pdf total_chunks=2
+[2026-05-06 21:04:05,330] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\장학회 지출결의서_2026_0310.pdf
+[2026-05-06 21:04:05,332] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp type=hwp category=uncategorized
+[2026-05-06 21:04:05,380] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 21:04:05,417] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_10_텍폴_신입생_학년말_성적우수_장학금_120만원_html_t0 rows=6
+[2026-05-06 21:04:06,206] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_2_2023학년도_하반기_성적우수자_대구공고_동문장학금_수여_대상자_58_html_t0 rows=8
+[2026-05-06 21:04:06,560] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_2_2023학년도_하반기_성적우수자_대구공고_동문장학금_수여_대상자_58_html_t1 rows=8
+[2026-05-06 21:04:07,640] INFO ingest - ChromaDB 저장 완료 | file=10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp chunks=3
+[2026-05-06 21:04:07,640] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp tables=1 chunks=3
+[2026-05-06 21:04:07,650] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 21:04:07,673] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\10. 텍폴 신입생 학년말 성적우수 장학금 -120만원.hwp
+[2026-05-06 21:04:07,675] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp type=hwp category=uncategorized
+[2026-05-06 21:04:07,700] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-06 21:04:07,732] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t)
+[2026-05-06 21:04:08,391] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t0 rows=6
+[2026-05-06 21:04:09,806] INFO ingest - ChromaDB 저장 완료 | file=2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp chunks=10
+[2026-05-06 21:04:09,806] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp tables=2 chunks=10
+[2026-05-06 21:04:09,815] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 21:04:09,843] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\2. 2023학년도 하반기 성적우수자 대구공고 동문장학금 수여 대상자(1,2학년)(본교)-580만원.hwp
+[2026-05-06 21:04:09,844] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp type=hwp category=uncategorized
+[2026-05-06 21:04:09,907] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-06 21:04:10,573] INFO ingest - ChromaDB 저장 완료 | file=3. 텍폴 신입생 장학금 3월-130만원.hwp chunks=3
+[2026-05-06 21:04:10,573] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp tables=1 chunks=3
+[2026-05-06 21:04:10,591] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_3_텍폴_신입생_장학금_3월_130만원_html_t0 chunks=1
+[2026-05-06 21:04:11,945] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t0 rows=36
+[2026-05-06 21:04:12,132] INFO ingest - ChromaDB 저장 완료 | file=3. 텍폴 신입생 장학금 3월-130만원.hwp chunks=1
+[2026-05-06 21:04:12,132] INFO ingest - [표→Chroma] 저장 완료 | file=3. 텍폴 신입생 장학금 3월-130만원.hwp total_chunks=1
+[2026-05-06 21:04:12,169] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\3. 텍폴 신입생 장학금 3월-130만원.hwp
+[2026-05-06 21:04:12,170] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp type=hwp category=uncategorized
+[2026-05-06 21:04:12,202] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-06 21:04:12,253] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_7_2024학년도_검도부_명단_html_t)
+[2026-05-06 21:04:12,287] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t1 rows=36
+[2026-05-06 21:04:12,579] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_html_t2 rows=20
+[2026-05-06 21:04:13,062] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_7_2024학년도_검도부_명단_html_t0 rows=14
+[2026-05-06 21:04:17,236] INFO ingest - ChromaDB 저장 완료 | file=4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp chunks=26
+[2026-05-06 21:04:17,236] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp tables=3 chunks=26
+[2026-05-06 21:04:17,261] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_4_2024_대구공고_관악부_학년별_명단_200만원_ht chunks=1
+[2026-05-06 21:04:17,944] INFO ingest - ChromaDB 저장 완료 | file=7. 2024학년도 검도부 명단.hwp chunks=3
+[2026-05-06 21:04:17,945] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp tables=1 chunks=3
+[2026-05-06 21:04:17,964] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_7_2024학년도_검도부_명단_html_t0 chunks=1
+[2026-05-06 21:04:20,702] INFO ingest - ChromaDB 저장 완료 | file=4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp chunks=1
+[2026-05-06 21:04:20,702] INFO ingest - [표→Chroma] 저장 완료 | file=4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp total_chunks=1
+[2026-05-06 21:04:20,704] INFO ingest - ChromaDB 저장 완료 | file=7. 2024학년도 검도부 명단.hwp chunks=1
+[2026-05-06 21:04:20,704] INFO ingest - [표→Chroma] 저장 완료 | file=7. 2024학년도 검도부 명단.hwp total_chunks=1
+[2026-05-06 21:04:20,737] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\4. 2024. 대구공고 관악부 학년별 명단-200만원.hwp
+[2026-05-06 21:04:20,738] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp type=hwp category=uncategorized
+[2026-05-06 21:04:20,755] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\7. 2024학년도 검도부 명단.hwp
+[2026-05-06 21:04:20,756] INFO ingest - 시작 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp type=hwp category=uncategorized
+[2026-05-06 21:04:20,787] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp
+[2026-05-06 21:04:20,839] INFO ingest - [HWP] C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 21:04:20,871] INFO ingest - 기존 테이블 1개 삭제 (prefix=tbl_8_학교운동부_출전선수_대상자_명단_html_t)
+[2026-05-06 21:04:21,821] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=tbl_8_학교운동부_출전선수_대상자_명단_html_t0 rows=34
+[2026-05-06 21:04:22,556] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t0 rows=2
+[2026-05-06 21:04:22,755] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t1 rows=4
+[2026-05-06 21:04:22,957] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t2 rows=5
+[2026-05-06 21:04:23,122] INFO ingest - [HWP] 표 저장 및 치환 완료 | tbl=대구공고_동문검색_키오스크_구축사업_입찰공고_html_t3 rows=4
+[2026-05-06 21:04:24,487] INFO ingest - ChromaDB 저장 완료 | file=8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp chunks=9
+[2026-05-06 21:04:24,488] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp tables=1 chunks=9
+[2026-05-06 21:04:24,507] INFO ingest - [표→Chroma] 테이블 변환 | tbl=tbl_8_학교운동부_출전선수_대상자_명단_html_t0 chunks=1
+[2026-05-06 21:04:27,650] INFO ingest - ChromaDB 저장 완료 | file=대구공고 동문검색 키오스크 구축사업 입찰공고.hwp chunks=44
+[2026-05-06 21:04:27,651] INFO ingest - HWP 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp tables=4 chunks=44
+[2026-05-06 21:04:27,659] INFO ingest - [표→Chroma] 대상 테이블 없음 | file=대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 21:04:27,699] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\대구공고 동문검색 키오스크 구축사업 입찰공고.hwp
+[2026-05-06 21:04:28,348] INFO ingest - ChromaDB 저장 완료 | file=8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp chunks=1
+[2026-05-06 21:04:28,349] INFO ingest - [표→Chroma] 저장 완료 | file=8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp total_chunks=1
+[2026-05-06 21:04:28,374] INFO ingest - 완료 | file=C:\Users\des\Desktop\workspace\project\backend\utils\..\data\8. 학교운동부(축구부) 출전선수 대상자 명단(용인).hwp

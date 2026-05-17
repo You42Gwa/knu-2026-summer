@@ -76,7 +76,7 @@ if not HAS_OCR:
 # 상수
 # ---------------------------------------------------------------------------
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-EMBED_MODEL     = os.getenv("EMBED_MODEL", "qwen3-embedding:0.6b")
+EMBED_MODEL     = os.getenv("EMBED_MODEL", "bge-m3")
 
 CHUNK_SIZE     = 500
 CHUNK_OVERLAP  = 100
@@ -281,6 +281,17 @@ def split_into_chunks(raw: str, page: int | None = None) -> list[dict]:
         if len(c.strip()) >= MIN_CHUNK_LEN
     ]
 
+def df_to_markdown_chunks(df: pd.DataFrame, label: str) -> list[dict]:
+    """DataFrame을 마크다운으로 변환해 청크 리스트 반환"""
+    try:
+        df_clean = df.drop(columns=["manifest_source"], errors="ignore")
+        md = df_clean.to_markdown(index=False)
+        if md and len(md.strip()) >= MIN_CHUNK_LEN:
+            return [{"text": f"[표: {label}]\n{md}", "page": None}]
+    except Exception:
+        pass
+    return []
+
 # ---------------------------------------------------------------------------
 # manifest 관리
 # ---------------------------------------------------------------------------
@@ -414,7 +425,7 @@ def save_to_chroma(
         logger.info("Chroma 저장 대상 없음 | file=%s", doc_name)
         return 0
 
-    # qwen3-embedding으로 임베딩 생성 후 명시적으로 전달 (ChromaDB 기본 임베딩과 혼용 방지)
+    # bge-m3으로 임베딩 생성 후 명시적으로 전달 (ChromaDB 기본 임베딩과 혼용 방지)
     for i in range(0, len(documents), CHROMA_BATCH):
         batch_docs = documents[i : i + CHROMA_BATCH]
         batch_embeddings = _get_embeddings().embed_documents(batch_docs)
@@ -428,6 +439,42 @@ def save_to_chroma(
     logger.info("ChromaDB 저장 완료 | file=%s chunks=%d", doc_name, len(documents))
     return len(documents)
 
+def save_tables_to_chroma(file_path: str, file_hash: str, category: str):
+    """
+    이미 PostgreSQL에 저장된 테이블들을 읽어서 ChromaDB에도 저장.
+    기존 ingest 함수 호출 후 추가로 실행.
+    """
+    from sqlalchemy import inspect as sa_inspect
+    
+    safe_name = sanitize_table_name(os.path.basename(file_path).rsplit(".", 1)[0])
+    doc_label = os.path.splitext(os.path.basename(file_path))[0]
+    source    = os.path.basename(file_path)
+    
+    inspector = sa_inspect(engine)
+    all_tables = inspector.get_table_names(schema="public")
+    
+    # 이 파일에서 생성된 테이블만 필터링
+    target_tables = [t for t in all_tables if t.startswith(safe_name)]
+    
+    if not target_tables:
+        logger.info("[표→Chroma] 대상 테이블 없음 | file=%s", source)
+        return
+    
+    all_chunks = []
+    for tbl in target_tables:
+        try:
+            with engine.connect() as conn:
+                df = pd.read_sql(f'SELECT * FROM "{tbl}"', conn)
+            chunks = df_to_markdown_chunks(df, f"{doc_label} - {tbl}")
+            all_chunks.extend(chunks)
+            logger.info("[표→Chroma] 테이블 변환 | tbl=%s chunks=%d", tbl, len(chunks))
+        except Exception:
+            logger.exception("[표→Chroma] 변환 실패 | tbl=%s", tbl)
+    
+    if all_chunks:
+        save_to_chroma(file_path, all_chunks, file_hash, category)
+        logger.info("[표→Chroma] 저장 완료 | file=%s total_chunks=%d", source, len(all_chunks))
+        
 # ---------------------------------------------------------------------------
 # XLSX → PostgreSQL (다중 시트 지원)
 # ---------------------------------------------------------------------------
@@ -455,6 +502,8 @@ def ingest_xlsx_to_postgres(file_path: str):
             logger.warning("XLSX 파싱 결과 없음 | sheet=%s", sheet_name)
             continue
 
+        df["manifest_source"] = os.path.basename(file_path)
+
         table_name = (
             f"{base_name}_{sanitize_table_name(sheet_name)}"
             if len(sheets) > 1
@@ -463,6 +512,12 @@ def ingest_xlsx_to_postgres(file_path: str):
         with engine.begin() as conn:
             _drop_table_and_type(conn, table_name)
         df.to_sql(table_name, engine, if_exists="fail", index=False)
+        with engine.begin() as conn:
+            conn.execute(text(
+                f'ALTER TABLE "{table_name}" '
+                f'ADD CONSTRAINT "fk_{table_name}_manifest" '
+                f'FOREIGN KEY (manifest_source) REFERENCES ingestion_manifest(source) ON DELETE CASCADE'
+            ))
         logger.info("[XLSX] '%s' 적재 완료 | sheet=%s rows=%d", table_name, sheet_name, len(df))
 
 # ---------------------------------------------------------------------------
@@ -562,15 +617,36 @@ def ingest_pdf_hybrid(file_path: str, file_hash: str, category: str) -> int:
                     df = _parse_table(table)
                     if df is None:
                         continue
+                    
+                    # --- [A] SQL DB에 표 저장 ---
+                    df["manifest_source"] = os.path.basename(file_path)
                     tbl = f"{safe_name}_p{page_num}_t{table_count}"
+                    
                     with engine.begin() as conn:
                         _drop_table_and_type(conn, tbl)
                     df.to_sql(tbl, engine, if_exists="fail", index=False)
+                    
+                    with engine.begin() as conn:
+                        conn.execute(text(
+                            f'ALTER TABLE "{tbl}" '
+                            f'ADD CONSTRAINT "fk_{tbl}_manifest" '
+                            f'FOREIGN KEY (manifest_source) REFERENCES ingestion_manifest(source) ON DELETE CASCADE'
+                        ))
                     logger.info("[PDF] 표 저장 | tbl=%s rows=%d", tbl, len(df))
                     table_count += 1
+                    
+                    # --- [B] 하이브리드: 마크다운 변환 후 Vector DB용 청크에 추가 ---
+                    # DataFrame을 마크다운 표 형식으로 변환
+                    md_table = df.to_markdown(index=False)
+                    
+                    # LLM이 맥락을 이해하기 쉽도록 안내문을 붙여줍니다.
+                    md_text = f"\n[문서 내 {page_num}페이지의 표 데이터입니다]\n{md_table}\n"
+                    
+                    # Vector DB에 들어갈 chunk 리스트에 마크다운 표 텍스트를 통째로 추가!
+                    chunk_records.append({"text": md_text})
+                    
                 except Exception:
-                    logger.exception("[PDF] 표 저장 실패 | page=%d t=%d", page_num, t_idx)
-
+                    logger.exception("[PDF] 표 저장/마크다운 변환 실패 | page=%d t=%d", page_num, t_idx)
     if not chunk_records and table_count == 0:
         logger.warning("추출 데이터 없음 | file=%s", file_path)
 
@@ -622,16 +698,38 @@ def convert_hwp_to_html_and_ingest(file_path: str, file_hash: str, category: str
                 max_cols = max(len(r) for r in table_data)
                 normalized = [r + [None] * (max_cols - len(r)) for r in table_data]
                 df = _parse_table(normalized)
+                
                 if df is None:
+                    table.decompose()
                     continue
+
+                # 1. SQL DB에 저장
+                df["manifest_source"] = os.path.basename(file_path)
                 tbl = f"{safe_name}_html_t{i}"
+                
                 with engine.begin() as conn:
                     _drop_table_and_type(conn, tbl)
                 df.to_sql(tbl, engine, if_exists="fail", index=False)
-                logger.info("[HWP] 표 저장 | tbl=%s rows=%d", tbl, len(df))
+                
+                with engine.begin() as conn:
+                    conn.execute(text(
+                        f'ALTER TABLE "{tbl}" '
+                        f'ADD CONSTRAINT "fk_{tbl}_manifest" '
+                        f'FOREIGN KEY (manifest_source) REFERENCES ingestion_manifest(source) ON DELETE CASCADE'
+                    ))
+                
+                # 2. 마크다운 변환 및 HTML 치환 (핵심!)
+                # SQL 저장이 무사히 끝났으므로, 이제 HTML 테이블을 마크다운 텍스트로 바꿔치기합니다.
+                md_table = df.to_markdown(index=False)
+                table.replace_with(soup.new_string(f"\n\n[표 시작]\n{md_table}\n[표 끝]\n\n"))
+                
+                logger.info("[HWP] 표 저장 및 치환 완료 | tbl=%s rows=%d", tbl, len(df))
                 table_count += 1
+                
             except Exception:
-                logger.exception("[HWP] 표 저장 실패 | file=%s t=%d", file_path, i)
+                logger.exception("[HWP] 표 처리 실패 | file=%s t=%d", file_path, i)
+                # 에러가 나서 처리하지 못한 표는 Vector DB를 오염시키지 않도록 지워버림
+                table.decompose()
 
         for tag in soup.find_all("table"):
             tag.decompose()
@@ -668,6 +766,9 @@ def process_file(file_path: str):
 
     logger.info("시작 | file=%s type=%s category=%s", file_path, ext, category)
 
+    # FK 참조 대상이 먼저 존재해야 하므로 ingest 전에 pre-insert
+    upsert_manifest(source, source_path, file_hash, ext, category, "IN_PROGRESS")
+
     try:
         chroma_doc_count = 0
 
@@ -677,8 +778,10 @@ def process_file(file_path: str):
             safe_name = sanitize_table_name(os.path.basename(file_path).rsplit(".", 1)[0])
             _cleanup_stale_hwp_tables(safe_name)
             chroma_doc_count = ingest_pdf_hybrid(file_path, file_hash, category)
+            save_tables_to_chroma(file_path, file_hash, category)
         elif ext == "hwp":
             chroma_doc_count = convert_hwp_to_html_and_ingest(file_path, file_hash, category)
+            save_tables_to_chroma(file_path, file_hash, category)
         else:
             logger.warning("지원하지 않는 확장자 | file=%s", file_path)
             return

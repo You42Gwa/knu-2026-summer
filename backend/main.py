@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import glob
 import os
 import re
@@ -28,14 +30,15 @@ from sqlalchemy import text
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from database import engine
-from utils.ingest import process_file, ensure_manifest_table
+from utils.ingest import process_file, ensure_manifest_table, sanitize_table_name
 
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
 OLLAMA_BASE_URL      = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-OLLAMA_MODEL         = os.getenv("OLLAMA_MODEL", "qwen2.5:1.5b")
-EMBED_MODEL          = os.getenv("EMBED_MODEL", "qwen3-embedding:0.6b")
+OLLAMA_MODEL         = os.getenv("OLLAMA_MODEL", "qwen2.5-coder:3b")
+SQL_MODEL         = os.getenv("SQL_MODEL", "qwen2.5-coder:3b")
+EMBED_MODEL          = os.getenv("EMBED_MODEL", "bge-m3")
 CHROMA_HOST          = os.getenv("CHROMA_HOST", "localhost")
 CHROMA_PORT          = int(os.getenv("CHROMA_PORT", "8000"))
 COLLECTION_NAME      = "scholarship_rules"
@@ -96,7 +99,7 @@ def get_llm_sql() -> OllamaLLM:
     if _llm_sql is None:
         _llm_sql = OllamaLLM(
             base_url=OLLAMA_BASE_URL,
-            model=OLLAMA_MODEL,
+            model=SQL_MODEL,
             temperature=0.0,   # SQL은 항상 동일한 결과가 나와야 함
             num_ctx=4096,
             num_predict=256,
@@ -134,8 +137,8 @@ def get_rag_chain():
                 
                 ref = f"[{i+1}] {src}" + (f" p.{page}" if page else "")
                 content_snippet = d.page_content.replace("\n", " ")
-                logger.info(f"[VECTOR] 검색된 문서 {ref} ")
-                logger.info(f"[VECTOR] 검색된 문서 내용: {content_snippet}\n")
+                #logger.info(f"[VECTOR] 검색된 문서 {ref} ")
+                #logger.info(f"[VECTOR] 검색된 문서 내용: {content_snippet}\n")
                 
                 parts.append(f"{label}\n{d.page_content}")
             return "\n\n".join(parts)
@@ -169,34 +172,38 @@ _ROUTE_TEMPLATE = """\
 질문: {question}
 유형(SQL 또는 VECTOR):"""
 
-_RAG_TEMPLATE = """\
-당신은 한국어 문서를 분석하는 전문 AI 어시스턴트입니다.
-아래 참고 문서를 바탕으로 질문에 정확하고 상세하게 한국어로 답변하세요.
-참고 문서에 없는 내용은 "해당 내용은 문서에서 확인할 수 없습니다."라고 답하세요.
-답변은 핵심만 2~3문장으로 짧게 작성하세요.
+_RAG_TEMPLATE = """
+반드시 한국어로만 답변하세요.
+아래의 검색된 문맥(Context)만을 사용하여 질문에 답하세요. 
+답을 모르면 모른다고 하고, 문맥에 없는 내용을 지어내지 마세요.
+서로 다른 문서의 내용을 인과관계 없이 합치지 마세요.
 
-참고 문서:
+[Context]
 {context}
 
 질문: {question}
-답변:"""
+답변: """
 
-_SQL_GEN_TEMPLATE = """\
-당신은 PostgreSQL 전문가입니다. 아래 스키마를 보고 질문에 답하는 SELECT 쿼리를 작성하세요.
+_SQL_GEN_TEMPLATE = """당신은 PostgreSQL 전문가입니다. 
+제공된 [데이터베이스 스키마]의 정보만 사용하여 질문에 답하는 단 1개의 SELECT 쿼리를 작성하세요.
 
-[절대 규칙]
-- SQL 쿼리만 출력하세요. 설명 없이 순수 SQL만.
-- 모든 테이블명과 컬럼명을 큰따옴표로 감싸세요.
-- FROM dual 사용 금지 (PostgreSQL에 없음)
-- 스키마에 없는 컬럼명 사용 금지
-- 금액 컬럼은 텍스트일 수 있으므로 LIKE로 검색하거나 CAST 사용
-- 한 테이블에서 먼저 조회하고, 없으면 다른 테이블 시도
+[⚠️ 치명적 규칙 - 반드시 준수]
+1. 컬럼명 절대 고정: 스키마에 적힌 이름만 쓰세요. (예: "성_명"이 있으면 "성명"이나 "이름"은 절대 쓰지 말 것)
+2. 모든 명칭에 큰따옴표: 모든 테이블명과 컬럼명은 반드시 큰따옴표("")로 감싸세요.
+3. 금액 연산/비교 공식 (필수): "출연금액" 등 금액 컬럼은 문자열이므로, 반드시 REPLACE와 CAST를 함께 쓰세요.
+   - 올바른 예: WHERE CAST(REPLACE("출연금액", ',', '') AS NUMERIC) >= 1000000
+   - 틀린 예: WHERE "출연금액" > 1000000 (에러 발생)
+4. JOIN 자제: 질문에서 명시적으로 요구하지 않는 한 테이블끼리 JOIN하지 마세요.
+5. 출력 형식: 부연 설명 없이 SQL 쿼리문만 한 줄로 출력하세요.
 
-[스키마]
+- 사용자 질문에 '이*곤'과 같이 마스킹된 이름이 나오면 SQL에서는 "이름" LIKE '이%곤'으로 작성하라.
+- 특정 기수(예: 49기) 질문은 "기수" = '49' 또는 "기수" LIKE '%49%'로 검색하라.
+
+[데이터베이스 스키마]
 {schema}
 
-[질문]: {question}
-SQL:"""
+질문: {question}
+SQL: """
 
 _SQL_ANSWER_TEMPLATE = """\
 아래 데이터베이스 조회 결과를 바탕으로 질문에 한국어로 자연스럽게 답변하세요.
@@ -228,8 +235,8 @@ _VECTOR_EMPTY_SIGNALS = ("해당 내용은 문서에서 확인할 수 없습니�
 async def _answer_vector(question: str, allow_sql_fallback: bool = True) -> str:
     logger.info("[VECTOR] 검색 시작 | question=%s", question[:50])
     answer = await get_rag_chain().ainvoke(question)
-    logger.info("[VECTOR] 검색 완료")
-    logger.info("[VECTOR] 답변 생성 완료 | len=%d", len(answer))
+    #logger.info("[VECTOR] 검색 완료")
+    #logger.info("[VECTOR] 답변 생성 완료 | len=%d", len(answer))
     logger.info("[VECTOR] 최종 답변 | answer=%s", answer[:200])
     if allow_sql_fallback and any(s in answer for s in _VECTOR_EMPTY_SIGNALS):
         logger.info("[VECTOR→SQL] 유의미한 답변 없음, SQL 폴백 시도")
@@ -245,38 +252,66 @@ def _get_table_schema() -> str:
     global _schema_cache
     now = time.time()
 
+    # TTL 캐시: 매 요청마다 DB 조회 방지
     if _schema_cache and now - _schema_cache[1] < SCHEMA_CACHE_TTL:
         return _schema_cache[0]
 
     parts = []
     with engine.connect() as conn:
+        # 테이블명 → 원본 파일명 매핑 (LLM 힌트용)
+        tbl_to_source: dict[str, str] = {}
+        try:
+            for (source,) in conn.execute(text(
+                "SELECT source FROM ingestion_manifest"
+            )).fetchall():
+                safe = sanitize_table_name(os.path.splitext(source)[0])
+                tbl_to_source[safe] = source
+        except Exception:
+            pass
+
+        # ingestion_manifest 먼저 추가 (문서 목록 조회용)
+        try:
+            manifest_sample = str([
+                dict(r._mapping) for r in conn.execute(text(
+                    "SELECT source, file_type, status FROM ingestion_manifest LIMIT 3"
+                )).fetchall()
+            ])
+        except Exception:
+            manifest_sample = ""
+        parts.append(
+            "ingestion_manifest(source, source_path, file_hash, file_type, category, processed_at, status, chroma_doc_count)\n"
+            "  -- 수집된 파일 목록. source=원본파일명, source_path=절대경로\n"
+            f"  예시: {manifest_sample}"
+        )
+
         tables = conn.execute(text(
             "SELECT tablename FROM pg_tables "
             "WHERE schemaname = 'public' AND tablename != 'ingestion_manifest' "
             "ORDER BY tablename"
         )).fetchall()
-        
         for (tbl,) in tables:
             cols = conn.execute(text(
                 "SELECT column_name, data_type FROM information_schema.columns "
                 "WHERE table_name = :t ORDER BY ordinal_position"
             ), {"t": tbl}).fetchall()
-            
-            # 컬럼명을 큰따옴표로 명시 (LLM이 정확한 컬럼명 사용하도록)
             col_str = ", ".join(f'"{c}"' for c, d in cols)
-            
-            sample = conn.execute(text(
-                f'SELECT * FROM "{tbl}" LIMIT 1'
-            )).fetchone()
-            sample_str = str(dict(sample._mapping)) if sample else "없음"
-            
-            parts.append(
-                f'테이블: "{tbl}"\n'
-                f'컬럼: {col_str}\n'
-                f'예시: {sample_str}'
-            )
+            sample = conn.execute(text(f'SELECT * FROM "{tbl}" LIMIT 1')).fetchone()
+            sample_data = str(dict(sample._mapping)) if sample else "데이터 없음"
 
-    schema = "\n\n".join(parts)
+            # 원본 파일명 힌트: sanitize된 테이블 prefix와 ingestion_manifest 매핑
+            source_hint = f"[원본파일: {source}]" if source else ""
+            for safe_prefix, source in tbl_to_source.items():
+                if tbl == safe_prefix or tbl.startswith(safe_prefix + "_"):
+                    source_hint = f" [원본파일: {source}]"
+                    break
+
+            parts.append(
+        f"■ 테이블명: \"{tbl}\" {source_hint}\n"
+        f"  - 사용 가능한 컬럼: {col_str}\n"
+        f"  - 데이터 예시: {sample_data}"
+    )
+
+    schema = "\n".join(parts)
     _schema_cache = (schema, now)
     return schema
 
@@ -290,6 +325,19 @@ def _is_safe_sql(sql: str) -> bool:
     return sql.strip().upper().startswith("SELECT") and not _SAFE_SQL_PATTERN.search(sql)
 
 
+def _format_sql_result(rows) -> str:
+    if not rows:
+        return "조회된 데이터가 없습니다."
+    if len(rows) == 1:
+        return "\n".join(f"{k}: {v}" for k, v in dict(rows[0]._mapping).items() if v is not None)
+    header = list(rows[0]._mapping.keys())
+    lines = [" | ".join(header)]
+    lines.append("-" * len(lines[0]))
+    for r in rows:
+        lines.append(" | ".join(str(v) if v is not None else "-" for v in r))
+    return "\n".join(lines)
+
+
 async def _answer_sql(question: str, allow_vector_fallback: bool = True) -> str:
     schema = _get_table_schema()
     if not schema:
@@ -299,9 +347,27 @@ async def _answer_sql(question: str, allow_vector_fallback: bool = True) -> str:
     raw_sql = await get_llm_sql().ainvoke(
         _SQL_GEN_TEMPLATE.format(schema=schema, question=question)
     )
-    sql = re.sub(r"```(?:sql)?", "", raw_sql, flags=re.IGNORECASE).replace("```", "").strip()
+    # 1. 불필요한 마크다운 제거
+    sql = re.sub(r"```sql|```", "", raw_sql, flags=re.IGNORECASE).strip()
+
+    # 2. LLM이 고집부리는 백틱(`)을 PostgreSQL용 큰따옴표(")로 강제 변환
+    sql = sql.replace("`", '"')
+
+    # 3. 만약 LLM이 끈질기게 donations를 쓴다면, 정규식으로 실제 테이블로 강제 매핑 (옵션)
+    # (주의: 실제 DB에 있는 통합 테이블명이 'tbl_ingest_data' 등 명확할 때 사용)
+    # sql = re.sub(r'(?i)\bdonations\b|\bdonator_list\b', '"실제_데이터가_있는_테이블명"', sql)
+
+    # 4. SELECT 부분만 추출
     select_match = re.search(r"(SELECT\b.*)", sql, re.IGNORECASE | re.DOTALL)
     sql = select_match.group(1).strip() if select_match else sql
+
+    if ";" in sql:
+        sql = sql.split(";")[0] + ";"
+        
+    # SELECT로 시작하는 부분만 추출
+    select_match = re.search(r"(SELECT\b.*)", sql, re.IGNORECASE | re.DOTALL)
+    sql = select_match.group(1).strip() if select_match else sql
+    
     logger.info("[SQL] 생성된 쿼리 | sql=%s", sql[:200])
 
     if not _is_safe_sql(sql):
@@ -309,6 +375,7 @@ async def _answer_sql(question: str, allow_vector_fallback: bool = True) -> str:
         return "안전하지 않은 쿼리가 생성되어 실행을 차단했습니다."
 
     try:
+        
         with engine.connect() as conn:
             rows = conn.execute(text(sql)).fetchall()
         logger.info("[SQL] 조회 완료 | rows=%d", len(rows))
@@ -326,9 +393,7 @@ async def _answer_sql(question: str, allow_vector_fallback: bool = True) -> str:
     if not raw_result:
         return "조회된 데이터가 없습니다."
 
-    return (await get_llm_rag().ainvoke(
-        _SQL_ANSWER_TEMPLATE.format(question=question, result=raw_result)
-    )).strip()
+    return _format_sql_result(rows)
 
 # ---------------------------------------------------------------------------
 # 파일 탐색 (재귀)
@@ -347,13 +412,27 @@ async def lifespan(app: FastAPI):
     ensure_manifest_table()
     logger.info("manifest 테이블 확인 완료")
 
-    # LLM 워밍업 (첫 요청 지연 방지)
+    # LLM + 임베딩 워밍업 (첫 요청 지연 방지)
     try:
-        logger.info("LLM 워밍업 중...")
+        logger.info("LLM 워밍업 중... (model=%s)", OLLAMA_MODEL)
         await get_llm_rag().ainvoke("안녕")
         logger.info("LLM 워밍업 완료")
-    except Exception:
-        logger.warning("LLM 워밍업 실패 (Ollama 미실행 가능)")
+    except Exception as e:
+        logger.warning("LLM 워밍업 실패 | model=%s err=%s", OLLAMA_MODEL, e)
+
+    try:
+        logger.info("SQL용 LLM 워밍업 중... (model=%s)", SQL_MODEL)
+        await get_llm_rag().ainvoke("안녕")
+        logger.info("SQL용 LLM 워밍업 완료")
+    except Exception as e:
+        logger.warning("SQL용 LLM 워밍업 실패 | model=%s err=%s", SQL_MODEL, e)
+
+    try:
+        logger.info("임베딩 모델 워밍업 중... (model=%s)", EMBED_MODEL)
+        OllamaEmbeddings(base_url=OLLAMA_BASE_URL, model=EMBED_MODEL).embed_query("안녕")
+        logger.info("임베딩 워밍업 완료")
+    except Exception as e:
+        logger.warning("임베딩 워밍업 실패 | model=%s err=%s", EMBED_MODEL, e)
 
     yield
 

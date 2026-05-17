@@ -18,7 +18,7 @@
 ### AI & Database
 ![Ollama](https://img.shields.io/badge/Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)
 ![Gemma](https://img.shields.io/badge/Gemma4-4285F4?style=for-the-badge&logo=google&logoColor=white)
-![Qwen](https://img.shields.io/badge/Qwen3_Embedding-FF6A00?style=for-the-badge&logo=alibabadotcom&logoColor=white)
+![BGE](https://img.shields.io/badge/BGE--M3_Embedding-FF6A00?style=for-the-badge&logo=huggingface&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 ![ChromaDB](https://img.shields.io/badge/ChromaDB-FF6D5A?style=for-the-badge&logo=chroma&logoColor=white)
 
@@ -38,10 +38,10 @@ Slack 메시지
   └─▶ n8n (트리거 / 전처리)
         └─▶ POST /chat  (FastAPI + X-API-Key 인증)
               └─▶ 키워드 기반 라우팅 판단
-                    ├─ SQL  ──▶ 스키마 조회 → SQL 생성 → PostgreSQL 실행 → 자연어 응답
-                    └─ VECTOR ─▶ ChromaDB 검색 (qwen3-embedding:0.6b) → LLM 답변 생성
-                                                                          │
-                                                                    Ollama (gemma4:e4b)
+                    ├─ SQL  ──▶ 스키마 조회 → SQL 생성(LLM) → PostgreSQL 실행 → Python 포맷팅 응답
+                    └─ VECTOR ─▶ ChromaDB 검색 (bge-m3) → LLM 답변 생성
+                                                             │
+                                                       Ollama (gemma4:e4b)
   ◀─ n8n ◀─ FastAPI 응답 ◀──────────────────────────────────────────────┘
 ```
 
@@ -49,10 +49,13 @@ Slack 메시지
 
 ```
 POST /ingest  또는  python utils/ingest.py
-  ├─ PDF (텍스트) ─▶ 표 → PostgreSQL  /  텍스트(표 제외) → ChromaDB
+  ├─ PDF (텍스트) ─▶ 표 → PostgreSQL (manifest_source FK 포함)  /  텍스트(표 제외) → ChromaDB
   ├─ PDF (스캔)   ─▶ pytesseract OCR (페이지별) → ChromaDB
-  ├─ HWP         ─▶ hwp5html 변환 → 표 → PostgreSQL  /  본문 → ChromaDB
-  └─ XLSX        ─▶ 시트별 → PostgreSQL
+  ├─ HWP         ─▶ hwp5html 변환 → 표 → PostgreSQL (manifest_source FK 포함)  /  본문 → ChromaDB
+  └─ XLSX        ─▶ 시트별 → PostgreSQL (manifest_source FK 포함)
+
+* 모든 데이터 테이블의 manifest_source 컬럼은 ingestion_manifest.source를 FK로 참조
+  → LLM이 "이 데이터가 어느 파일에서 왔는지" SQL JOIN으로 조회 가능
 ```
 
 ---
@@ -139,12 +142,15 @@ docker compose up -d
 
 ### 5-4. Ollama 모델 준비
 
+> **주의**: `gemma4:e4b`는 최신 버전의 Ollama가 필요합니다.
+> `docker pull ollama/ollama:latest && docker-compose up -d --force-recreate ollama` 로 업데이트 후 진행하세요.
+
 ```bash
 # LLM (생성 모델)
 docker exec ollama_server ollama pull gemma4:e4b
 
-# 임베딩 모델 (MTEB 다국어 1위, 100+ 언어)
-docker exec ollama_server ollama pull qwen3-embedding:0.6b
+# 임베딩 모델 (MTEB 다국어, 1024차원)
+docker exec ollama_server ollama pull bge-m3
 ```
 
 ---
@@ -228,7 +234,7 @@ curl -X POST http://localhost:8080/chat \
 {
   "status": "ok",
   "llm_model": "gemma4:e4b",
-  "embed_model": "qwen3-embedding:0.6b",
+  "embed_model": "bge-m3",
   "ollama": "ok",
   "chromadb": "ok"
 }
@@ -250,8 +256,8 @@ curl -X POST http://localhost:8080/chat \
 | `CHROMA_HOST` | `localhost` | ChromaDB 호스트 |
 | `CHROMA_PORT` | `8000` | ChromaDB 포트 |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama 서버 주소 |
-| `OLLAMA_MODEL` | `gemma4:e4b` | 생성 LLM 모델 |
-| `EMBED_MODEL` | `qwen3-embedding:0.6b` | 임베딩 모델 |
+| `OLLAMA_MODEL` | `qwen2.5:3b` | 생성 LLM 모델 |
+| `EMBED_MODEL` | `bge-m3` | 임베딩 모델 |
 | `API_KEY` | *(비어있으면 인증 없음)* | `/chat`, `/ingest` 엔드포인트 보호용 API Key |
 | `INGEST_ALLOWED_BASE` | `backend/data/` 절대경로 | `/ingest` API가 접근 가능한 최상위 디렉토리 |
 

@@ -225,8 +225,7 @@ def korean_to_number(text: str) -> str:
     # ── 한글 전용 숫자 패턴 ──────────────────────────────────────────────────
     KR_NUM_CHARS = '일이삼사오육칠팔구십백천만억조'
     kr_pattern = re.compile(
-        rf'[{KR_NUM_CHARS}]+'
-        rf'(?:\s*[{KR_NUM_CHARS}]+)*'
+        rf'[{KR_NUM_CHARS}]*[십백천만억조][{KR_NUM_CHARS}]*'
     )
 
     # 아라비아+한글 혼합 먼저 처리 (우선순위 높음)
@@ -254,7 +253,7 @@ def normalize(text: str) -> str:
     # 천 단위 쉼표 제거: 977,070,000 → 977070000
     text = re.sub(r'(\d),(\d)', r'\1\2', text)
     # 단위 제거
-    text = re.sub(r'[원건명회번기회차분]', '', text)
+    text = re.sub(r'(\d)\s*[원건명회번기차분]', r'\1', text)
     # 공백 정규화
     text = re.sub(r'\s+', ' ', text).strip()
     return text

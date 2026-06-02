@@ -5,10 +5,18 @@ backend/logs/
 .claude/
 __pycache__/
 *.pyc
+*.pyo
 .DS_Store
+Thumbs.db
 
+# 적재 데이터 (로컬 생성물)
 backend/data/*
 backend/dataframes/
-backend/tests/*.json
-data/*
 !backend/data/.gitkeep
+
+# 평가 결과 (로컬 생성물)
+backend/tests/results/
+
+# 평가 JSON (goldset 제외)
+backend/tests/*.json
+!backend/tests/goldset.json

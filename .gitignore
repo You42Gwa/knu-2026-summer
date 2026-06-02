@@ -17,6 +17,5 @@ backend/dataframes/
 # 평가 결과 (로컬 생성물)
 backend/tests/results/
 
-# 평가 JSON (goldset 제외)
+# 평가 JSON (로컬 전용)
 backend/tests/*.json
-!backend/tests/goldset.json

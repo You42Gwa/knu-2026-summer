@@ -130,7 +130,6 @@ knu-2026-summer-rag/
 │   │   └── ingest.py        # 문서 파싱 및 DB 적재 파이프라인
 │   └── tests/
 │       ├── eval.py          # 평가 스크립트 (키워드 기반 정답률 측정)
-│       ├── goldset.json     # 평가 질의셋 v1.2 (42개, easy / medium)
 │       ├── version.md       # 버전별 성능 개선 이력
 │       ├── compare.py       # 두 eval 결과 비교 유틸리티
 │       └── check_integrity.py   # 데이터 무결성 검증
@@ -299,7 +298,7 @@ curl -X POST http://localhost:8080/chat \
 
 ## 9. 평가 결과
 
-`backend/tests/goldset.json` (v1.2, 42개 질의셋)으로 측정한 최종 성능입니다.
+내부 평가 질의셋(로컬 전용)으로 측정한 최종 성능입니다.
 
 | 카테고리 | 정답률 |
 |---|---|

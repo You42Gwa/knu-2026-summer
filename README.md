@@ -130,7 +130,6 @@ knu-2026-summer-rag/
 │   │   └── ingest.py        # 문서 파싱 및 DB 적재 파이프라인
 │   └── tests/
 │       ├── eval.py          # 평가 스크립트 (키워드 기반 정답률 측정)
-│       ├── version.md       # 버전별 성능 개선 이력
 │       ├── compare.py       # 두 eval 결과 비교 유틸리티
 │       └── check_integrity.py   # 데이터 무결성 검증
 ├── .env.example             # 환경변수 템플릿
@@ -309,7 +308,6 @@ curl -X POST http://localhost:8080/chat \
 
 평균 응답 시간: **3.0s** (timeout 해결 후)
 
-버전별 상세 개선 이력: `backend/tests/version.md`
 
 ---
 

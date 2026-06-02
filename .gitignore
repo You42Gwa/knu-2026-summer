@@ -17,5 +17,7 @@ backend/dataframes/
 # 평가 결과 (로컬 생성물)
 backend/tests/results/
 
-# 평가 JSON (로컬 전용)
+# 평가 질의셋 및 개발 로그 (로컬 전용)
 backend/tests/*.json
+backend/tests/make_goldset.py
+backend/tests/version.md

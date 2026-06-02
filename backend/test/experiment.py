@@ -317,8 +317,8 @@ def run_experiment():
     route_correct_count = 0
 
     for item in eval_data:
-        # if(item['no'] <= 50):
-        #     continue
+        if(item['no'] <= 50):
+            continue
         print(f"[{item['no']}/{total_count}] 질문 처리 중: {item['q']}")
         
         start_time = time.time()

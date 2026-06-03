@@ -2,10 +2,18 @@
 골드셋 기반 RAG 시스템 평가 스크립트
 
 사용법:
-    python eval.py                        # 전체 테스트
-    python eval.py --id TC001            # 특정 케이스만
-    python eval.py --category sql_명단   # 카테고리 필터
-    python eval.py --url http://...      # 서버 주소 변경
+    # feature/update-models 브랜치 평가 (기본)
+    python eval.py --tag update-models
+
+    # feature/experiment 브랜치 평가 (sql → pandas 매핑)
+    python eval.py --tag experiment --route-alias sql=pandas
+
+    # 특정 케이스 / 카테고리만
+    python eval.py --id TC001
+    python eval.py --category pandas_명단
+
+    # 서버 주소 변경
+    python eval.py --url http://localhost:8081
 """
 
 from __future__ import annotations
@@ -22,7 +30,8 @@ from typing import Any
 import requests
 
 GOLDSET_PATH = Path(__file__).parent / "goldset.json"
-DEFAULT_URL = "http://localhost:8080"
+DEFAULT_URL  = "http://localhost:8080"
+RESULT_DIR   = Path(__file__).parent / "results"
 
 
 # ---------------------------------------------------------------------------
@@ -30,8 +39,7 @@ DEFAULT_URL = "http://localhost:8080"
 # ---------------------------------------------------------------------------
 
 def score_keywords(answer: str, keywords: list[str]) -> tuple[float, list[str], list[str]]:
-    """키워드 중 몇 개가 답변에 포함됐는지 확인 (대소문자·공백 무시)."""
-    # "250만 원" == "250만원" 처럼 공백 차이를 무시
+    """공백 무시 부분 일치로 키워드 재현율 계산."""
     answer_norm = re.sub(r"\s+", "", answer.lower())
     hit, miss = [], []
     for kw in keywords:
@@ -41,10 +49,14 @@ def score_keywords(answer: str, keywords: list[str]) -> tuple[float, list[str], 
     return recall, hit, miss
 
 
-def evaluate_case(tc: dict[str, Any], base_url: str) -> dict[str, Any]:
-    question = tc["question"]
+def evaluate_case(
+    tc: dict[str, Any],
+    base_url: str,
+    route_alias: dict[str, str],
+) -> dict[str, Any]:
+    question       = tc["question"]
     expected_route = tc["expected_route"]
-    keywords = tc["ground_truth_keywords"]
+    keywords       = tc["ground_truth_keywords"]
 
     start = time.perf_counter()
     try:
@@ -53,58 +65,63 @@ def evaluate_case(tc: dict[str, Any], base_url: str) -> dict[str, Any]:
             json={"question": question},
             timeout=120,
         )
-        elapsed = time.perf_counter() - start
+        elapsed = round(time.perf_counter() - start, 2)
         resp.raise_for_status()
-        data = resp.json()
-        answer = data.get("answer", "")
-        actual_route = data.get("source", "unknown")
-        error = None
+        data         = resp.json()
+        answer       = data.get("answer", "")
+        actual_route = data.get("source", "unknown").lower()
+        error        = None
     except Exception as e:
-        elapsed = time.perf_counter() - start
-        answer = ""
+        elapsed      = round(time.perf_counter() - start, 2)
+        answer       = ""
         actual_route = "error"
-        error = str(e)
+        error        = str(e)
 
-    route_ok = actual_route == expected_route
+    # route-alias 적용 (ex. sql → pandas)
+    normalized_route = route_alias.get(actual_route, actual_route)
+    route_ok = normalized_route == expected_route
+
     keyword_recall, hit, miss = score_keywords(answer, keywords)
 
-    # 네거티브 케이스: '없다'는 취지의 키워드 중 하나라도 있으면 통과
     if tc["category"] == "negative":
         passed = keyword_recall > 0
     else:
-        # 키워드 75% 이상이면 라우팅 무관 통과 (정답을 맞혔으면 경로는 무관)
-        # 라우팅이 맞고 키워드 50% 이상이면 통과
         passed = keyword_recall >= 0.75 or (route_ok and keyword_recall >= 0.5)
 
     return {
-        "id": tc["id"],
-        "question": question,
-        "category": tc["category"],
-        "difficulty": tc["difficulty"],
-        "expected_route": expected_route,
-        "actual_route": actual_route,
-        "route_ok": route_ok,
-        "keyword_recall": round(keyword_recall, 3),
-        "hit_keywords": hit,
-        "miss_keywords": miss,
-        "passed": passed,
-        "elapsed_sec": round(elapsed, 2),
-        "answer_preview": answer[:500] if answer else "",
-        "error": error,
+        "id":              tc["id"],
+        "question":        question,
+        "category":        tc["category"],
+        "difficulty":      tc["difficulty"],
+        "expected_route":  expected_route,
+        "actual_route":    actual_route,
+        "normalized_route": normalized_route,
+        "route_ok":        route_ok,
+        "keyword_recall":  round(keyword_recall, 3),
+        "hit_keywords":    hit,
+        "miss_keywords":   miss,
+        "passed":          passed,
+        "elapsed_sec":     elapsed,
+        "answer_preview":  answer[:500] if answer else "",
+        "error":           error,
     }
 
 
 # ---------------------------------------------------------------------------
-# 리포트 출력
+# 콘솔 출력
 # ---------------------------------------------------------------------------
 
 def print_result(r: dict[str, Any], verbose: bool = False) -> None:
-    status = "✅" if r["passed"] else "❌"
-    route_mark = "✓" if r["route_ok"] else "✗"
+    status     = "O" if r["passed"] else "X"
+    route_mark = "O" if r["route_ok"] else "X"
+    alias_note = (
+        f"({r['actual_route']}→{r['normalized_route']})"
+        if r["actual_route"] != r["normalized_route"] else ""
+    )
     print(
-        f"{status} [{r['id']}] {r['question'][:40]:<42}"
-        f"  route: {r['actual_route']:6}({route_mark})"
-        f"  kw: {r['keyword_recall']:.0%}"
+        f"[{status}] [{r['id']}] {r['question'][:40]:<42}"
+        f"  route:{r['normalized_route']:7}{alias_note}[{route_mark}]"
+        f"  kw:{r['keyword_recall']:.0%}"
         f"  {r['elapsed_sec']}s"
     )
     if not r["passed"] or verbose:
@@ -116,21 +133,20 @@ def print_result(r: dict[str, Any], verbose: bool = False) -> None:
             print(f"     답변: {r['answer_preview']}")
 
 
-def print_summary(results: list[dict[str, Any]]) -> None:
-    total = len(results)
-    passed = sum(r["passed"] for r in results)
+def print_summary(results: list[dict[str, Any]], tag: str) -> None:
+    total     = len(results)
+    passed    = sum(r["passed"] for r in results)
     route_acc = sum(r["route_ok"] for r in results) / total if total else 0
     avg_recall = sum(r["keyword_recall"] for r in results) / total if total else 0
-    avg_time = sum(r["elapsed_sec"] for r in results) / total if total else 0
+    avg_time  = sum(r["elapsed_sec"] for r in results) / total if total else 0
 
     print("\n" + "=" * 60)
-    print(f"  전체 결과: {passed}/{total} 통과  ({passed/total:.0%})")
+    print(f"  [{tag}] 전체 결과: {passed}/{total} 통과  ({passed/total:.0%})")
     print(f"  라우팅 정확도: {route_acc:.0%}")
     print(f"  평균 키워드 재현율: {avg_recall:.0%}")
     print(f"  평균 응답 시간: {avg_time:.1f}s")
     print("=" * 60)
 
-    # 카테고리별 요약
     cats: dict[str, list] = {}
     for r in results:
         cats.setdefault(r["category"], []).append(r)
@@ -139,31 +155,76 @@ def print_summary(results: list[dict[str, Any]]) -> None:
         p = sum(x["passed"] for x in rs)
         print(f"    {cat:<20} {p}/{len(rs)} ({p/len(rs):.0%})")
 
-    # 실패 목록
     failed = [r for r in results if not r["passed"]]
     if failed:
-        print(f"\n  실패한 케이스 ({len(failed)}개):")
+        print(f"\n  실패 케이스 ({len(failed)}개):")
         for r in failed:
             print(f"    [{r['id']}] {r['question'][:50]}")
 
 
 # ---------------------------------------------------------------------------
-# Markdown 리포트 생성
+# Excel 저장
 # ---------------------------------------------------------------------------
 
-def generate_markdown_report(results: list[dict[str, Any]], base_url: str) -> str:
-    total = len(results)
-    passed = sum(r["passed"] for r in results)
-    route_acc = sum(r["route_ok"] for r in results) / total if total else 0
+def save_excel(results: list[dict[str, Any]], path: Path) -> None:
+    try:
+        import pandas as pd  # type: ignore
+    except ImportError:
+        print("  [경고] pandas 없음 — Excel 저장 건너뜀")
+        return
+
+    rows = []
+    for r in results:
+        rows.append({
+            "ID":          r["id"],
+            "카테고리":     r["category"],
+            "난이도":      r["difficulty"],
+            "질문":        r["question"],
+            "기대 라우팅":  r["expected_route"],
+            "실제 라우팅":  r["actual_route"],
+            "라우팅 정규화": r["normalized_route"],
+            "라우팅 성공":  "O" if r["route_ok"] else "X",
+            "키워드 재현율": f"{r['keyword_recall']:.0%}",
+            "적중 키워드":  ", ".join(r["hit_keywords"]),
+            "누락 키워드":  ", ".join(r["miss_keywords"]),
+            "통과":        "O" if r["passed"] else "X",
+            "소요시간(s)": r["elapsed_sec"],
+            "답변 미리보기": r["answer_preview"],
+            "오류":        r["error"] or "",
+        })
+
+    df = pd.DataFrame(rows)
+    df.to_excel(path, index=False)
+    print(f"  Excel 저장: {path}")
+
+
+# ---------------------------------------------------------------------------
+# Markdown 리포트
+# ---------------------------------------------------------------------------
+
+def save_markdown(
+    results: list[dict[str, Any]],
+    path: Path,
+    base_url: str,
+    tag: str,
+    route_alias: dict[str, str],
+) -> None:
+    total      = len(results)
+    passed     = sum(r["passed"] for r in results)
+    route_acc  = sum(r["route_ok"] for r in results) / total if total else 0
     avg_recall = sum(r["keyword_recall"] for r in results) / total if total else 0
-    avg_time = sum(r["elapsed_sec"] for r in results) / total if total else 0
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    avg_time   = sum(r["elapsed_sec"] for r in results) / total if total else 0
+    now        = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    alias_str = ", ".join(f"{k}→{v}" for k, v in route_alias.items()) if route_alias else "없음"
 
     lines = [
-        "# RAG 평가 리포트",
+        f"# RAG 평가 리포트 — `{tag}`",
         "",
         f"**생성 일시**: {now}  ",
         f"**서버**: {base_url}  ",
+        f"**브랜치 태그**: `{tag}`  ",
+        f"**라우팅 별칭**: {alias_str}  ",
         f"**테스트 케이스**: {total}개",
         "",
         "---",
@@ -187,50 +248,44 @@ def generate_markdown_report(results: list[dict[str, Any]], base_url: str) -> st
     for r in results:
         cats.setdefault(r["category"], []).append(r)
     for cat, rs in sorted(cats.items()):
-        p = sum(x["passed"] for x in rs)
-        bar = "🟢" if p / len(rs) >= 0.7 else ("🟡" if p / len(rs) >= 0.4 else "🔴")
-        lines.append(f"| {bar} {cat} | {p} | {len(rs)} | {p/len(rs):.0%} |")
+        p    = sum(x["passed"] for x in rs)
+        icon = "O" if p / len(rs) >= 0.7 else ("△" if p / len(rs) >= 0.4 else "X")
+        lines.append(f"| {icon} {cat} | {p} | {len(rs)} | {p/len(rs):.0%} |")
 
     lines += [
         "",
         "## 케이스별 결과",
         "",
-        "| ID | 질문 | 카테고리 | 기대→실제 라우팅 | KW 재현율 | 시간 | 결과 |",
+        "| ID | 질문 | 카테고리 | 라우팅(기대→실제) | KW 재현율 | 시간 | 결과 |",
         "|----|------|----------|-----------------|:---------:|:----:|:----:|",
     ]
 
     for r in results:
-        status = "✅" if r["passed"] else "❌"
-        route_arrow = (
-            f"{r['expected_route']}→{r['actual_route']}"
-            if not r["route_ok"]
-            else r["actual_route"]
+        status      = "O" if r["passed"] else "X"
+        route_disp  = (
+            f"{r['expected_route']}→{r['normalized_route']} (raw:{r['actual_route']})"
+            if not r["route_ok"] else r["actual_route"]
         )
-        route_mark = "" if r["route_ok"] else " ⚠️"
         q = r["question"][:38].replace("|", "\\|")
         lines.append(
-            f"| {r['id']} | {q} | {r['category']} | {route_arrow}{route_mark}"
+            f"| {r['id']} | {q} | {r['category']} | {route_disp}"
             f" | {r['keyword_recall']:.0%} | {r['elapsed_sec']}s | {status} |"
         )
 
     failed = [r for r in results if not r["passed"]]
     if failed:
-        lines += [
-            "",
-            f"## 실패 케이스 상세 ({len(failed)}개)",
-            "",
-        ]
+        lines += ["", f"## 실패 케이스 상세 ({len(failed)}개)", ""]
         for r in failed:
-            route_ok_str = "✓" if r["route_ok"] else f"✗ (기대: {r['expected_route']})"
+            route_note = "O" if r["route_ok"] else f"X (기대: {r['expected_route']})"
             lines += [
                 f"### [{r['id']}] {r['question']}",
                 "",
                 f"- **카테고리**: {r['category']} · 난이도: {r['difficulty']}",
-                f"- **라우팅**: {r['actual_route']} {route_ok_str}",
+                f"- **라우팅**: {r['normalized_route']} [{route_note}]",
                 f"- **키워드 재현율**: {r['keyword_recall']:.0%}",
                 f"- **적중**: {', '.join(r['hit_keywords']) or '없음'}",
                 f"- **누락**: {', '.join(r['miss_keywords']) or '없음'}",
-                f"- **응답 시간**: {r['elapsed_sec']}s",
+                f"- **소요 시간**: {r['elapsed_sec']}s",
             ]
             if r["answer_preview"]:
                 preview = r["answer_preview"].replace("\n", " ")[:200]
@@ -239,24 +294,42 @@ def generate_markdown_report(results: list[dict[str, Any]], base_url: str) -> st
                 lines.append(f"- **오류**: `{r['error']}`")
             lines.append("")
 
-    return "\n".join(lines)
+    path.write_text("\n".join(lines), encoding="utf-8")
+    print(f"  Markdown 저장: {path}")
 
 
 # ---------------------------------------------------------------------------
 # 메인
 # ---------------------------------------------------------------------------
 
+def parse_route_alias(raw: list[str]) -> dict[str, str]:
+    """'sql=pandas' 형태 문자열 목록 → {'sql': 'pandas'} 딕셔너리."""
+    alias: dict[str, str] = {}
+    for item in raw:
+        if "=" in item:
+            src, dst = item.split("=", 1)
+            alias[src.strip().lower()] = dst.strip().lower()
+    return alias
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="RAG 골드셋 평가")
-    parser.add_argument("--url", default=DEFAULT_URL, help="FastAPI 서버 주소")
-    parser.add_argument("--id", help="특정 테스트케이스 ID만 실행 (예: TC001)")
-    parser.add_argument("--category", help="카테고리 필터 (예: sql_명단)")
-    parser.add_argument("--verbose", "-v", action="store_true", help="답변 미리보기 출력")
-    parser.add_argument("--out", help="결과 JSON 저장 경로 (선택)")
-    parser.add_argument("--report", help="Markdown 리포트 저장 경로 (예: report.md)")
+    parser = argparse.ArgumentParser(description="골드셋 기반 RAG 평가")
+    parser.add_argument("--url",          default=DEFAULT_URL, help="FastAPI 서버 주소")
+    parser.add_argument("--tag",          default="default",   help="결과 파일 식별 태그 (브랜치명 권장)")
+    parser.add_argument("--route-alias",  nargs="*", default=[], metavar="SRC=DST",
+                        help="라우팅 레이블 별칭 (예: sql=pandas)")
+    parser.add_argument("--id",           help="특정 케이스 ID만 실행 (예: TC001)")
+    parser.add_argument("--category",     help="카테고리 필터 (예: pandas_명단)")
+    parser.add_argument("--verbose", "-v", action="store_true")
     args = parser.parse_args()
 
-    goldset = json.loads(GOLDSET_PATH.read_text(encoding="utf-8"))
+    route_alias = parse_route_alias(args.route_alias)
+
+    if not GOLDSET_PATH.exists():
+        print(f"goldset.json 없음: {GOLDSET_PATH}")
+        sys.exit(1)
+
+    goldset    = json.loads(GOLDSET_PATH.read_text(encoding="utf-8"))
     test_cases = goldset["test_cases"]
 
     if args.id:
@@ -268,28 +341,30 @@ def main() -> None:
         print("해당 조건의 테스트케이스가 없습니다.")
         sys.exit(1)
 
-    print(f"서버: {args.url}")
-    print(f"테스트: {len(test_cases)}개\n")
-    print("-" * 60)
+    alias_note = f" (alias: {route_alias})" if route_alias else ""
+    print(f"서버: {args.url}  태그: {args.tag}{alias_note}")
+    print(f"테스트: {len(test_cases)}개\n" + "-" * 60)
 
     results = []
     for tc in test_cases:
-        r = evaluate_case(tc, args.url)
+        r = evaluate_case(tc, args.url, route_alias)
         results.append(r)
         print_result(r, verbose=args.verbose)
 
-    print_summary(results)
+    print_summary(results, tag=args.tag)
 
-    if args.out:
-        out_path = Path(args.out)
-        out_path.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f"\nJSON 저장: {out_path}")
+    # 결과 저장
+    RESULT_DIR.mkdir(exist_ok=True)
+    now_str  = datetime.now().strftime("%m%d_%H%M")
+    stem     = f"{now_str}_{args.tag}"
 
-    if args.report:
-        report_path = Path(args.report)
-        report_md = generate_markdown_report(results, args.url)
-        report_path.write_text(report_md, encoding="utf-8")
-        print(f"Markdown 리포트 저장: {report_path}")
+    # 결과 JSON (비교 스크립트용) — 먼저 저장
+    json_path = RESULT_DIR / f"{stem}.json"
+    json_path.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"  JSON 저장:  {json_path}")
+
+    save_markdown(results, RESULT_DIR / f"{stem}.md", args.url, args.tag, route_alias)
+    save_excel(results, RESULT_DIR / f"{stem}.xlsx")
 
 
 if __name__ == "__main__":

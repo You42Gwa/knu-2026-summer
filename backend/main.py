@@ -41,7 +41,7 @@ OLLAMA_MODEL        = os.getenv("OLLAMA_MODEL", "gemma4:e4b")
 EMBED_MODEL         = os.getenv("EMBED_MODEL", "qwen3-embedding:0.6b")
 CHROMA_HOST         = os.getenv("CHROMA_HOST", "localhost")
 CHROMA_PORT         = int(os.getenv("CHROMA_PORT", "8000"))
-COLLECTION_NAME     = "scholarship_rules"
+COLLECTION_NAME     = os.getenv("COLLECTION_NAME", "scholarship_rules")
 DATA_FOLDER         = os.path.join(os.path.dirname(__file__), "data")
 API_KEY             = os.getenv("API_KEY", "")
 INGEST_ALLOWED_BASE = os.path.realpath(os.getenv("INGEST_ALLOWED_BASE", DATA_FOLDER))
@@ -178,6 +178,13 @@ def _load_dataframes():
                     meta = json.load(f)
                 source = meta.get("source", orig_name)
                 label  = meta.get("label", orig_name)
+            # 학과 관련 컬럼의 "(N명)" suffix 제거 — LLM 혼란 방지
+            for col in df.columns:
+                if any(k in col for k in ("학과", "계열", "대상학생")):
+                    try:
+                        df[col] = df[col].astype(str).str.replace(r"\(\d+명\)", "", regex=True).str.strip()
+                    except Exception:
+                        pass
             entries.append((df, source, label))
         except Exception as e:
             logger.warning("DataFrame 로드 실패 | file=%s err=%s", fname, e)
@@ -192,15 +199,11 @@ def _load_dataframes():
     logger.info("DataFrame %d개 로드 완료", len(_df_namespace))
 
 
-def _get_df_schema() -> str:
-    global _df_schema_cache
-    now = time.time()
-    if _df_schema_cache and now - _df_schema_cache[1] < _SCHEMA_CACHE_TTL:
-        return _df_schema_cache[0]
-
+def _build_schema_for_vars(var_set: set[str]) -> str:
+    """지정된 alias 집합에 대해서만 schema 문자열을 생성한다."""
     _ENUM_KEYWORDS = ("학과", "학년", "종목", "계열", "반", "구분", "유형", "과목", "대상")
     source_to_vars: dict[str, list[str]] = {}
-    for var in _df_namespace:
+    for var in var_set:
         src = _df_sources.get(var, var)
         source_to_vars.setdefault(src, []).append(var)
 
@@ -228,7 +231,6 @@ def _get_df_schema() -> str:
                 f"  예시(값): {sample_str}"
             )
 
-            # 카테고리성 컬럼 고유값 힌트
             for col in cols:
                 if any(k in col for k in _ENUM_KEYWORDS):
                     try:
@@ -241,9 +243,39 @@ def _get_df_schema() -> str:
                         pass
 
         parts.append("\n".join(entry_lines))
+    return "\n\n".join(parts)
 
-    schema = "\n\n".join(parts)
+
+def _get_df_schema() -> str:
+    """전체 schema (캐시됨)."""
+    global _df_schema_cache
+    now = time.time()
+    if _df_schema_cache and now - _df_schema_cache[1] < _SCHEMA_CACHE_TTL:
+        return _df_schema_cache[0]
+    schema = _build_schema_for_vars(set(_df_namespace.keys()))
     _df_schema_cache = (schema, now)
+    return schema
+
+
+def _get_df_schema_filtered(question: str) -> str:
+    """질문과 관련된 DF만 포함한 schema를 반환한다.
+    셀값 매칭 → 소스명 매칭 순으로 후보를 모으고, 없으면 전체 schema를 반환한다."""
+    relevant: set[str] = set()
+
+    # 셀값 매칭
+    conditions = _find_filter_conditions(question)
+    relevant.update(conditions.keys())
+
+    # 소스명 매칭
+    by_label = _find_dfs_by_source_label(question)
+    relevant.update(by_label[:4])  # 상위 4개까지
+
+    if not relevant:
+        return _get_df_schema()
+
+    # 관련 DF만 schema 생성
+    schema = _build_schema_for_vars(relevant)
+    logger.info("[SCHEMA_FILTER] %d/%d DFs 선택 | question=%s", len(relevant), len(_df_namespace), question[:40])
     return schema
 
 # ---------------------------------------------------------------------------
@@ -258,10 +290,26 @@ MULTI_QUERY_PROMPT = PromptTemplate(
 재구성된 질문:""",
 )
 
+# 문서 설명 질문 탐지 (목적·내용·요약 요청)
+_DOC_EXPLAIN_RE = re.compile(r"문서의?\s*(목적|내용|설명)|설명해|어떤\s*(문서|내용)|요약해", re.IGNORECASE)
+
 _RAG_TEMPLATE = """\
 당신은 한국어 문서를 분석하는 전문 AI 어시스턴트입니다.
 아래 참고 문서를 바탕으로 질문에 정확하고 상세하게 한국어로 답변하세요.
 참고 문서에 없는 내용은 "해당 내용은 문서에서 확인할 수 없습니다."라고 답하세요.
+
+참고 문서:
+{context}
+
+질문: {question}
+답변:"""
+
+# 문서 설명 전용 템플릿: 문서명·금액·항목에서 목적·내용을 추론하도록 유도
+_DOC_EXPLAIN_RAG_TEMPLATE = """\
+당신은 한국어 문서를 분석하는 AI 어시스턴트입니다.
+아래 참고 문서(특히 [문서 개요] 섹션)를 바탕으로 문서의 목적과 내용을 한국어로 설명하세요.
+문서명, 지원 금액, 대상 기관·학생, 포함 항목 등 알 수 있는 정보를 모두 활용하세요.
+참고 문서에 문서명이라도 있으면 그것을 근거로 설명해 주세요.
 
 참고 문서:
 {context}
@@ -274,10 +322,10 @@ _PANDAS_GEN_TEMPLATE = """\
 import 없이 변수명(df0, df1 ...)을 바로 사용하세요. 최종 결과는 반드시 result 변수에 저장하세요.
 마크다운 코드 블록 없이 순수 Python 코드만 출력하세요.
 
-★ 절대 규칙:
-- "데이터 위치 힌트"가 있으면 반드시 그 변수명과 컬럼명을 그대로 사용하세요.
-- 힌트가 없을 때만 스키마의 "컬럼(이 이름만 사용):" 줄에서 컬럼명을 가져오세요.
-- 스키마에도 힌트에도 없는 컬럼명은 절대 만들지 마세요.
+★ 핵심 규칙:
+- "데이터 위치 힌트"에 여러 옵션이 있으면 파일명을 보고 질문과 가장 관련 있는 DataFrame을 선택하세요.
+- 힌트가 없을 때는 스키마의 파일명을 참고해 질문에 맞는 DataFrame을 직접 선택하세요.
+- 컬럼명은 반드시 스키마의 "컬럼(이 이름만 사용):" 줄에서 가져오세요. 없는 컬럼명은 만들지 마세요.
 - "실제값:" 줄은 데이터 값이지 컬럼명이 아닙니다.
 
 코딩 규칙:
@@ -323,25 +371,27 @@ RAG_PROMPT = PromptTemplate.from_template(_RAG_TEMPLATE)
 # 라우팅 (키워드 기반)
 # ---------------------------------------------------------------------------
 _PANDAS_KEYWORDS = re.compile(
-    r"명단|몇\s*명|\d+\s*명|인원|금액|얼마|통계|집계|합계|총\s*금액|지급액|목록|리스트|누가|누구|현황|조회|어느\s*학과|무슨\s*학과|어느\s*반",
+    r"명단|몇\s*명|\d+\s*명|인원|금액|얼마|통계|집계|합계|총\s*금액|지급액|목록|리스트|누가|누구|현황|조회|어느\s*학과|무슨\s*학과|어느\s*반|종목",
     re.IGNORECASE,
 )
 _VECTOR_PROCEDURE = re.compile(
     r"방법|절차|기준|서류|자격|안내|규정|내용|제도|신청|문의|어떻게|왜|이유|달라|같아|차이|비교",
     re.IGNORECASE,
 )
+# "지급\s*금액" 제거: 파일명 기반 총액 추출로 pandas에서 처리
 _VECTOR_OVERRIDE = re.compile(
-    r"설명해|설명해줘|목적|문서의\s*내용|내용을\s*설명|어떤\s*내용|몇\s*월|몇\s*년|날짜|작성됐|어느\s*학교",
+    r"설명해|설명해줘|목적|문서의\s*내용|내용을\s*설명|어떤\s*내용|몇\s*월|몇\s*년|날짜|작성됐|어느\s*학교|총\s*지급액|장학금\s*총액",
     re.IGNORECASE,
 )
 _AGG_COUNT = re.compile(r"몇\s*명|총\s*인원|인원은|명이야|명인가|몇명", re.IGNORECASE)
-_AGG_SUM   = re.compile(r"총\s*금액|합계금액|얼마야|얼마인|지급\s*총액|장학금\s*총액", re.IGNORECASE)
+_AGG_SUM   = re.compile(r"총\s*금액|합계금액|얼마야|얼마인|지급\s*금액|장학금\s*총액", re.IGNORECASE)
 
 
 def _route(question: str) -> str:
     if _VECTOR_OVERRIDE.search(question):
         return "VECTOR"
-    if _PANDAS_KEYWORDS.search(question):
+    # _AGG_SUM은 PANDAS에서 소스 파일명 기반 총액 추출로 처리
+    if _PANDAS_KEYWORDS.search(question) or _AGG_SUM.search(question):
         if _VECTOR_PROCEDURE.search(question):
             return "VECTOR"
         return "PANDAS"
@@ -359,15 +409,25 @@ async def _answer_vector(question: str, allow_pandas_fallback: bool = True) -> t
     logger.info("[VECTOR] 검색 시작 | question=%s", question[:50])
 
     queries = [question]
-    try:
-        raw_variants = await get_llm_code().ainvoke(
-            MULTI_QUERY_PROMPT.format(question=question)
-        )
-        variants = [l.strip() for l in raw_variants.strip().split("\n") if l.strip()]
-        queries += variants[:2]
-        logger.info("[VECTOR] 쿼리 확장 %d개", len(queries))
-    except Exception as e:
-        logger.warning("[VECTOR] 쿼리 확장 실패 | err=%s", e)
+    is_doc_explain = bool(_DOC_EXPLAIN_RE.search(question))
+
+    if is_doc_explain:
+        # 문서 설명 질문: 메타 문구 제거 후 "[문서 개요]" 접두사로 개요 청크 검색
+        doc_ctx = re.sub(r"\s*문서의?\s*(목적|내용|설명).*$", "", question).strip()
+        doc_ctx = re.sub(r"\s*설명해.*$", "", doc_ctx).strip()
+        if doc_ctx and len(doc_ctx) > 3:
+            queries.insert(0, f"[문서 개요] {doc_ctx}")
+        logger.info("[VECTOR] 문서설명 쿼리 최적화 | doc_ctx=%s", doc_ctx[:40])
+    else:
+        try:
+            raw_variants = await get_llm_code().ainvoke(
+                MULTI_QUERY_PROMPT.format(question=question)
+            )
+            variants = [l.strip() for l in raw_variants.strip().split("\n") if l.strip()]
+            queries += variants[:2]
+            logger.info("[VECTOR] 쿼리 확장 %d개", len(queries))
+        except Exception as e:
+            logger.warning("[VECTOR] 쿼리 확장 실패 | err=%s", e)
 
     retriever = get_retriever()
     all_docs: list = []
@@ -388,11 +448,18 @@ async def _answer_vector(question: str, allow_pandas_fallback: bool = True) -> t
         for d in docs if d.metadata.get("source")
     ))
     context = _fmt_docs(docs)
-    answer = await (RAG_PROMPT | get_llm_rag() | StrOutputParser()).ainvoke(
+
+    # 문서 설명 질문은 전용 템플릿 사용 (목적·내용 추론 유도)
+    if is_doc_explain:
+        prompt = PromptTemplate.from_template(_DOC_EXPLAIN_RAG_TEMPLATE)
+    else:
+        prompt = RAG_PROMPT
+    answer = await (prompt | get_llm_rag() | StrOutputParser()).ainvoke(
         {"context": context, "question": question}
     )
     logger.info("[VECTOR] 답변 생성 완료 | len=%d docs=%d", len(answer), len(docs))
-    if allow_pandas_fallback and any(s in answer for s in _VECTOR_EMPTY_SIGNALS):
+    # 문서설명·목적 질문은 pandas 폴백 금지 (명단 테이블이 반환되면 더 나쁨)
+    if allow_pandas_fallback and not _VECTOR_OVERRIDE.search(question) and any(s in answer for s in _VECTOR_EMPTY_SIGNALS):
         logger.info("[VECTOR→PANDAS] 유의미한 답변 없음, pandas 폴백 시도")
         pd_answer, pd_sources, _ = await _answer_pandas(question, allow_vector_fallback=False)
         if pd_answer and "없습니다" not in pd_answer and "오류" not in pd_answer:
@@ -414,10 +481,11 @@ _NON_NAME_WORDS = frozenset([
     "이상", "이하", "미만", "해당", "지급", "기준", "선발",
     "알려줘", "알려주", "주세요", "해줘", "계열", "바이오", "화학",
     "동문장학", "동문회", "실습품", "확인서", "기능대회", "지원금",
-    "텍폴", "공무원", "청솔반", "검도부", "관악부", "운동부", "축구부",
-    "학년말", "성적우수", "대구공고", "총인원", "총금액", "얼마야", "얼마",
-    "수령자", "수령확인", "출전선수", "학교운동", "스마트공간", "자동화기계",
-    "친환경자동차", "자동차정비", "자동차기계", "섬유소재", "전공심화", "공간건축",
+    "공무원", "검도부", "관악부", "운동부", "축구부",
+    "학년말", "성적우수", "총인원", "총금액", "얼마야", "얼마",
+    "수령자", "수령확인", "출전선수", "학교운동", "스마트공간",
+    # 학과명/종목명: _find_filter_conditions 에서 실제 셀값 검색에 사용되도록 제거
+    # "자동화기계", "친환경자동차", "자동차정비", "자동차기계", "섬유소재", "전공심화", "공간건축"
 ])
 
 _KR_PARTICLES = frozenset("의이가을를은는에도로과와며서")
@@ -429,7 +497,7 @@ def _strip_kr_particle(word: str) -> str:
     return word
 
 
-def _search_name_pandas(question: str) -> tuple[pd.DataFrame | None, list[str]]:
+def _search_name_pandas(question: str) -> tuple[pd.DataFrame | None, list[str], bool]:
     """질문에서 이름 후보를 추출해 모든 DataFrame에서 전수 검색."""
     seen: set[str] = set()
     candidates: list[str] = []
@@ -439,7 +507,7 @@ def _search_name_pandas(question: str) -> tuple[pd.DataFrame | None, list[str]]:
             candidates.append(clean)
             seen.add(clean)
     if not candidates:
-        return None, []
+        return None, [], False  # 이름 후보 없음
 
     context_words = {w for w in re.findall(r"[가-힣]{2,}", question)} - _NON_NAME_WORDS
     table_results: list[tuple[pd.DataFrame, str, int]] = []
@@ -469,7 +537,6 @@ def _search_name_pandas(question: str) -> tuple[pd.DataFrame | None, list[str]]:
                 continue
 
             row_text = " ".join(rows.astype(str).values.flatten())
-            # 행 텍스트 + 소스명 관련성을 합산: 동명이인이 여러 문서에 있을 때 정확한 문서 선택
             src = _df_sources.get(var_name, var_name)
             ctx_score = sum(1 for w in context_words if w in row_text)
             src_score = sum(1 for w in context_words if w in src)
@@ -478,13 +545,13 @@ def _search_name_pandas(question: str) -> tuple[pd.DataFrame | None, list[str]]:
             break
 
     if not table_results:
-        return None, []
+        return None, [], True  # 이름 후보는 있었으나 데이터에 없음
 
     table_results.sort(key=lambda x: x[2], reverse=True)
     best_rows, best_src, best_score = table_results[0]
     logger.info("[NAME_SEARCH] %d개 DF 매칭, 최적 선택 (score=%d): %s",
                 len(table_results), best_score, best_src)
-    return best_rows, [best_src]
+    return best_rows, [best_src], True
 
 # ---------------------------------------------------------------------------
 # 키워드 → 실제 (alias, col, value) 매핑
@@ -576,7 +643,8 @@ def _find_dfs_by_source_label(question: str) -> list[str]:
     """데이터 셀 매칭이 없을 때 소스명·레이블을 키워드로 검색해 관련 alias 목록 반환.
     _SOURCE_STOP_WORDS만 제거하므로 '동문회', '신입생' 같은 키워드도 살아남는다."""
     words: set[str] = set()
-    for w in re.findall(r"[가-힣]{2,}|20\d{2}", question):
+    # "3월", "1분기" 같은 숫자+한글 패턴도 추출해 파일명 내 월·분기 구분에 활용
+    for w in re.findall(r"[가-힣]{2,}|20\d{2}|\d+월|\d+분기", question):
         stripped = _strip_kr_particle(w)
         for cand in [w, stripped]:
             if cand not in _SOURCE_STOP_WORDS and len(cand) >= 2:
@@ -594,18 +662,29 @@ def _find_dfs_by_source_label(question: str) -> list[str]:
 
 
 def _find_value_locations(question: str) -> str:
-    """_find_filter_conditions 결과를 LLM 프롬프트용 힌트 문자열로 변환."""
+    """_find_filter_conditions 결과를 LLM 프롬프트용 힌트 문자열로 변환.
+    소스 파일명을 함께 표시해 LLM이 질문 맥락에 맞는 DataFrame을 선택하도록 안내한다."""
     conditions = _find_filter_conditions(question)
     if not conditions:
         return ""
     hints = [
-        f"'{val}' → {alias}['{col}']"
+        f"'{val}' → {alias}['{col}'] (파일: {_df_sources.get(alias, alias)})"
         for alias, cond_list in conditions.items()
         for col, val in cond_list
     ]
-    return "데이터 위치 힌트 (반드시 이 변수명/컬럼명을 사용하세요):\n" + "\n".join(
+    return "데이터 위치 힌트 (질문 맥락에 맞는 DataFrame을 선택하세요):\n" + "\n".join(
         f"  {h}" for h in hints
     )
+
+
+_AMOUNT_IN_FILENAME_RE = re.compile(r"(\d[\d,]*)만원")
+
+
+def _extract_total_from_source(alias: str) -> str | None:
+    """소스 파일명에서 총액 정보 추출 (예: '-760만원.pdf' → '760만원')."""
+    src = _df_sources.get(alias, "")
+    m = _AMOUNT_IN_FILENAME_RE.search(src)
+    return f"{m.group(1)}만원" if m else None
 
 
 def _query_pandas_direct(question: str) -> tuple[object, list[str]]:
@@ -702,10 +781,29 @@ def _query_pandas_direct(question: str) -> tuple[object, list[str]]:
 
     source = _df_sources.get(best_alias, best_alias)
 
+
     if _AGG_COUNT.search(question):
-        return int(len(filtered)), [source]
+        # 동일 소스 파일에서 나온 여러 DF가 있으면 전체 합산
+        same_src = [a for a in _df_namespace if _df_sources.get(a) == source]
+        if len(same_src) > 1:
+            def _count_for_alias(a: str) -> int:
+                df_a = _df_namespace[a]
+                m = pd.Series([True] * len(df_a), index=df_a.index)
+                for col, val in conditions.get(best_alias, []):
+                    if col in df_a.columns:
+                        m &= df_a[col].astype(str).str.contains(re.escape(val), na=False)
+                return _count_valid_name_rows(_apply_grade_filter(df_a[m]))
+            total = sum(_count_for_alias(a) for a in same_src)
+            logger.info("[AGG_COUNT] 동일 소스 %d개 DF 합산 | source=%s total=%d", len(same_src), source, total)
+            return int(total), [source]
+        return _count_valid_name_rows(filtered), [source]
 
     if _AGG_SUM.search(question):
+        # 1순위: 소스 파일명에서 총액 추출 (파일명에 "XYZ만원" 패턴)
+        total_str = _extract_total_from_source(best_alias)
+        if total_str:
+            return total_str, [source]
+        # 2순위: 금액 컬럼 합계
         amount_col = next(
             (c for c in filtered.columns if any(k in c for k in _AMOUNT_COLS)), None
         )
@@ -749,6 +847,16 @@ except ImportError:
         "range": range, "isinstance": isinstance,
         "True": True, "False": False, "None": None,
     }}
+
+
+def _count_valid_name_rows(df: pd.DataFrame) -> int:
+    """이름 컬럼이 있으면 비어있지 않은 행만 카운트, 없으면 전체 행 수."""
+    name_col = next((c for c in df.columns if c in _NAME_COLS_SET), None)
+    if name_col:
+        valid = df[name_col].astype(str).str.strip()
+        cnt = int((~valid.isin(["", "None", "nan", "NaN"])).sum())
+        return cnt if cnt > 0 else len(df)
+    return len(df)
 
 
 def _clean_code(raw: str) -> str:
@@ -795,6 +903,36 @@ def _format_pandas_result(result: object) -> str:
         return "\n".join(str(r) for r in result)
     return str(result)
 
+
+def _format_list_result(df: pd.DataFrame) -> str:
+    """DataFrame 명단 결과를 LLM 우회로 직접 포맷.
+    LLM에 넘기면 전체 행을 재생성하다 timeout 발생 → 테이블 그대로 반환."""
+    if df is None or (hasattr(df, "empty") and df.empty):
+        return "조회된 데이터가 없습니다."
+    header = f"총 {len(df)}건\n"
+    return header + df.to_string(index=False)
+
+
+def _format_scalar_result(result: object, question: str) -> str:
+    """int/float/str scalar를 LLM 없이 자연스러운 문장으로 포맷."""
+    if hasattr(result, "item"):
+        result = result.item()
+    if isinstance(result, int):
+        if _AGG_COUNT.search(question):
+            return f"총 {result}명입니다."
+        return str(result)
+    if isinstance(result, float):
+        if result == int(result):
+            return _format_scalar_result(int(result), question)
+        if int(result) >= 10000:
+            return f"{int(result) // 10000}만원"
+        return str(int(result))
+    if isinstance(result, str):
+        if re.search(r"\d+만원", result):
+            return f"지급 금액은 {result}입니다."
+        return result
+    return str(result)
+
 # ---------------------------------------------------------------------------
 # Pandas RAG
 # ---------------------------------------------------------------------------
@@ -806,14 +944,14 @@ async def _answer_pandas(question: str, allow_vector_fallback: bool = True) -> t
         return "현재 로드된 데이터프레임이 없습니다.", [], "pandas"
 
     # 1단계: 이름 전수 검색 (기존)
-    name_df, name_sources = _search_name_pandas(question)
+    name_df, name_sources, name_searched = _search_name_pandas(question)
     if name_df is not None:
         logger.info("[NAME_SEARCH] %d건 발견, 코드 생성 생략", len(name_df))
-        formatted = _format_pandas_result(name_df)
-        answer = await get_llm_rag().ainvoke(
-            _DATA_ANSWER_TEMPLATE.format(question=question, result=formatted)
-        )
-        return answer.strip(), name_sources, "pandas"
+        return _format_list_result(name_df), name_sources, "pandas"
+    if name_searched and re.search(r"이라는|라는\s*학생|학생이\s*(?:장학금|받|있)", question):
+        # "홍길동이라는 학생이 장학금 받았어" 같은 특정 인물 조회 → 없음 반환
+        logger.info("[NAME_SEARCH] 특정 인물 조회 패턴 — 데이터 없음")
+        return "조회된 데이터가 없습니다.", [], "pandas"
 
     # 2단계: 키워드 직접 조회 (LLM 코드 생성 없음)
     direct_result, direct_sources = _query_pandas_direct(question)
@@ -821,13 +959,13 @@ async def _answer_pandas(question: str, allow_vector_fallback: bool = True) -> t
         formatted = _format_pandas_result(direct_result)
         if formatted != "조회된 데이터가 없습니다.":
             logger.info("[DIRECT] 직접 조회 성공 | source=%s", direct_sources)
-            answer = await get_llm_rag().ainvoke(
-                _DATA_ANSWER_TEMPLATE.format(question=question, result=formatted)
-            )
-            return answer.strip(), direct_sources, "pandas"
+            if isinstance(direct_result, pd.DataFrame):
+                return _format_list_result(direct_result), direct_sources, "pandas"
+            # scalar(int/float/str): LLM 우회, 직접 포맷
+            return _format_scalar_result(direct_result, question), direct_sources, "pandas"
 
-    # 3단계: LLM 코드 생성 (복잡한 질문 폴백)
-    schema = _get_df_schema()
+    # 3단계: LLM 코드 생성 (복잡한 질문 폴백) — 관련 DF만 schema에 포함
+    schema = _get_df_schema_filtered(question)
     hints = _find_value_locations(question)
     agg_hint = ""
     if _AGG_COUNT.search(question):
@@ -872,7 +1010,6 @@ async def _answer_pandas(question: str, allow_vector_fallback: bool = True) -> t
 
     if formatted == "조회된 데이터가 없습니다." and allow_vector_fallback:
         if _NO_VECTOR_FALLBACK.search(question):
-            # 명단·인원 쿼리는 VECTOR 폴백 시 hallucination 위험이 높으므로 그대로 반환
             logger.info("[PANDAS] 명단형 쿼리 — VECTOR 폴백 건너뜀")
             return formatted, [], "pandas"
         logger.info("[PANDAS→VECTOR] 결과 없음, VECTOR 폴백")
@@ -884,10 +1021,10 @@ async def _answer_pandas(question: str, allow_vector_fallback: bool = True) -> t
     if formatted == "조회된 데이터가 없습니다.":
         return formatted, source_files, "pandas"
 
-    answer = await get_llm_rag().ainvoke(
-        _DATA_ANSWER_TEMPLATE.format(question=question, result=formatted)
-    )
-    return answer.strip(), source_files, "pandas"
+    if isinstance(result, pd.DataFrame):
+        return _format_list_result(result), source_files, "pandas"
+
+    return _format_scalar_result(result, question), source_files, "pandas"
 
 # ---------------------------------------------------------------------------
 # 파일 탐색 (재귀)
@@ -968,6 +1105,63 @@ def health():
         result["chromadb"] = "unreachable"
         result["status"] = "degraded"
     return result
+
+
+@app.get("/summary")
+def summary(_: None = Depends(_verify_api_key)):
+    """모든 적재 문서의 명세 요약: 문서별 목적·인원·총액 + 전체 합산.
+    n8n·Slack 연동 시 명세서 자동 작성에 활용."""
+    from datetime import datetime, timezone
+
+    _AMOUNT_RE = re.compile(r"(\d[\d,]*)만원")
+
+    seen_sources: list[str] = []
+    docs: list[dict] = []
+
+    for alias in sorted(_df_namespace.keys()):
+        source = _df_sources.get(alias, alias)
+        if source in seen_sources:
+            continue
+        seen_sources.append(source)
+
+        same_src = [a for a in _df_namespace if _df_sources.get(a) == source]
+        total_count = sum(_count_valid_name_rows(_df_namespace[a]) for a in same_src)
+
+        amount_str = _extract_total_from_source(alias)
+        amount_int = 0
+        if amount_str:
+            m = _AMOUNT_RE.search(amount_str)
+            if m:
+                amount_int = int(m.group(1).replace(",", ""))
+
+        # 목적: 파일명에서 번호·금액·괄호 제거
+        core = re.sub(r"\s*[-–]\s*\d[\d,]*만원.*$", "", source)
+        core = re.sub(r"\s*\.[a-zA-Z]+$", "", core)
+        core = re.sub(r"\s*\([^)]*\)\s*", " ", core).strip()
+        core = re.sub(r"^\d+\.\s*", "", core).strip()
+
+        docs.append({
+            "문서명": source,
+            "목적": core,
+            "인원": total_count,
+            "총액": amount_str or "미확인",
+            "총액_만원": amount_int,
+        })
+
+    total_people = sum(d["인원"] for d in docs)
+    total_amount = sum(d["총액_만원"] for d in docs)
+
+    return {
+        "생성일시": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+        "전체합산": {
+            "총인원": total_people,
+            "총지원금액": f"{total_amount:,}만원",
+        },
+        "문서_목록": [
+            {k: v for k, v in d.items() if k != "총액_만원"}
+            for d in docs
+        ],
+    }
 
 
 @app.post("/chat", response_model=ChatResponse)

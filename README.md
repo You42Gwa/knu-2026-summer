@@ -31,28 +31,72 @@
 
 ---
 
-## 3. 시스템 아키텍처
+## 3. 핵심 기능
+
+### 기능 1 — 질의 응답 (`/chat`)
+
+사용자가 자연어로 질문하면 AI가 적재된 문서를 분석해 답변을 도출합니다.
+
+```
+질문 예시:
+  "하반기 장학금 1학년 대상자 명단을 알려줘"
+  "1학년 장학생이 몇 명이야?"
+  "신입생 장학금 지급 금액은 얼마야?"
+  "해당 문서의 목적이나 내용을 설명해줘"
+```
+
+질의 유형을 자동 분류하여 두 가지 경로로 처리합니다.
+
+| 경로 | 트리거 | 처리 방식 |
+|---|---|---|
+| **PANDAS** | 명단, 몇 명, 금액, 인원, 종목 등 | Parquet 직접 조회 → 집계/필터링 → 결과 반환 |
+| **VECTOR** | 방법, 절차, 설명, 목적, 내용 등 | ChromaDB 의미 검색 → LLM 답변 생성 |
+
+---
+
+### 기능 2 — 문서 명세서 생성 (`/summary`)
+
+적재된 모든 문서에서 **목적·인원·지원 금액**을 자동 추출하여 구조화된 명세서를 반환합니다.
+
+```json
+{
+  "생성일시": "2026-06-03 ...",
+  "전체합산": {
+    "총인원": 198,
+    "총지원금액": "3,760만원"
+  },
+  "문서_목록": [
+    {
+      "문서명": "장학금 지급 대상자 명단.pdf",
+      "목적": "장학금 지급 대상자",
+      "인원": 29,
+      "총액": "760만원"
+    },
+    ...
+  ]
+}
+```
+
+n8n 워크플로우와 연동하여 Slack 보고서 자동 발송 또는 양식 문서 자동 작성에 활용합니다.
+
+---
+
+## 4. 시스템 아키텍처
 
 ```
 Slack 메시지
   └─▶ n8n (트리거 / 전처리)
-        └─▶ POST /chat  (FastAPI + X-API-Key 인증)
-              └─▶ 키워드 기반 라우팅 판단
-                    ├─ PANDAS ─▶ Parquet 로드 → ①이름 전수 검색 / ②키워드 직접 조회 / ③LLM 코드 생성(폴백) → 인메모리 실행 → 결과 포맷팅
-                    └─ VECTOR ─▶ ChromaDB 검색 (bge-m3) → LLM 답변 생성
-                                                             │
-                                                       Ollama (gemma4:e4b)
+        ├─▶ POST /chat  (질의 응답)
+        │     └─▶ 키워드 기반 라우팅 판단
+        │           ├─ PANDAS ─▶ Parquet 로드 → ①이름 전수 검색 / ②키워드 직접 조회 / ③LLM 코드 생성(폴백) → 결과 포맷팅
+        │           └─ VECTOR ─▶ ChromaDB 검색 (qwen3-embedding:0.6b) → LLM 답변 생성
+        │                                                    │
+        │                                             Ollama (gemma4:e4b)
+        └─▶ GET  /summary  (문서 명세서)
+              └─▶ 적재 문서별 인원·금액·목적 자동 집계 → JSON 반환
+
   ◀─ n8n ◀─ FastAPI 응답 ◀──────────────────────────────────────────────┘
 ```
-
-### 라우팅 기준
-
-| 경로 | 트리거 키워드 예시 | 처리 방식 |
-|---|---|---|
-| **PANDAS** | 몇 명, 인원, 금액, 명단, 조회 | ①이름 전수 검색 → ②키워드 직접 조회 → ③LLM pandas 코드 생성(폴백) |
-| **VECTOR** | 방법, 절차, 기준, 규정, 설명해 | ChromaDB 의미 검색 → LLM 답변 생성 |
-
-> VECTOR 경로에서 유의미한 결과가 없으면 PANDAS 경로로 폴백합니다.
 
 ### 문서 적재 파이프라인
 
@@ -63,72 +107,61 @@ POST /ingest  또는  python utils/ingest.py
   ├─ HWP         ─▶ hwp5html 변환 → 표 → Parquet + .meta.json  /  본문 → ChromaDB
   └─ XLSX        ─▶ 시트별 → Parquet + .meta.json
 
+* 각 문서마다 [문서 개요] 청크(목적·금액·항목 요약)를 ChromaDB에 추가 주입
 * PostgreSQL은 ingestion_manifest 테이블만 유지 (중복 적재 방지용 MD5 해시 추적)
 * 적재 완료 후 _load_dataframes()로 인메모리 namespace 갱신
 ```
 
 ---
 
-## 4. 폴더 구조
+## 5. 폴더 구조
 
 ```
 knu-2026-summer-rag/
 ├── backend/
-│   ├── main.py              # FastAPI 서버 (라우팅, /chat, /ingest 엔드포인트)
+│   ├── main.py              # FastAPI 서버 (라우팅, /chat, /summary, /ingest 엔드포인트)
 │   ├── database.py          # PostgreSQL / ChromaDB 연결 설정
 │   ├── check_chroma.py      # ChromaDB 상태 확인 유틸리티
 │   ├── .env                 # [Git Ignored] 실제 환경변수 (backend/.env.example 참고)
 │   ├── data/                # [Git Ignored] 입력 문서 (hwp, pdf, xlsx)
-│   ├── dataframes/          # Parquet 캐시 + 메타데이터 (적재 시 자동 생성)
-│   │   ├── df_tbl_*.parquet     # 문서에서 추출된 표 데이터
-│   │   └── df_tbl_*.meta.json   # 원본 파일명·레이블 추적 메타데이터
-│   ├── logs/
-│   │   └── ingest.log       # 적재 처리 로그 (자동 생성, 5MB 로테이션)
+│   ├── dataframes/          # [Git Ignored] Parquet 캐시 + 메타데이터 (적재 시 자동 생성)
+│   ├── logs/                # [Git Ignored] 적재 처리 로그
 │   ├── utils/
 │   │   └── ingest.py        # 문서 파싱 및 DB 적재 파이프라인
 │   └── tests/
 │       ├── eval.py          # 평가 스크립트 (키워드 기반 정답률 측정)
-│       ├── goldset.json     # 평가 질의셋 (easy / medium / hard 50개+)
-│       ├── check_integrity.py   # 데이터 무결성 검증
-│       └── make_goldset.py  # 평가 질의셋 생성기
-├── .env                     # [Git Ignored] Docker Compose용 환경변수 (.env.example 참고)
-├── .env.example             # 환경변수 템플릿 (복사 후 값 설정)
+│       ├── compare.py       # 두 eval 결과 비교 유틸리티
+│       └── check_integrity.py   # 데이터 무결성 검증
+├── .env.example             # 환경변수 템플릿
 ├── docker-compose.yml       # Ollama / PostgreSQL / ChromaDB / n8n 일괄 실행
 ├── my_workflow.json         # n8n Slack 워크플로우
-├── requirements.txt         # Python 의존성
+├── requirements.txt
 └── README.md
 ```
 
 ---
 
-## 5. 시작하기
+## 6. 시작하기
 
-### 5-1. 환경변수 설정 (필수)
+### 6-1. 환경변수 설정 (필수)
 
 `.env.example`을 복사해 `.env`를 생성하고 값을 설정합니다.
 
 ```bash
-# 루트 .env (Docker Compose용)
 cp .env.example .env
-
-# backend/.env (Python 앱용)
 cp .env.example backend/.env
 ```
 
-두 파일 모두 열어서 아래 항목을 반드시 변경하세요:
+두 파일 모두 아래 항목을 반드시 변경하세요:
 
 ```dotenv
 POSTGRES_PASSWORD=강력한_비밀번호로_변경
 API_KEY=랜덤한_API_키로_변경
 ```
 
-> `API_KEY`를 비워두면 인증 없이 동작합니다 (로컬 개발 환경에서만 권장).
-
 ---
 
-### 5-2. 시스템 의존성 설치 (OCR 사용 시)
-
-스캔 PDF OCR 처리를 위해 아래 도구를 **별도 설치**해야 합니다.
+### 6-2. 시스템 의존성 설치 (OCR 사용 시)
 
 **Tesseract OCR** (한국어 언어팩 포함)
 - Windows: https://github.com/UB-Mannheim/tesseract/wiki 에서 installer 다운로드
@@ -138,14 +171,9 @@ API_KEY=랜덤한_API_키로_변경
 - https://github.com/oschwartz10612/poppler-windows/releases 에서 다운로드
 - 압축 해제 후 `bin/` 경로를 시스템 PATH에 추가
 
-> OCR 미설치 시에도 텍스트 PDF / HWP / XLSX 처리는 정상 동작합니다.  
-> 스캔 PDF 페이지는 경고 로그를 남기고 건너뜁니다.
-
 ---
 
-### 5-3. 인프라 실행 (Docker)
-
-루트 `.env` 파일이 있어야 `docker compose`가 실행됩니다.
+### 6-3. 인프라 실행 (Docker)
 
 ```bash
 docker compose up -d
@@ -160,80 +188,76 @@ docker compose up -d
 
 ---
 
-### 5-4. Ollama 모델 준비
-
-> **주의**: `gemma4:e4b`는 최신 버전의 Ollama가 필요합니다.
-> `docker pull ollama/ollama:latest && docker-compose up -d --force-recreate ollama` 로 업데이트 후 진행하세요.
+### 6-4. Ollama 모델 준비
 
 ```bash
-# LLM (생성 모델)
 docker exec ollama_server ollama pull gemma4:e4b
-
-# 임베딩 모델
 docker exec ollama_server ollama pull qwen3-embedding:0.6b
 ```
 
 ---
 
-### 5-5. 백엔드 실행
+### 6-5. 백엔드 실행
 
 ```bash
 cd backend
 python -m venv venv
-
-# Windows
-venv\Scripts\activate
-# Mac/Linux
-source venv/bin/activate
+venv\Scripts\activate      # Windows
+source venv/bin/activate   # Mac/Linux
 
 pip install -r ../requirements.txt
-
 uvicorn main:app --host 0.0.0.0 --port 8080 --reload
 ```
 
 ---
 
-### 5-6. 문서 적재
-
-**방법 A — API 호출** (`API_KEY` 설정 시 헤더 필수)
+### 6-6. 문서 적재
 
 ```bash
-# 특정 파일 (backend/data/ 내부 경로만 허용)
-curl -X POST http://localhost:8080/ingest \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: your_api_key" \
-  -d '{"file_path": "/absolute/path/to/backend/data/file.pdf"}'
-
-# data/ 폴더 전체
-curl -X POST http://localhost:8080/ingest/all \
-  -H "X-API-Key: your_api_key"
-```
-
-**방법 B — 직접 실행** (경로 제한 없음, 병렬 처리)
-
-```bash
-# backend/data/ 폴더에 문서를 넣고 실행
+# data/ 폴더에 문서를 넣고 실행
 python utils/ingest.py
 ```
 
-> 적재가 완료되면 `backend/dataframes/`에 Parquet 파일과 `.meta.json`이 생성됩니다.  
-> 동일 파일을 다시 적재하면 MD5 해시로 중복을 감지하여 건너뜁니다.
-
 ---
 
-## 6. API 엔드포인트
+## 7. API 엔드포인트
 
 `API_KEY` 환경변수가 설정된 경우 `*` 표시 엔드포인트에 `X-API-Key` 헤더가 필요합니다.
 
 | Method | Path | 인증 | 설명 |
 |---|---|---|---|
 | GET | `/health` | 불필요 | 서버·Ollama·ChromaDB 상태 확인 |
+| GET | `/summary` | * | **모든 문서 명세서** (인원·금액·목적 자동 집계) |
 | POST | `/chat` | * | 질문 전송 → 자동 라우팅 → 답변 반환 |
 | POST | `/chat/stream` | * | 스트리밍 답변 (프론트 직접 연동용) |
 | POST | `/ingest` | * | 단일 파일 적재 (백그라운드, data/ 내부만 허용) |
 | POST | `/ingest/all` | * | `data/` 폴더 전체 일괄 적재 (백그라운드) |
 
-**`/chat` 요청/응답 예시**
+### `/summary` 응답 예시
+
+```bash
+curl http://localhost:8080/summary -H "X-API-Key: your_api_key"
+```
+
+```json
+{
+  "생성일시": "2026-06-03 00:00 UTC",
+  "전체합산": {
+    "총인원": 198,
+    "총지원금액": "3,760만원"
+  },
+  "문서_목록": [
+    {
+      "문서명": "1. 2024학년도 신입생 동문회 장학금 지급 대상자(본교 상반기)-760만원.pdf",
+      "목적": "2024학년도 신입생 동문회 장학금 지급 대상자",
+      "인원": 29,
+      "총액": "760만원"
+    }
+  ]
+}
+```
+
+### `/chat` 요청/응답 예시
 
 ```bash
 curl -X POST http://localhost:8080/chat \
@@ -244,36 +268,20 @@ curl -X POST http://localhost:8080/chat \
 
 ```json
 {
-  "answer": "2024년 장학금 예산 총액은 ...",
-  "source": "pandas"
-}
-```
-
-> `source` 필드: `"pandas"` (정형 데이터 pandas 조회) | `"vector"` (문서 의미 검색)
-
-**`/health` 응답 예시**
-
-```json
-{
-  "status": "ok",
-  "llm_model": "gemma4:e4b",
-  "embed_model": "qwen3-embedding:0.6b",
-  "dataframes": 5,
-  "ollama": "ok",
-  "chromadb": "ok"
+  "answer": "지급 금액은 760만원입니다.",
+  "source": "pandas",
+  "sources": ["장학금 지급 대상자 명단.pdf"]
 }
 ```
 
 ---
 
-## 7. 환경변수
-
-`.env.example`을 복사해 `backend/.env` (Python 앱) 및 루트 `.env` (Docker Compose) 를 생성하세요.
+## 8. 환경변수
 
 | 변수 | 기본값 | 설명 |
 |---|---|---|
 | `POSTGRES_USER` | `admin` | PostgreSQL 사용자 |
-| `POSTGRES_PASSWORD` | **(필수 설정)** | PostgreSQL 비밀번호 — 반드시 변경 |
+| `POSTGRES_PASSWORD` | **(필수 설정)** | PostgreSQL 비밀번호 |
 | `POSTGRES_DB` | `rag_database` | PostgreSQL DB명 |
 | `POSTGRES_HOST` | `localhost` | PostgreSQL 호스트 |
 | `POSTGRES_PORT` | `5432` | PostgreSQL 포트 |
@@ -282,34 +290,28 @@ curl -X POST http://localhost:8080/chat \
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama 서버 주소 |
 | `OLLAMA_MODEL` | `gemma4:e4b` | 생성 LLM 모델 |
 | `EMBED_MODEL` | `qwen3-embedding:0.6b` | 임베딩 모델 |
-| `API_KEY` | *(비어있으면 인증 없음)* | `/chat`, `/ingest` 엔드포인트 보호용 API Key |
-| `INGEST_ALLOWED_BASE` | `backend/data/` 절대경로 | `/ingest` API가 접근 가능한 최상위 디렉토리 |
+| `API_KEY` | *(비어있으면 인증 없음)* | 엔드포인트 보호용 API Key |
+| `INGEST_ALLOWED_BASE` | `backend/data/` 절대경로 | `/ingest` API 접근 가능 디렉토리 |
 
 ---
 
-## 8. 평가 (Evaluation)
+## 9. 평가 결과
 
-`backend/tests/`에 평가 도구가 포함되어 있습니다.
+내부 평가 질의셋(로컬 전용)으로 측정한 최종 성능입니다.
 
-```bash
-cd backend
-# 전체 평가 실행
-python tests/eval.py
+| 카테고리 | 정답률 |
+|---|---|
+| pandas_명단 | 14/16 (88%) |
+| pandas_인원 | 7/8 (88%) |
+| vector_문서 | 12/15 (80%) |
+| **전체** | **34/42 (81%)** |
 
-# 난이도별 필터링
-python tests/eval.py --difficulty easy
-python tests/eval.py --difficulty hard
+평균 응답 시간: **3.0s** (timeout 해결 후)
 
-# 카테고리별 필터링 (sql_명단, sql_금액, sql_인원, vector_규정 등)
-python tests/eval.py --category sql_명단
-```
-
-`goldset.json`은 easy / medium / hard 3단계로 구성된 50개+ 질의셋으로,  
-정형(pandas) / 비정형(vector) / 경계(negative) 케이스를 모두 포함합니다.
 
 ---
 
-## 9. 협업 규칙
+## 10. 협업 규칙
 
 ### Git 브랜치 전략
 ```
@@ -324,16 +326,6 @@ main ← develop ← feature/기능명
 
 ### n8n 워크플로우
 수정 후 반드시 JSON으로 내보내어 `my_workflow.json`으로 커밋.
-
----
-
-## 10. 정량적 성과 목표
-
-| 지표 | 목표 |
-|---|---|
-| 정형 데이터 질의 정답률 (Naive RAG 대비) | 90% 이상 |
-| 할루시네이션 감소율 | 측정 및 기록 |
-| End-to-End 응답 레이턴시 | 측정 및 기록 |
 
 ---
 

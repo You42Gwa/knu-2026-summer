@@ -149,6 +149,81 @@ def _cell_val(cell) -> str:
     return str(cell).strip() if cell is not None else ""
 
 
+# 집계 행 탐지 패턴: 셀 값이 "합계", "소계", "계", "장학금 계" 등
+_AGGREGATE_ROW_RE = re.compile(
+    r"^(합\s*계|소\s*계|총\s*계|합\s*산|계|장학금\s*계|total|subtotal)$",
+    re.IGNORECASE,
+)
+# 금액 공식 패턴: "N명*N만원" 형식의 요약 수식
+_AMOUNT_FORMULA_RE = re.compile(r"\d+명\s*[*×x]\s*\d+", re.IGNORECASE)
+
+
+def _clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+    """인제스트 시 공통 정제: 집계 행 제거 + 컬럼값 정규화."""
+    if df is None or df.empty:
+        return df
+
+    # 1. 집계 행 제거: 전체 컬럼을 검사해 집계 키워드·금액공식 포함 행 제거
+    agg_mask = pd.Series(False, index=df.index)
+    for col in df.columns:
+        vals = df[col].astype(str).str.strip()
+        agg_mask |= vals.apply(
+            lambda v: bool(_AGGREGATE_ROW_RE.match(v)) or bool(_AMOUNT_FORMULA_RE.search(v))
+        )
+
+    if agg_mask.any():
+        logger.info("집계 행 제거: %d행", int(agg_mask.sum()))
+        df = df[~agg_mask].reset_index(drop=True)
+
+    # 2. 숫자/금액만 있는 footer 행 제거
+    # 실제 데이터 행은 반드시 학과명·성명 등 한글을 포함하므로,
+    # 한글이 없고 숫자·금액 형식만 있는 행은 집계/footer 행으로 판단한다.
+    _DIGIT_AMOUNT_RE = re.compile(r'^\d[\d,]*$|^\d[\d,]*만원$|^\d[\d,]*원$')
+
+    def _is_footer_row(row: pd.Series) -> bool:
+        vals = [str(v).strip() for v in row if str(v).strip() not in ("", "None", "nan")]
+        if len(vals) < 2:
+            return False
+        # 숫자·금액이 아닌 값 중에 한글이 있으면 실제 데이터 행
+        non_amount = [v for v in vals if not _DIGIT_AMOUNT_RE.match(v)]
+        if any(re.search(r'[가-힣]', v) for v in non_amount):
+            return False
+        return all(_DIGIT_AMOUNT_RE.match(v) for v in vals) and len(set(vals)) <= 3
+
+    footer_mask = df.apply(_is_footer_row, axis=1)
+    if footer_mask.any():
+        logger.info("숫자전용 footer 행 제거: %d행", int(footer_mask.sum()))
+        df = df[~footer_mask].reset_index(drop=True)
+
+    # 3. 말미 중복 순번 행 제거: 순번/연번 컬럼 마지막 행이 직전 행과 같으면 footer
+    seq_col = next(
+        (c for c in df.columns if any(k in c for k in ("연번", "순번", "번호", "순"))), None
+    )
+    if seq_col:
+        try:
+            while len(df) > 1:
+                seq_vals = pd.to_numeric(df[seq_col], errors="coerce")
+                last, prev = seq_vals.iloc[-1], seq_vals.iloc[-2]
+                if pd.notna(last) and pd.notna(prev) and last == prev:
+                    logger.info("말미 중복 순번 행 제거: %s=%s", seq_col, df.iloc[-1][seq_col])
+                    df = df.iloc[:-1].reset_index(drop=True)
+                else:
+                    break
+        except Exception:
+            pass
+
+    # 3. 학과·계열 컬럼 값에서 "(N명)" suffix 제거
+    for col in df.columns:
+        if any(k in col for k in ("학과", "계열", "학부", "전공", "대상학생")):
+            try:
+                cleaned = df[col].astype(str).str.replace(r"\(\d+명\)", "", regex=True).str.strip()
+                df[col] = cleaned.where(~cleaned.isin({"None", "nan", ""}), None)
+            except Exception:
+                pass
+
+    return df
+
+
 def _parse_table(raw_table: list[list]) -> "pd.DataFrame | None":
     """병합 셀(None) 처리 + 2행 헤더 자동 탐지 후 DataFrame 반환."""
     if not raw_table or len(raw_table) < 2:
@@ -211,6 +286,9 @@ def _parse_table(raw_table: list[list]) -> "pd.DataFrame | None":
     df = df.replace("", None)
     df = df.ffill(axis=0)
     df = df.dropna(how="all").replace("\n", " ", regex=True)
+    if df.empty:
+        return None
+    df = _clean_dataframe(df)
     return df if not df.empty else None
 
 
@@ -274,6 +352,45 @@ def _table_to_text_chunks(df: pd.DataFrame, doc_label: str, page: int | None = N
         lines.append(" | ".join(cell_vals))
 
     return split_into_chunks("\n".join(lines), page=page)
+
+
+_FILENAME_AMOUNT_RE = re.compile(r"(\d[\d,]*)만원")
+
+
+def _make_doc_overview_chunk(doc_label: str, source_file: str, dfs: list) -> "dict | None":
+    """문서 개요 청크: 목적·내용 질문에 대한 벡터 검색용."""
+    total_rows = sum(len(d) for d in dfs)
+    all_cols: list[str] = []
+    for d in dfs:
+        for c in d.columns:
+            if c not in all_cols:
+                all_cols.append(c)
+
+    lines = [
+        "[문서 개요]",
+        f"문서명: {doc_label}",
+        f"파일: {source_file}",
+    ]
+    # 파일명에서 총액 추출 — "지급 금액은 얼마야" 유형 vector 답변용
+    m = _FILENAME_AMOUNT_RE.search(source_file)
+    if m:
+        lines.append(f"총 지원 금액: {m.group(1)}만원")
+    if total_rows:
+        lines.append(f"데이터: 총 {total_rows}건")
+    if all_cols:
+        lines.append(f"항목: {', '.join(all_cols[:8])}")
+
+    # 목적 설명 추가 — "설명해줘" 유형 질문의 벡터 검색 적중률 향상
+    # 파일명에서 금액 suffix·파일번호·괄호 제거해 핵심 명칭 추출
+    core = re.sub(r"\s*[-–]\s*\d[\d,]*만원.*$", "", doc_label)
+    core = re.sub(r"\s*\([^)]*\)\s*", " ", core).strip()
+    core = re.sub(r"^\d+\.\s*", "", core).strip()
+    core = re.sub(r"\s+", " ", core)
+    if core:
+        lines.append(f"목적: 이 문서는 {core}에 관한 명단 및 관련 정보를 담고 있습니다.")
+
+    text = "\n".join(lines)
+    return {"text": text, "page": None} if len(text) >= MIN_CHUNK_LEN else None
 
 # ---------------------------------------------------------------------------
 # manifest 관리 (PostgreSQL — 중복 방지 및 상태 추적용)
@@ -456,6 +573,7 @@ def ingest_xlsx(file_path: str, file_hash: str = "", category: str = "") -> int:
     xl = pd.ExcelFile(file_path, engine="openpyxl")
     sheets = xl.sheet_names
     all_chunk_records: list[dict] = []
+    parsed_tables: list[pd.DataFrame] = []
 
     for i, sheet_name in enumerate(sheets):
         raw_df = xl.parse(sheet_name, header=None)
@@ -473,6 +591,7 @@ def ingest_xlsx(file_path: str, file_hash: str = "", category: str = "") -> int:
             logger.warning("XLSX 파싱 결과 없음 | sheet=%s", sheet_name)
             continue
 
+        parsed_tables.append(df)
         # 단일 시트면 베이스명만, 멀티 시트면 인덱스 부여
         var_name = f"df_{base_name}_s{i}" if len(sheets) > 1 else f"df_{base_name}"
         label    = f"{doc_label} - {sheet_name}" if len(sheets) > 1 else doc_label
@@ -480,6 +599,11 @@ def ingest_xlsx(file_path: str, file_hash: str = "", category: str = "") -> int:
         logger.info("[XLSX] '%s' 저장 완료 | sheet=%s rows=%d", var_name, sheet_name, len(df))
 
         all_chunk_records.extend(_table_to_text_chunks(df, doc_label))
+
+    if parsed_tables:
+        overview = _make_doc_overview_chunk(doc_label, source_file, parsed_tables)
+        if overview:
+            all_chunk_records.insert(0, overview)
 
     if all_chunk_records and file_hash:
         count = save_to_chroma(file_path, all_chunk_records, file_hash, category)
@@ -560,6 +684,7 @@ def ingest_pdf_hybrid(file_path: str, file_hash: str, category: str) -> int:
     page_texts = _extract_page_texts(file_path)
 
     chunk_records: list[dict] = []
+    parsed_tables: list[pd.DataFrame] = []
     for page_num, raw_text in page_texts.items():
         cleaned = clean_pdf_text(raw_text)
         chunk_records.extend(split_into_chunks(cleaned, page=page_num))
@@ -578,6 +703,7 @@ def ingest_pdf_hybrid(file_path: str, file_hash: str, category: str) -> int:
                     df = _parse_table(table)
                     if df is None:
                         continue
+                    parsed_tables.append(df)
                     var_name = f"df_{safe_name}_p{page_num}t{table_count}"
                     label    = f"{doc_label} (p.{page_num} 표{table_count + 1})"
                     save_dataframe(df, var_name, source_file, label)
@@ -586,6 +712,11 @@ def ingest_pdf_hybrid(file_path: str, file_hash: str, category: str) -> int:
                     chunk_records.extend(_table_to_text_chunks(df, doc_label, page_num))
                 except Exception:
                     logger.exception("[PDF] 표 저장 실패 | page=%d t=%d", page_num, t_idx)
+
+    if parsed_tables:
+        overview = _make_doc_overview_chunk(doc_label, source_file, parsed_tables)
+        if overview:
+            chunk_records.insert(0, overview)
 
     if not chunk_records and table_count == 0:
         logger.warning("추출 데이터 없음 | file=%s", file_path)
@@ -628,6 +759,7 @@ def convert_hwp_to_html_and_ingest(file_path: str, file_hash: str, category: str
         soup = BeautifulSoup(read_text_with_fallbacks(index_html), "html.parser")
 
         table_count = 0
+        parsed_tables: list[pd.DataFrame] = []
         table_chunk_records: list[dict] = []
         for i, table in enumerate(soup.find_all("table")):
             rows = table.find_all("tr")
@@ -644,6 +776,7 @@ def convert_hwp_to_html_and_ingest(file_path: str, file_hash: str, category: str
                 df = _parse_table(normalized)
                 if df is None:
                     continue
+                parsed_tables.append(df)
                 var_name = f"df_{safe_name}_t{i}"
                 label    = f"{doc_label} (표{i + 1})"
                 save_dataframe(df, var_name, source_file, label)
@@ -659,6 +792,11 @@ def convert_hwp_to_html_and_ingest(file_path: str, file_hash: str, category: str
         body_text = soup.get_text(separator="\n")
         chunk_records = split_into_chunks(body_text)
         chunk_records.extend(table_chunk_records)
+
+        if parsed_tables:
+            overview = _make_doc_overview_chunk(doc_label, source_file, parsed_tables)
+            if overview:
+                chunk_records.insert(0, overview)
 
         chroma_count = save_to_chroma(file_path, chunk_records, file_hash, category) if chunk_records else 0
         logger.info("HWP 완료 | file=%s tables=%d chunks=%d", file_path, table_count, chroma_count)

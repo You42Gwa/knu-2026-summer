@@ -53,6 +53,7 @@ def evaluate_case(
     tc: dict[str, Any],
     base_url: str,
     route_alias: dict[str, str],
+    endpoint: str = "/chat",
 ) -> dict[str, Any]:
     question       = tc["question"]
     expected_route = tc["expected_route"]
@@ -61,7 +62,7 @@ def evaluate_case(
     start = time.perf_counter()
     try:
         resp = requests.post(
-            f"{base_url}/chat",
+            f"{base_url}{endpoint}",
             json={"question": question},
             timeout=120,
         )
@@ -316,6 +317,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="골드셋 기반 RAG 평가")
     parser.add_argument("--url",          default=DEFAULT_URL, help="FastAPI 서버 주소")
     parser.add_argument("--tag",          default="default",   help="결과 파일 식별 태그 (브랜치명 권장)")
+    parser.add_argument("--endpoint",     default="/chat",     help="평가 대상 엔드포인트 (예: /chat/naive)")
     parser.add_argument("--route-alias",  nargs="*", default=[], metavar="SRC=DST",
                         help="라우팅 레이블 별칭 (예: sql=pandas)")
     parser.add_argument("--id",           help="특정 케이스 ID만 실행 (예: TC001)")
@@ -342,12 +344,12 @@ def main() -> None:
         sys.exit(1)
 
     alias_note = f" (alias: {route_alias})" if route_alias else ""
-    print(f"서버: {args.url}  태그: {args.tag}{alias_note}")
+    print(f"서버: {args.url}  엔드포인트: {args.endpoint}  태그: {args.tag}{alias_note}")
     print(f"테스트: {len(test_cases)}개\n" + "-" * 60)
 
     results = []
     for tc in test_cases:
-        r = evaluate_case(tc, args.url, route_alias)
+        r = evaluate_case(tc, args.url, route_alias, endpoint=args.endpoint)
         results.append(r)
         print_result(r, verbose=args.verbose)
 

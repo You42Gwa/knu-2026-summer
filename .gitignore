@@ -21,3 +21,6 @@ backend/tests/results/
 backend/tests/*.json
 backend/tests/make_goldset.py
 backend/tests/version.md
+backend/tests/*.json
+data/*
+!backend/data/.gitkeep

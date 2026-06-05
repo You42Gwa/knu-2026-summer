@@ -46,6 +46,16 @@ DATA_FOLDER         = os.path.join(os.path.dirname(__file__), "data")
 API_KEY             = os.getenv("API_KEY", "")
 INGEST_ALLOWED_BASE = os.path.realpath(os.getenv("INGEST_ALLOWED_BASE", DATA_FOLDER))
 
+ORG_CORP_NAME       = os.getenv("ORG_CORP_NAME", "")
+ORG_BUSINESS_NO     = os.getenv("ORG_BUSINESS_NO", "")
+ORG_REPRESENTATIVE  = os.getenv("ORG_REPRESENTATIVE", "")
+ORG_DONATION_TYPE   = os.getenv("ORG_DONATION_TYPE", "")
+ORG_EMAIL           = os.getenv("ORG_EMAIL", "")
+ORG_BUSINESS_YEAR   = os.getenv("ORG_BUSINESS_YEAR", "")
+ORG_PHONE           = os.getenv("ORG_PHONE", "")
+ORG_DESIGNATED_DATE = os.getenv("ORG_DESIGNATED_DATE", "")
+ORG_ADDRESS         = os.getenv("ORG_ADDRESS", "")
+
 # ---------------------------------------------------------------------------
 # API Key 인증
 # ---------------------------------------------------------------------------
@@ -678,6 +688,7 @@ def _find_value_locations(question: str) -> str:
 
 
 _AMOUNT_IN_FILENAME_RE = re.compile(r"(\d[\d,]*)만원")
+_MONTH_IN_FILENAME_RE  = re.compile(r"(\d{1,2})월")
 
 
 def _extract_total_from_source(alias: str) -> str | None:
@@ -685,6 +696,27 @@ def _extract_total_from_source(alias: str) -> str | None:
     src = _df_sources.get(alias, "")
     m = _AMOUNT_IN_FILENAME_RE.search(src)
     return f"{m.group(1)}만원" if m else None
+
+
+def _extract_month_from_source(source: str) -> str:
+    """파일명에서 지출월 추출 (예: '3월' → '3월')."""
+    m = _MONTH_IN_FILENAME_RE.search(source)
+    return f"{m.group(1)}월" if m else ""
+
+
+def _extract_recipient_from_dfs(aliases: list[str]) -> str:
+    """DataFrame의 '지급처' 컬럼에서 대표 지급처명 추출."""
+    for alias in aliases:
+        df = _df_namespace.get(alias)
+        if df is None:
+            continue
+        col = next((c for c in df.columns if "지급처" in c), None)
+        if col:
+            vals = df[col].dropna()
+            vals = vals[vals.astype(str).str.strip().ne("")]
+            if not vals.empty:
+                return str(vals.iloc[0]).strip()
+    return ""
 
 
 def _query_pandas_direct(question: str) -> tuple[object, list[str]]:
@@ -1140,12 +1172,17 @@ def summary(_: None = Depends(_verify_api_key)):
         core = re.sub(r"\s*\([^)]*\)\s*", " ", core).strip()
         core = re.sub(r"^\d+\.\s*", "", core).strip()
 
+        recipient = _extract_recipient_from_dfs(same_src)
+        month_str = _extract_month_from_source(source)
+
         docs.append({
             "문서명": source,
             "목적": core,
             "인원": total_count,
             "총액": amount_str or "미확인",
             "총액_만원": amount_int,
+            "지급처": recipient,
+            "지출월": month_str,
         })
 
     total_people = sum(d["인원"] for d in docs)
@@ -1153,6 +1190,17 @@ def summary(_: None = Depends(_verify_api_key)):
 
     return {
         "생성일시": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+        "기관정보": {
+            "corp_name":       ORG_CORP_NAME,
+            "business_no":     ORG_BUSINESS_NO,
+            "representative":  ORG_REPRESENTATIVE,
+            "donation_type":   ORG_DONATION_TYPE,
+            "email":           ORG_EMAIL,
+            "business_year":   ORG_BUSINESS_YEAR,
+            "phone":           ORG_PHONE,
+            "designated_date": ORG_DESIGNATED_DATE,
+            "address":         ORG_ADDRESS,
+        },
         "전체합산": {
             "총인원": total_people,
             "총지원금액": f"{total_amount:,}만원",
@@ -1161,6 +1209,9 @@ def summary(_: None = Depends(_verify_api_key)):
             {k: v for k, v in d.items() if k != "총액_만원"}
             for d in docs
         ],
+        "전체합산_지급처": list(dict.fromkeys(
+            d["지급처"] for d in docs if d["지급처"]
+        )),
     }
 
 

@@ -369,15 +369,6 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "corp_name": "={{ $('Run Summary').first().json['기관정보']['corp_name'] }}",
-            "business_no": "={{ $('Run Summary').first().json['기관정보']['business_no'] }}",
-            "representative": "={{ $('Run Summary').first().json['기관정보']['representative'] }}",
-            "donation_type": "={{ $('Run Summary').first().json['기관정보']['donation_type'] }}",
-            "email": "={{ $('Run Summary').first().json['기관정보']['email'] }}",
-            "business_year": "={{ $('Run Summary').first().json['기관정보']['business_year'] }}",
-            "phone": "={{ $('Run Summary').first().json['기관정보']['phone'] }}",
-            "designated_date": "={{ $('Run Summary').first().json['기관정보']['designated_date'] }}",
-            "address": "={{ $('Run Summary').first().json['기관정보']['address'] }}",
             "submit_year": "={{ $now.setZone('Asia/Seoul').toFormat('yyyy') }}",
             "submit_month": "={{ $now.setZone('Asia/Seoul').toFormat('MM') }}",
             "submit_day": "={{ $now.setZone('Asia/Seoul').toFormat('dd') }}"

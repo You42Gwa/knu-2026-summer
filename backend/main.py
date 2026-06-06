@@ -27,8 +27,6 @@ from utils.ingest import process_file, ensure_manifest_table
 from core.config import (
     OLLAMA_BASE_URL, OLLAMA_MODEL, EMBED_MODEL,
     CHROMA_HOST, CHROMA_PORT, DATA_FOLDER,
-    ORG_CORP_NAME, ORG_BUSINESS_NO, ORG_REPRESENTATIVE, ORG_DONATION_TYPE,
-    ORG_EMAIL, ORG_BUSINESS_YEAR, ORG_PHONE, ORG_DESIGNATED_DATE, ORG_ADDRESS,
 )
 from core.security import _verify_api_key, _validate_ingest_path
 from core.llm import get_llm_rag, get_rag_chain
@@ -177,17 +175,6 @@ def summary(_: None = Depends(_verify_api_key)):
 
     return {
         "생성일시": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-        "기관정보": {
-            "corp_name":       ORG_CORP_NAME,
-            "business_no":     ORG_BUSINESS_NO,
-            "representative":  ORG_REPRESENTATIVE,
-            "donation_type":   ORG_DONATION_TYPE,
-            "email":           ORG_EMAIL,
-            "business_year":   ORG_BUSINESS_YEAR,
-            "phone":           ORG_PHONE,
-            "designated_date": ORG_DESIGNATED_DATE,
-            "address":         ORG_ADDRESS,
-        },
         "전체합산": {
             "총인원": total_people,
             "총지원금액": f"{total_amount:,}만원",

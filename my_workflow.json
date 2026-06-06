@@ -2,17 +2,31 @@
   "nodes": [
     {
       "parameters": {
-        "trigger": ["app_mention"],
-        "channelId": {"__rl": true,"value": "C0B83LZ70B1","mode": "id"},
+        "trigger": [
+          "app_mention"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
         "options": {}
       },
       "type": "n8n-nodes-base.slackTrigger",
       "typeVersion": 1,
-      "position": [100, 400],
+      "position": [
+        100,
+        400
+      ],
       "id": "db64c57f-40ec-48b5-b200-2dc16774ab45",
       "name": "Slack Trigger1",
       "webhookId": "c17ace21-997f-45f9-8d4a-bcb5ae7cebb6",
-      "credentials": {"slackApi": {"id": "J1JrHC3TBoPCCS0v","name": "Slack account"}}
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
     },
     {
       "parameters": {
@@ -42,20 +56,32 @@
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [380, 400],
+      "position": [
+        380,
+        400
+      ],
       "id": "991d6a84-0d84-49c5-9f14-b265f6c99c80",
       "name": "Edit Fields1"
     },
     {
       "parameters": {
         "conditions": {
-          "options": {"caseSensitive": true,"leftValue": "","typeValidation": "strict","version": 3},
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
           "conditions": [
             {
               "id": "fa11e000-0000-0001-0000-000000000001",
               "leftValue": "={{ Array.isArray($('Slack Trigger1').item.json.files) && $('Slack Trigger1').item.json.files.length > 0 }}",
               "rightValue": "true",
-              "operator": {"type": "boolean","operation": "true","singleValue": true}
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
             }
           ],
           "combinator": "and"
@@ -64,18 +90,50 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [660, 400],
+      "position": [
+        660,
+        400
+      ],
       "id": "27d5fe0c-0694-4d45-82c3-7d1460b87f66",
       "name": "File Branch"
     },
     {
       "parameters": {
         "conditions": {
-          "options": {"caseSensitive": false,"leftValue": "","typeValidation": "strict","version": 3},
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
           "conditions": [
-            {"id": "dc001111-0000-0001-0000-000000000001","leftValue": "={{ $('Edit Fields1').item.json.question }}","rightValue": "문서목록","operator": {"type": "string","operation": "contains"}},
-            {"id": "dc001111-0000-0002-0000-000000000002","leftValue": "={{ $('Edit Fields1').item.json.question }}","rightValue": "어떤 파일","operator": {"type": "string","operation": "contains"}},
-            {"id": "dc001111-0000-0003-0000-000000000003","leftValue": "={{ $('Edit Fields1').item.json.question }}","rightValue": "파일 목록","operator": {"type": "string","operation": "contains"}}
+            {
+              "id": "dc001111-0000-0001-0000-000000000001",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "문서목록",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "dc001111-0000-0002-0000-000000000002",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "어떤 파일",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "dc001111-0000-0003-0000-000000000003",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "파일 목록",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
           ],
           "combinator": "or"
         },
@@ -83,19 +141,59 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [940, 400],
+      "position": [
+        940,
+        400
+      ],
       "id": "2ccf3309-d0d1-4319-8a49-b0cc686f4b5e",
       "name": "DocList Branch"
     },
     {
       "parameters": {
         "conditions": {
-          "options": {"caseSensitive": false,"leftValue": "","typeValidation": "strict","version": 3},
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
           "conditions": [
-            {"id": "hb000001-0000-0001-0000-000000000001","leftValue": "={{ $('Edit Fields1').item.json.question }}","rightValue": "도움말","operator": {"type": "string","operation": "contains"}},
-            {"id": "hb000001-0000-0002-0000-000000000002","leftValue": "={{ $('Edit Fields1').item.json.question }}","rightValue": "뭘 할 수 있","operator": {"type": "string","operation": "contains"}},
-            {"id": "hb000001-0000-0003-0000-000000000003","leftValue": "={{ $('Edit Fields1').item.json.question }}","rightValue": "사용법","operator": {"type": "string","operation": "contains"}},
-            {"id": "hb000001-0000-0004-0000-000000000004","leftValue": "={{ $('Edit Fields1').item.json.question }}","rightValue": "help","operator": {"type": "string","operation": "contains"}}
+            {
+              "id": "hb000001-0000-0001-0000-000000000001",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "도움말",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "hb000001-0000-0002-0000-000000000002",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "뭘 할 수 있",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "hb000001-0000-0003-0000-000000000003",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "사용법",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "hb000001-0000-0004-0000-000000000004",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "help",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
           ],
           "combinator": "or"
         },
@@ -103,37 +201,31 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [1220, 400],
+      "position": [
+        1220,
+        400
+      ],
       "id": "b0796b0e-55f6-4449-a320-374c5ab2edff",
       "name": "Help Branch"
     },
     {
       "parameters": {
         "conditions": {
-          "options": {"caseSensitive": false,"leftValue": "","typeValidation": "strict","version": 3},
-          "conditions": [
-            {"id": "del-cond-0001","leftValue": "={{ $('Edit Fields1').item.json.question }}","rightValue": "삭제","operator": {"type": "string","operation": "startsWith"}}
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [1500, 400],
-      "id": "del-branch-0001-0001-0001-0001",
-      "name": "Delete Branch"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {"caseSensitive": true,"leftValue": "","typeValidation": "strict","version": 3},
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
           "conditions": [
             {
-              "id": "dd08ecf3-0482-4850-8505-dddeada2211b",
+              "id": "del-cond-0001",
               "leftValue": "={{ $('Edit Fields1').item.json.question }}",
-              "rightValue": "명세서",
-              "operator": {"type": "string","operation": "contains"}
+              "rightValue": "삭제",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
             }
           ],
           "combinator": "and"
@@ -142,7 +234,43 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [1780, 400],
+      "position": [
+        1500,
+        400
+      ],
+      "id": "del-branch-0001-0001-0001-0001",
+      "name": "Delete Branch"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "dd08ecf3-0482-4850-8505-dddeada2211b",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "명세서",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1780,
+        400
+      ],
       "id": "b3e59450-24a7-4da0-8ad5-2ba86499d845",
       "name": "Report Branch1"
     },
@@ -161,10 +289,18 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
-      "position": [660, 100],
+      "position": [
+        660,
+        100
+      ],
       "id": "8e8ab545-7c89-4abe-98e2-85a85466df0e",
       "name": "Download File",
-      "credentials": {"slackApi": {"id": "J1JrHC3TBoPCCS0v","name": "Slack account"}}
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
     },
     {
       "parameters": {
@@ -173,13 +309,22 @@
         "sendBody": true,
         "contentType": "multipart-form-data",
         "bodyParameters": {
-          "parameters": [{"parameterType": "formBinaryData","name": "file","inputDataFieldName": "data"}]
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
         },
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
-      "position": [940, 100],
+      "position": [
+        940,
+        100
+      ],
       "id": "2b43eba7-0fdb-4911-84bc-40e685021d58",
       "name": "Upload to Backend",
       "continueOnFail": true
@@ -187,23 +332,38 @@
     {
       "parameters": {
         "select": "channel",
-        "channelId": {"__rl": true,"value": "C0B83LZ70B1","mode": "id"},
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
         "text": "={{ $('Edit Fields1').first().json.fileName + ' 색인을 시작했습니다. 약 30초 후 결과를 알려드릴게요.' }}",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
-      "position": [1220, 100],
+      "position": [
+        1220,
+        100
+      ],
       "id": "30fe555d-67a6-4cbe-87ee-319edaa08aa2",
       "name": "Send Indexing Started",
       "webhookId": "5746c49a-f961-47ed-8384-22375b623788",
-      "credentials": {"slackApi": {"id": "J1JrHC3TBoPCCS0v","name": "Slack account"}}
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
     },
     {
       "parameters": {},
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [1500, 100],
+      "position": [
+        1500,
+        100
+      ],
       "id": "c5699ddd-6975-439c-ba87-a2388e77472a",
       "name": "Wait 30s",
       "webhookId": "f7a8b9c0-d1e2-3456-f7a8-b9c0d1e23456"
@@ -215,7 +375,10 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
-      "position": [1780, 100],
+      "position": [
+        1780,
+        100
+      ],
       "id": "a1ab87ff-b98e-438a-ae89-0b47b92f9b42",
       "name": "Check Status",
       "continueOnFail": true
@@ -223,13 +386,21 @@
     {
       "parameters": {
         "conditions": {
-          "options": {"caseSensitive": true,"leftValue": "","typeValidation": "strict","version": 3},
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
           "conditions": [
             {
               "id": "b9c0d1e2-f3a4-0001-b9c0-d1e2f3a40001",
               "leftValue": "={{ $json.status }}",
               "rightValue": "SUCCESS",
-              "operator": {"type": "string","operation": "equals"}
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
           ],
           "combinator": "and"
@@ -238,39 +409,66 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [2060, 100],
+      "position": [
+        2060,
+        100
+      ],
       "id": "ead2b05c-8256-41e3-af9a-eab09a3070bd",
       "name": "Index Result Branch"
     },
     {
       "parameters": {
         "select": "channel",
-        "channelId": {"__rl": true,"value": "C0B83LZ70B1","mode": "id"},
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
         "text": "={{ '✅ ' + $('Edit Fields1').first().json.fileName + ' 색인 완료! ' + ($json.chroma_doc_count || 0) + '건 색인됨.' }}",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
-      "position": [2340, 0],
+      "position": [
+        2340,
+        0
+      ],
       "id": "8a1cc4dc-07b2-4008-bb0d-39f72f427801",
       "name": "Send Index Complete",
       "webhookId": "bc2e1d77-ce6c-4bd9-a739-6d79091dfc79",
-      "credentials": {"slackApi": {"id": "J1JrHC3TBoPCCS0v","name": "Slack account"}}
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
     },
     {
       "parameters": {
         "select": "channel",
-        "channelId": {"__rl": true,"value": "C0B83LZ70B1","mode": "id"},
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
         "text": "={{ '⚠️ ' + $('Edit Fields1').first().json.fileName + ' 색인 ' + ($json.status || '상태 확인 필요') + ($json.error_message ? ': ' + $json.error_message : '') }}",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
-      "position": [2340, 200],
+      "position": [
+        2340,
+        200
+      ],
       "id": "48badbae-785d-4138-9d85-0cf1e5c86441",
       "name": "Send Index Failed",
       "webhookId": "c56aa400-64c1-4f33-a6af-e336af22e34b",
-      "credentials": {"slackApi": {"id": "J1JrHC3TBoPCCS0v","name": "Slack account"}}
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
     },
     {
       "parameters": {
@@ -279,7 +477,10 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
-      "position": [940, 700],
+      "position": [
+        940,
+        700
+      ],
       "id": "899b8378-2df6-4d8f-9dd5-85bd39d02d6d",
       "name": "Call Documents API"
     },
@@ -289,39 +490,66 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1220, 700],
+      "position": [
+        1220,
+        700
+      ],
       "id": "5cdb2b3a-6497-4d3d-9985-4d6d682c24b0",
       "name": "Format Doc List"
     },
     {
       "parameters": {
         "select": "channel",
-        "channelId": {"__rl": true,"value": "C0B83LZ70B1","mode": "id"},
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
         "text": "={{ $json.text }}",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
-      "position": [1500, 700],
+      "position": [
+        1500,
+        700
+      ],
       "id": "e9e670a7-d050-4426-ae26-86eb02960e65",
       "name": "Send Doc List",
       "webhookId": "99589597-30af-4bdb-b30b-85ba952f6baa",
-      "credentials": {"slackApi": {"id": "J1JrHC3TBoPCCS0v","name": "Slack account"}}
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
     },
     {
       "parameters": {
         "select": "channel",
-        "channelId": {"__rl": true,"value": "C0B83LZ70B1","mode": "id"},
-        "text": "안녕하세요! 다음과 같이 사용할 수 있습니다.\n\n*질의 응답*\n`@봇 1학년 장학생 명단 알려줘`\n`@봇 신입생 장학금 총액이 얼마야?`\n`@봇 장학 선발 기준이 뭐야?`\n\n*명세서 자동 작성*\n`@봇 명세서 만들어줘`\n→ Google Sheets 템플릿에 인원·금액·지급처 자동 입력\n\n*파일 색인*\n파일을 첨부하고 봇을 멘션하면 자동으로 색인합니다.\n`@봇 [xlsx / pdf / hwp 파일 첨부]`\n\n*문서 목록*\n`@봇 문서목록`\n→ 현재 색인된 파일 목록과 상태 확인\n\n*문서 삭제*\n`@봇 삭제 파일명.xlsx`\n→ 색인된 문서를 완전히 삭제 (ChromaDB·데이터 모두 제거)",
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
+        "text": "안녕하세요! 장학 문서 챗봇입니다. 아래 기능을 사용할 수 있습니다.\n\n*질의응답*\n평소 하듯 자연어로 물어보면 됩니다.\n`@봇 1학년 장학생 명단 알려줘`\n`@봇 하반기 장학금 총액이 얼마야?`\n`@봇 신입생 장학금 선발 기준이 뭐야?`\n\n*명세서 자동 작성*\n`@봇 명세서 만들어줘`\n→ 색인된 문서 전체를 분석해 Google Sheets 기부금 활용실적명세서에 자동 입력합니다.\n\n*파일 색인 (새 문서 추가)*\n파일(xlsx / pdf / hwp)을 첨부하고 봇을 멘션하세요.\n`@봇 [파일 첨부]`\n→ 약 30초 후 완료 알림이 옵니다. 완료 전에는 질문에 반영되지 않습니다.\n\n*문서 목록 확인*\n`@봇 문서목록`\n→ 현재 색인된 파일 목록과 건수를 보여줍니다.\n\n*문서 삭제*\n먼저 `@봇 문서목록` 으로 파일명을 확인한 뒤 정확히 입력하세요.\n`@봇 삭제 신입생 동문장학금 3월-480만원.xlsx`\n→ ChromaDB, 파케이, 파일 모두 완전 삭제됩니다.\n\n*도움말*\n`@봇 도움말` 또는 `@봇 help`",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
-      "position": [1220, 900],
+      "position": [
+        1220,
+        900
+      ],
       "id": "7216a870-4848-4ee3-a619-7e9fa174bd8e",
       "name": "Send Help Message",
       "webhookId": "42847533-f7fc-439d-b79e-1958c4b99047",
-      "credentials": {"slackApi": {"id": "J1JrHC3TBoPCCS0v","name": "Slack account"}}
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
     },
     {
       "parameters": {
@@ -329,7 +557,10 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1500, 900],
+      "position": [
+        1500,
+        900
+      ],
       "id": "del-extract-0002-0002-0002-0002",
       "name": "Extract Delete Filename"
     },
@@ -341,7 +572,10 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
-      "position": [1780, 900],
+      "position": [
+        1780,
+        900
+      ],
       "id": "del-api-0003-0003-0003-0003",
       "name": "Call Delete API",
       "continueOnFail": true
@@ -349,17 +583,29 @@
     {
       "parameters": {
         "select": "channel",
-        "channelId": {"__rl": true,"value": "C0B83LZ70B1","mode": "id"},
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
         "text": "={{ $json.error ? '❌ 삭제 실패: ' + ($json.error.message || '파일을 찾을 수 없습니다.') : '✅ *' + $('Extract Delete Filename').first().json.filename + '* 삭제 완료.' }}",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
-      "position": [2060, 900],
+      "position": [
+        2060,
+        900
+      ],
       "id": "del-result-0004-0004-0004-0004",
       "name": "Send Delete Result",
       "webhookId": "del-hook-0001",
-      "credentials": {"slackApi": {"id": "J1JrHC3TBoPCCS0v","name": "Slack account"}}
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
     },
     {
       "parameters": {
@@ -376,10 +622,18 @@
       },
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [1780, -200],
+      "position": [
+        1780,
+        -200
+      ],
       "id": "ba4fa7b8-18e5-4ebd-a3f5-1bc0833605cb",
       "name": "Copy Template1",
-      "credentials": {"googleDriveOAuth2Api": {"id": "6C8yAKEzohZ3SJkt","name": "Google Drive account"}}
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "6C8yAKEzohZ3SJkt",
+          "name": "Google Drive account"
+        }
+      }
     },
     {
       "parameters": {
@@ -388,7 +642,10 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
-      "position": [2060, -200],
+      "position": [
+        2060,
+        -200
+      ],
       "id": "15bd80c4-202d-4edf-a198-c2b1e682c779",
       "name": "Run Summary"
     },
@@ -400,7 +657,11 @@
           "value": "={{ $(\"Copy Template1\").first().json.id }}",
           "mode": "id"
         },
-        "sheetName": {"__rl": true,"value": "INPUT_BASIC","mode": "name"},
+        "sheetName": {
+          "__rl": true,
+          "value": "INPUT_BASIC",
+          "mode": "name"
+        },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
@@ -410,20 +671,132 @@
           },
           "matchingColumns": [],
           "schema": [
-            {"id": "statement_no","displayName": "statement_no","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "corp_name","displayName": "corp_name","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "business_no","displayName": "business_no","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "representative","displayName": "representative","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "donation_type","displayName": "donation_type","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "email","displayName": "email","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "business_year","displayName": "business_year","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "phone","displayName": "phone","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "designated_date","displayName": "designated_date","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "address","displayName": "address","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "submit_year","displayName": "submit_year","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "submit_month","displayName": "submit_month","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "submit_day","displayName": "submit_day","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "submitter","displayName": "submitter","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true}
+            {
+              "id": "statement_no",
+              "displayName": "statement_no",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "corp_name",
+              "displayName": "corp_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "business_no",
+              "displayName": "business_no",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "representative",
+              "displayName": "representative",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "donation_type",
+              "displayName": "donation_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "business_year",
+              "displayName": "business_year",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "designated_date",
+              "displayName": "designated_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "submit_year",
+              "displayName": "submit_year",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "submit_month",
+              "displayName": "submit_month",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "submit_day",
+              "displayName": "submit_day",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "submitter",
+              "displayName": "submitter",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
@@ -432,10 +805,18 @@
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
-      "position": [2060, 0],
+      "position": [
+        2060,
+        0
+      ],
       "id": "7423e159-e960-4c23-8b0d-8330844ed194",
       "name": "Append INPUT_BASIC1",
-      "credentials": {"googleSheetsOAuth2Api": {"id": "6uDdV1ssRmLTm4wO","name": "Google Sheets account"}}
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6uDdV1ssRmLTm4wO",
+          "name": "Google Sheets account"
+        }
+      }
     },
     {
       "parameters": {
@@ -444,7 +825,10 @@
       },
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
-      "position": [2340, -200],
+      "position": [
+        2340,
+        -200
+      ],
       "id": "3ff447cd-0c6e-406e-8dfe-55b223a0d48b",
       "name": "Split Out"
     },
@@ -454,7 +838,10 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2620, -200],
+      "position": [
+        2620,
+        -200
+      ],
       "id": "df2788f8-6366-4c8b-9d27-42cd9cfe899e",
       "name": "Modify Items",
       "alwaysOutputData": true
@@ -467,7 +854,11 @@
           "value": "={{ $('Copy Template1').first().json.id }}",
           "mode": "id"
         },
-        "sheetName": {"__rl": true,"value": "=INPUT_DOMESTIC","mode": "name"},
+        "sheetName": {
+          "__rl": true,
+          "value": "=INPUT_DOMESTIC",
+          "mode": "name"
+        },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
@@ -480,12 +871,60 @@
           },
           "matchingColumns": [],
           "schema": [
-            {"id": "section","displayName": "section","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "period","displayName": "period","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "purpose","displayName": "purpose","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "count_or_people","displayName": "count_or_people","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "recipient","displayName": "recipient","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "amount","displayName": "amount","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true}
+            {
+              "id": "section",
+              "displayName": "section",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "period",
+              "displayName": "period",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "purpose",
+              "displayName": "purpose",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "count_or_people",
+              "displayName": "count_or_people",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "recipient",
+              "displayName": "recipient",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "amount",
+              "displayName": "amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
@@ -494,16 +933,29 @@
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
-      "position": [2900, -200],
+      "position": [
+        2900,
+        -200
+      ],
       "id": "663a7053-0eff-4a4a-b571-f6d7b3f94e75",
       "name": "Append INPUT_DOMESTIC",
-      "credentials": {"googleSheetsOAuth2Api": {"id": "6uDdV1ssRmLTm4wO","name": "Google Sheets account"}}
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6uDdV1ssRmLTm4wO",
+          "name": "Google Sheets account"
+        }
+      }
     },
     {
-      "parameters": {"jsCode": "return [\n  {\n    json: {}\n  }\n];"},
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {}\n  }\n];"
+      },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [3180, -200],
+      "position": [
+        3180,
+        -200
+      ],
       "id": "0fb0370b-94b7-48d4-9cd8-47a64c593d23",
       "name": "Single Run Guard1"
     },
@@ -532,12 +984,60 @@
           },
           "matchingColumns": [],
           "schema": [
-            {"id": "section","displayName": "section","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "period","displayName": "period","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "purpose","displayName": "purpose","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "count_or_people","displayName": "count_or_people","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "recipient","displayName": "recipient","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true},
-            {"id": "amount","displayName": "amount","required": false,"defaultMatch": false,"display": true,"type": "string","canBeUsedToMatch": true}
+            {
+              "id": "section",
+              "displayName": "section",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "period",
+              "displayName": "period",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "purpose",
+              "displayName": "purpose",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "count_or_people",
+              "displayName": "count_or_people",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "recipient",
+              "displayName": "recipient",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "amount",
+              "displayName": "amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
@@ -546,27 +1046,45 @@
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
-      "position": [3460, -200],
+      "position": [
+        3460,
+        -200
+      ],
       "id": "88fc6b6d-8b4b-4a7b-ae3d-584567e4776f",
       "name": "Append DOMESTIC(TOTALl SUM)1",
       "credentials": {
-        "googleSheetsOAuth2Api": {"id": "6uDdV1ssRmLTm4wO","name": "Google Sheets account"}
+        "googleSheetsOAuth2Api": {
+          "id": "6uDdV1ssRmLTm4wO",
+          "name": "Google Sheets account"
+        }
       }
     },
     {
       "parameters": {
         "select": "channel",
-        "channelId": {"__rl": true,"value": "C0B83LZ70B1","mode": "id"},
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
         "text": "=명세서 작성이 완료되었습니다.\n\n🔗 https://docs.google.com/spreadsheets/d/{{ $('Copy Template1').first().json.id }}/edit",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
-      "position": [3740, -200],
+      "position": [
+        3740,
+        -200
+      ],
       "id": "a934cdcc-1565-4343-b109-a464e5406120",
       "name": "Send Report Message1",
       "webhookId": "6be90c7a-397a-4478-be48-2a35e43f1dd2",
-      "credentials": {"slackApi": {"id": "J1JrHC3TBoPCCS0v","name": "Slack account"}}
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
     },
     {
       "parameters": {
@@ -574,32 +1092,52 @@
         "url": "http://host.docker.internal:8080/chat",
         "sendBody": true,
         "bodyParameters": {
-          "parameters": [{"name": "question","value": "={{ $json.question }}"}]
+          "parameters": [
+            {
+              "name": "question",
+              "value": "={{ $json.question }}"
+            }
+          ]
         },
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
-      "position": [1780, 1200],
+      "position": [
+        1780,
+        1200
+      ],
       "id": "e5bc5db4-8ea2-417a-a0c4-5cc4f4a82765",
       "name": "Run Chat2"
     },
     {
       "parameters": {
         "conditions": {
-          "options": {"caseSensitive": true,"leftValue": "","typeValidation": "strict","version": 3},
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
           "conditions": [
             {
               "id": "d5d54cb6-c3ff-4f58-9e7e-c08ac07b1439",
               "leftValue": "={{$json.answer}}",
               "rightValue": "조회된 데이터가 없습니다.",
-              "operator": {"type": "string","operation": "notEquals"}
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
             },
             {
               "id": "4290c539-f282-4b42-8bd6-24832a967d3d",
               "leftValue": "={{ ['pandas', 'vector'].includes(($json.source || '').trim().toLowerCase()) }}",
               "rightValue": "true",
-              "operator": {"type": "boolean","operation": "true","singleValue": true}
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
             }
           ],
           "combinator": "and"
@@ -608,92 +1146,409 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [2060, 1200],
+      "position": [
+        2060,
+        1200
+      ],
       "id": "800a1307-ed12-48e3-8c71-9cd807c5eb98",
       "name": "Chat Response1"
     },
     {
       "parameters": {
         "select": "channel",
-        "channelId": {"__rl": true,"value": "C0B83LZ70B1","mode": "id"},
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
         "text": "=답변:{{ $json.answer }}\n\n분기:{{ $json.source }}\n\n출처:{{ $json.sources }}",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
-      "position": [2340, 1100],
+      "position": [
+        2340,
+        1100
+      ],
       "id": "714493f5-dc4c-4cd0-879f-b39ce5fb9b43",
       "name": "Send Chat Answer1",
       "webhookId": "6be90c7a-397a-4478-be48-2a35e43f1dd2",
-      "credentials": {"slackApi": {"id": "J1JrHC3TBoPCCS0v","name": "Slack account"}}
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
     },
     {
       "parameters": {
         "select": "channel",
-        "channelId": {"__rl": true,"value": "C0B83LZ70B1","mode": "id"},
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
         "text": "관련 문서를 찾지 못했습니다.",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
-      "position": [2340, 1300],
+      "position": [
+        2340,
+        1300
+      ],
       "id": "143f23d1-364e-47a5-a54e-d45d46286690",
       "name": "Send Error Message1",
       "webhookId": "9acffefb-4ac4-44e3-900b-bf1a97fad65b",
-      "credentials": {"slackApi": {"id": "J1JrHC3TBoPCCS0v","name": "Slack account"}}
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
     }
   ],
   "connections": {
-    "Slack Trigger1": {"main": [[{"node": "Edit Fields1","type": "main","index": 0}]]},
-    "Edit Fields1": {"main": [[{"node": "File Branch","type": "main","index": 0}]]},
-    "File Branch": {"main": [
-      [{"node": "Download File","type": "main","index": 0}],
-      [{"node": "DocList Branch","type": "main","index": 0}]
-    ]},
-    "Download File": {"main": [[{"node": "Upload to Backend","type": "main","index": 0}]]},
-    "Upload to Backend": {"main": [[{"node": "Send Indexing Started","type": "main","index": 0}]]},
-    "Send Indexing Started": {"main": [[{"node": "Wait 30s","type": "main","index": 0}]]},
-    "Wait 30s": {"main": [[{"node": "Check Status","type": "main","index": 0}]]},
-    "Check Status": {"main": [[{"node": "Index Result Branch","type": "main","index": 0}]]},
-    "Index Result Branch": {"main": [
-      [{"node": "Send Index Complete","type": "main","index": 0}],
-      [{"node": "Send Index Failed","type": "main","index": 0}]
-    ]},
-    "DocList Branch": {"main": [
-      [{"node": "Call Documents API","type": "main","index": 0}],
-      [{"node": "Help Branch","type": "main","index": 0}]
-    ]},
-    "Call Documents API": {"main": [[{"node": "Format Doc List","type": "main","index": 0}]]},
-    "Format Doc List": {"main": [[{"node": "Send Doc List","type": "main","index": 0}]]},
-    "Help Branch": {"main": [
-      [{"node": "Send Help Message","type": "main","index": 0}],
-      [{"node": "Delete Branch","type": "main","index": 0}]
-    ]},
-    "Delete Branch": {"main": [
-      [{"node": "Extract Delete Filename","type": "main","index": 0}],
-      [{"node": "Report Branch1","type": "main","index": 0}]
-    ]},
-    "Extract Delete Filename": {"main": [[{"node": "Call Delete API","type": "main","index": 0}]]},
-    "Call Delete API": {"main": [[{"node": "Send Delete Result","type": "main","index": 0}]]},
-    "Report Branch1": {"main": [
-      [{"node": "Copy Template1","type": "main","index": 0}],
-      [{"node": "Run Chat2","type": "main","index": 0}]
-    ]},
-    "Copy Template1": {"main": [[{"node": "Run Summary","type": "main","index": 0}]]},
-    "Run Summary": {"main": [[
-      {"node": "Split Out","type": "main","index": 0},
-      {"node": "Append INPUT_BASIC1","type": "main","index": 0}
-    ]]},
-    "Split Out": {"main": [[{"node": "Modify Items","type": "main","index": 0}]]},
-    "Modify Items": {"main": [[{"node": "Append INPUT_DOMESTIC","type": "main","index": 0}]]},
-    "Append INPUT_DOMESTIC": {"main": [[{"node": "Single Run Guard1","type": "main","index": 0}]]},
-    "Single Run Guard1": {"main": [[{"node": "Append DOMESTIC(TOTALl SUM)1","type": "main","index": 0}]]},
-    "Append DOMESTIC(TOTALl SUM)1": {"main": [[{"node": "Send Report Message1","type": "main","index": 0}]]},
-    "Run Chat2": {"main": [[{"node": "Chat Response1","type": "main","index": 0}]]},
-    "Chat Response1": {"main": [
-      [{"node": "Send Chat Answer1","type": "main","index": 0}],
-      [{"node": "Send Error Message1","type": "main","index": 0}]
-    ]}
+    "Slack Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "File Branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File Branch": {
+      "main": [
+        [
+          {
+            "node": "Download File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "DocList Branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File": {
+      "main": [
+        [
+          {
+            "node": "Upload to Backend",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to Backend": {
+      "main": [
+        [
+          {
+            "node": "Send Indexing Started",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Indexing Started": {
+      "main": [
+        [
+          {
+            "node": "Wait 30s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 30s": {
+      "main": [
+        [
+          {
+            "node": "Check Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status": {
+      "main": [
+        [
+          {
+            "node": "Index Result Branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Index Result Branch": {
+      "main": [
+        [
+          {
+            "node": "Send Index Complete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Index Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DocList Branch": {
+      "main": [
+        [
+          {
+            "node": "Call Documents API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Help Branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Documents API": {
+      "main": [
+        [
+          {
+            "node": "Format Doc List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Doc List": {
+      "main": [
+        [
+          {
+            "node": "Send Doc List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Help Branch": {
+      "main": [
+        [
+          {
+            "node": "Send Help Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete Branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Branch": {
+      "main": [
+        [
+          {
+            "node": "Extract Delete Filename",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Report Branch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Delete Filename": {
+      "main": [
+        [
+          {
+            "node": "Call Delete API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Delete API": {
+      "main": [
+        [
+          {
+            "node": "Send Delete Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Report Branch1": {
+      "main": [
+        [
+          {
+            "node": "Copy Template1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Run Chat2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Template1": {
+      "main": [
+        [
+          {
+            "node": "Run Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Summary": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append INPUT_BASIC1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Modify Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modify Items": {
+      "main": [
+        [
+          {
+            "node": "Append INPUT_DOMESTIC",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append INPUT_DOMESTIC": {
+      "main": [
+        [
+          {
+            "node": "Single Run Guard1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Single Run Guard1": {
+      "main": [
+        [
+          {
+            "node": "Append DOMESTIC(TOTALl SUM)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append DOMESTIC(TOTALl SUM)1": {
+      "main": [
+        [
+          {
+            "node": "Send Report Message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Chat2": {
+      "main": [
+        [
+          {
+            "node": "Chat Response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Response1": {
+      "main": [
+        [
+          {
+            "node": "Send Chat Answer1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Error Message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
   },
   "pinData": {},
   "meta": {

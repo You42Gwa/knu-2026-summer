@@ -6,7 +6,7 @@ import re
 import pandas as pd
 
 from datastore.state import _df_namespace, _df_sources, _df_labels
-from rag.router import _AGG_COUNT, _AGG_SUM
+from rag.router import _AGG_COUNT, _AGG_SUM, _AGG_MAX, _AGG_MIN, _AGG_PER
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -331,6 +331,63 @@ def _query_pandas_direct(question: str) -> tuple[object, list[str]]:
 
     source = _df_sources.get(best_alias, best_alias)
 
+    # 금액 컬럼 공통 탐색
+    def _find_amount_col(df: pd.DataFrame):
+        return next((c for c in df.columns if any(k in c for k in _AMOUNT_COLS)), None)
+
+    def _to_numeric_clean(series: "pd.Series") -> "pd.Series":
+        """콤마 포함 문자열('250,000')도 숫자로 변환."""
+        return pd.to_numeric(series.astype(str).str.replace(",", "", regex=False), errors="coerce")
+
+    # ── 최고/최저 금액 ──────────────────────────────────────────────────────
+    if _AGG_MAX.search(question):
+        amount_col = _find_amount_col(filtered)
+        if amount_col:
+            try:
+                val = _to_numeric_clean(filtered[amount_col]).max()
+                if not pd.isna(val):
+                    return float(val), [source]
+            except Exception:
+                pass
+
+    if _AGG_MIN.search(question):
+        amount_col = _find_amount_col(filtered)
+        if amount_col:
+            try:
+                val = _to_numeric_clean(filtered[amount_col]).min()
+                if not pd.isna(val):
+                    return float(val), [source]
+            except Exception:
+                pass
+
+    # ── 1인당 지급액 ────────────────────────────────────────────────────────
+    if _AGG_PER.search(question):
+        amount_col = _find_amount_col(filtered)
+        if amount_col:
+            try:
+                unique_vals = _to_numeric_clean(filtered[amount_col]).dropna().unique()
+                if len(unique_vals) == 1:
+                    return float(unique_vals[0]), [source]
+                if len(unique_vals) > 1:
+                    mode_val = _to_numeric_clean(filtered[amount_col]).mode()
+                    if not mode_val.empty:
+                        return float(mode_val.iloc[0]), [source]
+            except Exception:
+                pass
+
+    # ── 특정 금액 기준 인원수 ───────────────────────────────────────────────
+    amount_filter_m = re.search(r"(\d[\d,]+)원", question)
+    if amount_filter_m and _AGG_COUNT.search(question):
+        target = amount_filter_m.group(1).replace(",", "")
+        amount_col = _find_amount_col(filtered)
+        if amount_col:
+            try:
+                num_series = _to_numeric_clean(filtered[amount_col])
+                count = int((num_series == float(target)).sum())
+                return count, [source]
+            except Exception:
+                pass
+
     if _AGG_COUNT.search(question):
         # 동일 소스 파일에서 나온 여러 DF가 있으면 전체 합산
         same_src = [a for a in _df_namespace if _df_sources.get(a) == source]
@@ -348,14 +405,11 @@ def _query_pandas_direct(question: str) -> tuple[object, list[str]]:
         return _count_valid_name_rows(filtered), [source]
 
     if _AGG_SUM.search(question):
-        # 1순위: 소스 파일명에서 총액 추출 (파일명에 "XYZ만원" 패턴)
+        # 1인당 질문이 아닐 때만 총액 추출
         total_str = _extract_total_from_source(best_alias)
         if total_str:
             return total_str, [source]
-        # 2순위: 금액 컬럼 합계
-        amount_col = next(
-            (c for c in filtered.columns if any(k in c for k in _AMOUNT_COLS)), None
-        )
+        amount_col = _find_amount_col(filtered)
         if amount_col:
             try:
                 total = pd.to_numeric(filtered[amount_col], errors="coerce").sum()

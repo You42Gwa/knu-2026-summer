@@ -19,6 +19,9 @@ _VECTOR_OVERRIDE = re.compile(
 )
 _AGG_COUNT = re.compile(r"몇\s*명|총\s*인원|인원은|명이야|명인가|몇명", re.IGNORECASE)
 _AGG_SUM   = re.compile(r"총\s*금액|합계금액|얼마야|얼마인|지급\s*금액|장학금\s*총액", re.IGNORECASE)
+_AGG_MAX   = re.compile(r"최고|최대|가장\s*(?:많|높|큰)|제일\s*(?:높|많|큰)", re.IGNORECASE)
+_AGG_MIN   = re.compile(r"최저|최소|가장\s*(?:적|낮|작은?)|제일\s*(?:낮|적|작)", re.IGNORECASE)
+_AGG_PER   = re.compile(r"1인당|한\s*명이\s*받은|학생\s*한\s*명|인당", re.IGNORECASE)
 
 
 def _route(question: str) -> str:

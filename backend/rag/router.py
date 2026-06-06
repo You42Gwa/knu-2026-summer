@@ -13,7 +13,8 @@ _VECTOR_PROCEDURE = re.compile(
 )
 # "지급\s*금액" 제거: 파일명 기반 총액 추출로 pandas에서 처리
 _VECTOR_OVERRIDE = re.compile(
-    r"설명해|설명해줘|목적|문서의\s*내용|내용을\s*설명|어떤\s*내용|몇\s*월|몇\s*년|날짜|작성됐|어느\s*학교|총\s*지급액|장학금\s*총액",
+    r"설명해|설명해줘|목적|문서의\s*내용|내용을\s*설명|어떤\s*내용|몇\s*월|몇\s*년|날짜|작성됐|어느\s*학교|총\s*지급액|장학금\s*총액"
+    r"|어디서|어느\s*기관|기관명|단체명|출처|발행",
     re.IGNORECASE,
 )
 _AGG_COUNT = re.compile(r"몇\s*명|총\s*인원|인원은|명이야|명인가|몇명", re.IGNORECASE)

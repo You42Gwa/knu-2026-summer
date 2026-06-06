@@ -21,12 +21,22 @@ def extract(file_path: str) -> list[dict]:
         hwp.quit()
         hwp = None
 
-        try:
-            with open(temp_html, encoding="utf-8") as f:
-                soup = BeautifulSoup(f, "html.parser")
-        except UnicodeDecodeError:
-            with open(temp_html, encoding="cp949") as f:
-                soup = BeautifulSoup(f, "html.parser")
+        with open(temp_html, "rb") as f:
+            raw = f.read()
+
+        import re as _re
+        m = _re.search(rb'charset=["\']?([A-Za-z0-9\-]+)', raw)
+        detected_enc = m.group(1).decode("ascii", errors="replace") if m else None
+
+        soup = None
+        for enc in filter(None, [detected_enc, "utf-8-sig", "cp949", "euc-kr", "utf-8"]):
+            try:
+                soup = BeautifulSoup(raw.decode(enc), "html.parser")
+                break
+            except (UnicodeDecodeError, LookupError):
+                continue
+        if soup is None:
+            soup = BeautifulSoup(raw.decode("cp949", errors="replace"), "html.parser")
 
         table = soup.find("table")
         if not table:
@@ -79,6 +89,7 @@ def extract(file_path: str) -> list[dict]:
 
 
 if __name__ == "__main__":
+    sys.stdout.reconfigure(encoding="utf-8")
     if len(sys.argv) < 2:
         print("[]")
         sys.exit(0)

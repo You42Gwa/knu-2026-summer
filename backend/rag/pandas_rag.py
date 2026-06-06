@@ -36,8 +36,8 @@ async def _answer_pandas(question: str, allow_vector_fallback: bool = True) -> t
     if name_df is not None:
         logger.info("[NAME_SEARCH] %d건 발견, 코드 생성 생략", len(name_df))
         return _format_list_result(name_df), name_sources, "pandas"
-    if name_searched and re.search(r"이라는|라는\s*학생|학생이\s*(?:장학금|받|있)", question):
-        # "홍길동이라는 학생이 장학금 받았어" 같은 특정 인물 조회 → 없음 반환
+    if name_searched and re.search(r"이라는|라는\s*학생|학생이.{0,20}(?:장학금|받|있)", question):
+        # 특정 인물 조회(이라는/학생이...받았어 등) → 이름이 없으면 바로 없음 반환
         logger.info("[NAME_SEARCH] 특정 인물 조회 패턴 — 데이터 없음")
         return "조회된 데이터가 없습니다.", [], "pandas"
 

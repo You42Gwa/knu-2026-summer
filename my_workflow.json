@@ -8,8 +8,8 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        -1088,
-        2320
+        2240,
+        220
       ],
       "id": "8edc0582-853b-4ef7-b612-48baaaba2cd6",
       "name": "Split Out"
@@ -102,8 +102,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -1264,
-        2560
+        3360,
+        220
       ],
       "id": "037571cc-31c0-4a96-9d27-ed696ae1d98b",
       "name": "Append DOMESTIC(TOTALl SUM)1",
@@ -121,8 +121,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -880,
-        2320
+        2520,
+        220
       ],
       "id": "e23e1efb-a660-43f1-81bd-973567de2d48",
       "name": "Modify Items",
@@ -136,8 +136,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -1296,
-        2320
+        1960,
+        220
       ],
       "id": "f3305273-72fe-4f2c-b9aa-b40d7fe7a2e1",
       "name": "Run Summary"
@@ -156,8 +156,8 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
       "position": [
-        -1296,
-        3072
+        2240,
+        940
       ],
       "id": "57f838c0-bca7-47ab-98a4-a6c63cddea80",
       "name": "Send Error Message1",
@@ -183,8 +183,8 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
       "position": [
-        -1296,
-        2864
+        2240,
+        780
       ],
       "id": "ec23ea44-393c-4856-b2b8-191d4d94fc68",
       "name": "Send Chat Answer1",
@@ -211,8 +211,8 @@
       "type": "n8n-nodes-base.slackTrigger",
       "typeVersion": 1,
       "position": [
-        -2384,
-        2672
+        0,
+        400
       ],
       "id": "1fe7071b-4817-4c7a-b2c6-f88572e43336",
       "name": "Slack Trigger1",
@@ -241,8 +241,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2192,
-        2672
+        280,
+        400
       ],
       "id": "f940b47d-d9ce-4400-a9bf-94d5e9acfa11",
       "name": "Edit Fields1"
@@ -275,8 +275,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -1968,
-        2672
+        560,
+        400
       ],
       "id": "f1b2a3c4-d5e6-7890-f1b2-a3c4d5e67890",
       "name": "File Branch"
@@ -308,8 +308,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -1760,
-        2800
+        1400,
+        400
       ],
       "id": "ec889328-91d1-4033-95a7-1cbbf3171a36",
       "name": "Report Branch1"
@@ -351,8 +351,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -1488,
-        2976
+        1960,
+        860
       ],
       "id": "96de779b-4d1a-49cc-a316-beb0389307a9",
       "name": "Chat Response1"
@@ -368,13 +368,15 @@
           "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyz51z8Wg0CsrwDm4QQLNNVbjpZChoEkVZrRNaKuWaE/edit?usp=drivesdk"
         },
         "name": "={{ \"기부금_활용실적명세서_\" + $now.format(\"yyyyMMdd_HHmmss\") }}",
-        "options": {}
+        "options": {
+          "convert": true
+        }
       },
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        -1536,
-        2544
+        1680,
+        220
       ],
       "id": "d37d429b-928c-4a33-8339-2c33396feb9e",
       "name": "Copy Template1",
@@ -395,10 +397,8 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": 1362915405,
-          "mode": "list",
-          "cachedResultName": "INPUT_BASIC",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VL1F3J_oR237WBf-B0U8vSGGTH7Coch2MRoRWix6wSc/edit#gid=1362915405"
+          "value": "INPUT_BASIC",
+          "mode": "name"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -544,8 +544,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -1344,
-        2544
+        2240,
+        380
       ],
       "id": "7d930943-7a79-4fe5-9fa4-ca8dee47c2f2",
       "name": "Append INPUT_BASIC1",
@@ -566,10 +566,6 @@
             {
               "name": "question",
               "value": "={{ $json.question }}"
-            },
-            {
-              "name": "include_rows",
-              "value": "true"
             }
           ]
         },
@@ -578,8 +574,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -1568,
-        2976
+        1680,
+        860
       ],
       "id": "4c4739c3-afb9-47d6-bc15-1d39c875a274",
       "name": "Run Chat2"
@@ -589,7 +585,7 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "={{ $(\"Copy Template1\").first().json.id }}",
+          "value": "={{ $('Copy Template1').first().json.id }}",
           "mode": "id"
         },
         "sheetName": {
@@ -601,68 +597,20 @@
           "mappingMode": "defineBelow",
           "value": {
             "section": "=yearly",
-            "purpose": "={{$json.목적}}",
-            "count_or_people": "={{$json.인원}}",
+            "period": "={{ $json['지출월'] }}",
+            "purpose": "={{ $json['목적'] }}",
+            "count_or_people": "={{ $json['인원'] }}",
             "recipient": "={{ $json['지급처'] }}",
-            "amount": "={{$json.총액}}",
-            "period": "={{ $json['지출월'] }}"
+            "amount": "={{ $json['총액'] }}"
           },
           "matchingColumns": [],
           "schema": [
-            {
-              "id": "section",
-              "displayName": "section",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "period",
-              "displayName": "period",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "purpose",
-              "displayName": "purpose",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "count_or_people",
-              "displayName": "count_or_people",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "recipient",
-              "displayName": "recipient",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "amount",
-              "displayName": "amount",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            }
+            {"id": "section", "displayName": "section", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "period", "displayName": "period", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "purpose", "displayName": "purpose", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "count_or_people", "displayName": "count_or_people", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "recipient", "displayName": "recipient", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true},
+            {"id": "amount", "displayName": "amount", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true}
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
@@ -672,11 +620,11 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -1536,
-        2736
+        2660,
+        220
       ],
-      "id": "e703f9d8-2341-437d-a6e2-1357ef02017b",
-      "name": "Append INPUT_DOMESTIC2",
+      "id": "a1b2c3d4-e5f6-7890-abcd-111111111111",
+      "name": "Append INPUT_DOMESTIC",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "6uDdV1ssRmLTm4wO",
@@ -691,8 +639,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1344,
-        2736
+        3080,
+        220
       ],
       "id": "ebfcc897-f138-47de-9955-833d6bf7b8e5",
       "name": "Single Run Guard1"
@@ -705,14 +653,14 @@
           "value": "C0B83LZ70B1",
           "mode": "id"
         },
-        "text": "=명세서 작성이 완료되었습니다.",
+        "text": "=명세서 작성이 완료되었습니다.\n\n🔗 https://docs.google.com/spreadsheets/d/{{ $('Copy Template1').first().json.id }}/edit",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
       "position": [
-        -1088,
-        2736
+        3640,
+        220
       ],
       "id": "8edfb21c-d674-4546-bf10-754d5cdf48eb",
       "name": "Send Report Message1",
@@ -769,8 +717,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -1760,
-        2672
+        840,
+        400
       ],
       "id": "dc001111-aaaa-bbbb-cccc-dd0000000001",
       "name": "DocList Branch"
@@ -783,8 +731,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -1568,
-        2576
+        1120,
+        560
       ],
       "id": "dc001111-aaaa-bbbb-cccc-dd0000000002",
       "name": "Call Documents API"
@@ -796,8 +744,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1360,
-        2576
+        1400,
+        560
       ],
       "id": "dc001111-aaaa-bbbb-cccc-dd0000000003",
       "name": "Format Doc List"
@@ -816,11 +764,97 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
       "position": [
-        -1152,
-        2576
+        1680,
+        560
       ],
       "id": "dc001111-aaaa-bbbb-cccc-dd0000000004",
       "name": "Send Doc List",
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "hb000001-0000-0001-0000-000000000001",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "도움말",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "hb000001-0000-0002-0000-000000000002",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "뭘 할 수 있",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "hb000001-0000-0003-0000-000000000003",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "사용법",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "hb000001-0000-0004-0000-000000000004",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "help",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1120,
+        400
+      ],
+      "id": "hb000001-aaaa-bbbb-cccc-dd0000000001",
+      "name": "Help Branch"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
+        "text": "안녕하세요! 다음과 같이 사용할 수 있습니다.\n\n*질의 응답*\n`@봇 1학년 장학생 명단 알려줘`\n`@봇 신입생 장학금 총액이 얼마야?`\n`@봇 장학 선발 기준이 뭐야?`\n\n*명세서 자동 작성*\n`@봇 명세서 만들어줘`\n→ Google Sheets 템플릿에 인원·금액·지급처 자동 입력\n\n*파일 색인*\n파일을 첨부하고 봇을 멘션하면 자동으로 색인합니다.\n`@봇 [xlsx / pdf / hwp 파일 첨부]`\n\n*문서 목록*\n`@봇 문서목록`\n→ 현재 색인된 파일 목록과 상태 확인",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        1400,
+        700
+      ],
+      "id": "hb000001-aaaa-bbbb-cccc-dd0000000002",
+      "name": "Send Help Message",
       "credentials": {
         "slackApi": {
           "id": "J1JrHC3TBoPCCS0v",
@@ -835,8 +869,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1760,
-        2448
+        840,
+        60
       ],
       "id": "a2b3c4d5-e6f7-8901-a2b3-c4d5e6f78901",
       "name": "Get File Info"
@@ -859,8 +893,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -1568,
-        2448
+        1120,
+        60
       ],
       "id": "b3c4d5e6-f7a8-9012-b3c4-d5e6f7a89012",
       "name": "Download File",
@@ -892,8 +926,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -1360,
-        2448
+        1400,
+        60
       ],
       "id": "c4d5e6f7-a8b9-0123-c4d5-e6f7a8b90123",
       "name": "Upload to Backend",
@@ -913,8 +947,8 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
       "position": [
-        -1152,
-        2448
+        1680,
+        60
       ],
       "id": "d5e6f7a8-b9c0-1234-d5e6-f7a8b9c01234",
       "name": "Send Indexing Started",
@@ -934,8 +968,8 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        -944,
-        2448
+        1960,
+        60
       ],
       "id": "e6f7a8b9-c0d1-2345-e6f7-a8b9c0d12345",
       "name": "Wait 30s",
@@ -950,8 +984,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -736,
-        2448
+        2240,
+        60
       ],
       "id": "a8b9c0d1-e2f3-4567-a8b9-c0d1e2f34567",
       "name": "Check Status",
@@ -984,8 +1018,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -528,
-        2448
+        2520,
+        60
       ],
       "id": "b9c0d1e2-f3a4-5678-b9c0-d1e2f3a45678",
       "name": "Index Result Branch"
@@ -1004,8 +1038,8 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
       "position": [
-        -320,
-        2368
+        2800,
+        -20
       ],
       "id": "c0d1e2f3-a4b5-6789-c0d1-e2f3a4b56789",
       "name": "Send Index Complete",
@@ -1030,8 +1064,8 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
       "position": [
-        -320,
-        2544
+        2800,
+        140
       ],
       "id": "d1e2f3a4-b5c6-7890-d1e2-f3a4b5c67890",
       "name": "Send Index Failed",
@@ -1070,7 +1104,7 @@
       "main": [
         [
           {
-            "node": "Append INPUT_DOMESTIC2",
+            "node": "Append INPUT_DOMESTIC",
             "type": "main",
             "index": 0
           }
@@ -1138,6 +1172,24 @@
         [
           {
             "node": "Call Documents API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Help Branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Help Branch": {
+      "main": [
+        [
+          {
+            "node": "Send Help Message",
             "type": "main",
             "index": 0
           }
@@ -1320,7 +1372,7 @@
         ]
       ]
     },
-    "Append INPUT_DOMESTIC2": {
+    "Append INPUT_DOMESTIC": {
       "main": [
         [
           {

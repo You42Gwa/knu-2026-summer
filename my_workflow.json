@@ -258,6 +258,40 @@
           },
           "conditions": [
             {
+              "id": "fa11e000-0000-0001-0000-000000000001",
+              "leftValue": "={{ Array.isArray($('Slack Trigger1').item.json.files) && $('Slack Trigger1').item.json.files.length > 0 }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1968,
+        2672
+      ],
+      "id": "f1b2a3c4-d5e6-7890-f1b2-a3c4d5e67890",
+      "name": "File Branch"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
               "id": "dd08ecf3-0482-4850-8505-dddeada2211b",
               "leftValue": "={{ $('Edit Fields1').item.json.question }}",
               "rightValue": "명세서",
@@ -274,8 +308,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -2016,
-        2672
+        -1760,
+        2800
       ],
       "id": "ec889328-91d1-4033-95a7-1cbbf3171a36",
       "name": "Report Branch1"
@@ -339,8 +373,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        -1680,
-        2320
+        -1536,
+        2544
       ],
       "id": "d37d429b-928c-4a33-8339-2c33396feb9e",
       "name": "Copy Template1",
@@ -510,8 +544,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -1488,
-        2320
+        -1344,
+        2544
       ],
       "id": "7d930943-7a79-4fe5-9fa4-ca8dee47c2f2",
       "name": "Append INPUT_BASIC1",
@@ -544,7 +578,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -1696,
+        -1568,
         2976
       ],
       "id": "4c4739c3-afb9-47d6-bc15-1d39c875a274",
@@ -638,8 +672,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        -1680,
-        2560
+        -1536,
+        2736
       ],
       "id": "e703f9d8-2341-437d-a6e2-1357ef02017b",
       "name": "Append INPUT_DOMESTIC2",
@@ -657,8 +691,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1472,
-        2560
+        -1344,
+        2736
       ],
       "id": "ebfcc897-f138-47de-9955-833d6bf7b8e5",
       "name": "Single Run Guard1"
@@ -678,11 +712,225 @@
       "typeVersion": 2.4,
       "position": [
         -1088,
-        2560
+        2736
       ],
       "id": "8edfb21c-d674-4546-bf10-754d5cdf48eb",
       "name": "Send Report Message1",
       "webhookId": "6be90c7a-397a-4478-be48-2a35e43f1dd2",
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const files = $('Slack Trigger1').first().json.files || [];\nif (files.length === 0) return [];\n\nconst file = files[0];\nreturn [{\n  json: {\n    file_id: file.id || '',\n    file_name: file.name || 'unknown',\n    file_url: file.url_private_download || file.url_private || '',\n    file_type: file.filetype || '',\n    original_text: $('Slack Trigger1').first().json.text || ''\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1760,
+        2448
+      ],
+      "id": "a2b3c4d5-e6f7-8901-a2b3-c4d5e6f78901",
+      "name": "Get File Info"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.file_url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackApi",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1568,
+        2448
+      ],
+      "id": "b3c4d5e6-f7a8-9012-b3c4-d5e6f7a89012",
+      "name": "Download File",
+      "continueOnFail": true,
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8080/ingest/upload",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "file",
+              "value": "data",
+              "parameterType": "formBinaryData"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1360,
+        2448
+      ],
+      "id": "c4d5e6f7-a8b9-0123-c4d5-e6f7a8b90123",
+      "name": "Upload to Backend",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
+        "text": "={{ $('Get File Info').first().json.file_name + ' 색인을 시작했습니다. 약 30초 후 결과를 알려드릴게요.' }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        -1152,
+        2448
+      ],
+      "id": "d5e6f7a8-b9c0-1234-d5e6-f7a8b9c01234",
+      "name": "Send Indexing Started",
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resume": "timeInterval",
+        "unit": "seconds",
+        "value": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -944,
+        2448
+      ],
+      "id": "e6f7a8b9-c0d1-2345-e6f7-a8b9c0d12345",
+      "name": "Wait 30s",
+      "webhookId": "f7a8b9c0-d1e2-3456-f7a8-b9c0d1e23456"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=http://host.docker.internal:8080/status?source={{ $('Get File Info').first().json.file_name }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -736,
+        2448
+      ],
+      "id": "a8b9c0d1-e2f3-4567-a8b9-c0d1e2f34567",
+      "name": "Check Status",
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b9c0d1e2-f3a4-0001-b9c0-d1e2f3a40001",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "SUCCESS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -528,
+        2448
+      ],
+      "id": "b9c0d1e2-f3a4-5678-b9c0-d1e2f3a45678",
+      "name": "Index Result Branch"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
+        "text": "={{ '✅ ' + $('Get File Info').first().json.file_name + ' 색인 완료! ' + ($json.chroma_doc_count || 0) + '건 색인됨.' }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        -320,
+        2368
+      ],
+      "id": "c0d1e2f3-a4b5-6789-c0d1-e2f3a4b56789",
+      "name": "Send Index Complete",
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
+        "text": "={{ '⚠️ ' + $('Get File Info').first().json.file_name + ' 색인 ' + ($json.status || '상태 확인 필요') + ($json.error_message ? ': ' + $json.error_message : '') }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        -320,
+        2544
+      ],
+      "id": "d1e2f3a4-b5c6-7890-d1e2-f3a4b5c67890",
+      "name": "Send Index Failed",
       "credentials": {
         "slackApi": {
           "id": "J1JrHC3TBoPCCS0v",
@@ -756,7 +1004,109 @@
       "main": [
         [
           {
+            "node": "File Branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File Branch": {
+      "main": [
+        [
+          {
+            "node": "Get File Info",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Report Branch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get File Info": {
+      "main": [
+        [
+          {
+            "node": "Download File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File": {
+      "main": [
+        [
+          {
+            "node": "Upload to Backend",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to Backend": {
+      "main": [
+        [
+          {
+            "node": "Send Indexing Started",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Indexing Started": {
+      "main": [
+        [
+          {
+            "node": "Wait 30s",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 30s": {
+      "main": [
+        [
+          {
+            "node": "Check Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status": {
+      "main": [
+        [
+          {
+            "node": "Index Result Branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Index Result Branch": {
+      "main": [
+        [
+          {
+            "node": "Send Index Complete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Index Failed",
             "type": "main",
             "index": 0
           }

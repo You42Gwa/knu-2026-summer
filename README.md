@@ -81,19 +81,39 @@ n8n 워크플로우와 연동하여 Slack 보고서 자동 발송 또는 양식 
 
 ---
 
+### 기능 3 — Slack 파일 업로드 색인 (`/ingest/upload`)
+
+Slack에서 파일을 첨부하여 봇을 멘션하면 자동으로 문서를 색인합니다.
+
+```
+@봇 [파일 첨부]
+  → n8n 파일 감지 → 다운로드 → POST /ingest/upload
+  → "색인 시작" 안내 → 30초 후 GET /status 폴링
+  → "✅ N건 색인 완료" 또는 "⚠️ 실패" 결과 회신
+```
+
+지원 형식: `xlsx`, `pdf`, `hwp`, `hwpx`
+
+---
+
 ## 4. 시스템 아키텍처
 
 ```
 Slack 메시지
-  └─▶ n8n (트리거 / 전처리)
-        ├─▶ POST /chat  (질의 응답)
+  └─▶ n8n (트리거 / 3-way 분기)
+        │
+        ├─▶ [파일 첨부]  POST /ingest/upload
+        │     └─▶ data/ 저장 → 백그라운드 색인 (PDF/HWP/XLSX 파서)
+        │           └─▶ GET /status 폴링 (30s) → Slack 완료 알림
+        │
+        ├─▶ [질의]  POST /chat
         │     └─▶ 키워드 기반 라우팅 판단
         │           ├─ PANDAS ─▶ Parquet 로드 → ①이름 전수 검색 / ②키워드 직접 조회 / ③LLM 코드 생성(폴백) → 결과 포맷팅
         │           └─ VECTOR ─▶ ChromaDB 검색 (bge-m3) → LLM 답변 생성
         │                                                    │
         │                                             Ollama (qwen2.5:3b)
-        └─▶ GET  /summary  (문서 명세서)
-              └─▶ 적재 문서별 인원·금액·목적 자동 집계 → JSON 반환
+        └─▶ [명세서]  GET /summary
+              └─▶ 적재 문서별 인원·금액·목적·지급처·지출월 자동 집계 → JSON 반환
 
   ◀─ n8n ◀─ FastAPI 응답 ◀──────────────────────────────────────────────┘
 ```
@@ -251,9 +271,29 @@ uvicorn main:app --host 0.0.0.0 --port 8080 --reload
 
 ### 6-6. 문서 적재
 
+**방법 1 — CLI (직접 실행)**
 ```bash
 # data/ 폴더에 문서를 넣고 실행
 python utils/ingest.py
+```
+
+**방법 2 — API (서버 경로 지정)**
+```bash
+curl -X POST http://localhost:8080/ingest \
+  -H "X-API-Key: your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{"file_path": "data/문서.xlsx"}'
+```
+
+**방법 3 — API (파일 업로드, Slack 연동용)**
+```bash
+curl -X POST http://localhost:8080/ingest/upload \
+  -H "X-API-Key: your_api_key" \
+  -F "file=@문서.xlsx"
+
+# 색인 완료 여부 확인
+curl "http://localhost:8080/status?source=문서.xlsx" \
+  -H "X-API-Key: your_api_key"
 ```
 
 ---

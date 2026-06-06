@@ -12,8 +12,13 @@ from rag.router import _VECTOR_OVERRIDE
 
 logger = logging.getLogger("uvicorn.error")
 
-# 문서 설명 질문 탐지 (목적·내용·요약 요청)
-_DOC_EXPLAIN_RE = re.compile(r"문서의?\s*(목적|내용|설명)|설명해|어떤\s*(문서|내용)|요약해", re.IGNORECASE)
+# 문서 설명 질문 탐지 (목적·내용·요약·기준·기관 요청)
+_DOC_EXPLAIN_RE = re.compile(
+    r"문서의?\s*(목적|내용|설명)|설명해|어떤\s*(문서|내용)|요약해"
+    r"|(?:지급|선발|지원)\s*(목적|기준|이유|방식|기관)"
+    r"|(?:목적|내용|용도|기준|이유)\s*(?:이|가)?\s*(?:뭐야|뭐|무엇|어떤가|어떻게)",
+    re.IGNORECASE,
+)
 
 _VECTOR_EMPTY_SIGNALS = ("해당 내용은 문서에서 확인할 수 없습니다", "문서에서 확인할 수 없")
 

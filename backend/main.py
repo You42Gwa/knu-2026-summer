@@ -25,7 +25,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # 도메인 모듈 (config → security/llm/datastore/rag 순으로 의존)
 from utils.ingest import process_file, ensure_manifest_table
-from utils.manifest import get_manifest_status, get_all_manifest_entries
+from utils.manifest import get_manifest_status, get_all_manifest_entries, delete_manifest
 from core.config import (
     OLLAMA_BASE_URL, OLLAMA_MODEL, EMBED_MODEL,
     CHROMA_HOST, CHROMA_PORT, DATA_FOLDER,
@@ -293,6 +293,36 @@ def ingest_status(source: str, _: None = Depends(_verify_api_key)):
     if st is None:
         raise HTTPException(status_code=404, detail=f"'{source}' 색인 기록이 없습니다.")
     return st
+
+
+@app.delete("/documents/{source}")
+def delete_document(source: str, _: None = Depends(_verify_api_key)):
+    """색인된 문서를 완전히 삭제한다 — ChromaDB·Parquet·manifest·data 파일 모두 제거."""
+    from utils.chroma_store import delete_from_chroma
+    from utils.parquet_store import drop_dataframe_files
+
+    source = os.path.basename(source)
+    stem = source.rsplit(".", 1)[0] if "." in source else source
+
+    chroma_deleted = delete_from_chroma(source)
+    drop_dataframe_files(stem)
+
+    data_path = os.path.join(DATA_FOLDER, source)
+    file_existed = os.path.exists(data_path)
+    if file_existed:
+        os.remove(data_path)
+
+    manifest_deleted = delete_manifest(source)
+    if not manifest_deleted and not file_existed:
+        raise HTTPException(status_code=404, detail=f"'{source}' 문서를 찾을 수 없습니다.")
+
+    _load_dataframes()
+    return {
+        "source": source,
+        "chroma_deleted": chroma_deleted,
+        "file_deleted": file_existed,
+        "manifest_deleted": manifest_deleted,
+    }
 
 
 @app.post("/ingest/all", response_model=StatusResponse)

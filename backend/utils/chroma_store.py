@@ -42,6 +42,19 @@ def get_uploaded_at(file_path: str) -> str:
     return datetime.fromtimestamp(ts, tz=timezone.utc).isoformat()
 
 
+def delete_from_chroma(source: str) -> int:
+    """source 파일의 ChromaDB 문서를 삭제한다. 삭제된 수를 반환한다."""
+    collection = _get_collection()
+    try:
+        existing = collection.get(where={"source": source}, include=[])
+        count = len(existing["ids"])
+        if count:
+            collection.delete(where={"source": source})
+        return count
+    except Exception:
+        return 0
+
+
 def save_to_chroma(
     file_path: str,
     chunk_records: list[dict],

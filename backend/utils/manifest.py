@@ -77,6 +77,16 @@ def get_existing_file_hash(source: str) -> str | None:
     return row[0] if row else None
 
 
+def delete_manifest(source: str) -> bool:
+    """source 항목을 manifest에서 삭제한다. 삭제된 행이 있으면 True."""
+    with engine.begin() as conn:
+        result = conn.execute(
+            text("DELETE FROM ingestion_manifest WHERE source = :s"),
+            {"s": source},
+        )
+    return result.rowcount > 0
+
+
 def upsert_manifest(
     source: str,
     source_path: str,

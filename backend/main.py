@@ -101,6 +101,7 @@ class IngestRequest(BaseModel):
 class StatusResponse(BaseModel):
     status: str
     message: str
+    filename: str | None = None
 
 # ---------------------------------------------------------------------------
 # 엔드포인트
@@ -252,10 +253,12 @@ _ALLOWED_INGEST_EXTS = {"xlsx", "pdf", "hwp", "hwpx"}
 def ingest_upload(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
+    filename_override: str | None = None,
     _: None = Depends(_verify_api_key),
 ):
-    """파일 바이너리를 직접 업로드받아 data 폴더에 저장 후 색인한다 (Slack 첨부 등)."""
-    filename = os.path.basename(file.filename or "")
+    """파일 바이너리를 직접 업로드받아 data 폴더에 저장 후 색인한다 (Slack 첨부 등).
+    filename_override 쿼리 파라미터로 저장 파일명을 지정할 수 있다."""
+    filename = os.path.basename(filename_override or file.filename or "")
     if not filename:
         raise HTTPException(status_code=400, detail="파일명이 없습니다.")
     ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
@@ -272,7 +275,7 @@ def ingest_upload(
     finally:
         file.file.close()
     background_tasks.add_task(_process_and_reload, dest)
-    return StatusResponse(status="accepted", message=f"'{filename}' 업로드 완료, 색인을 시작했습니다.")
+    return StatusResponse(status="accepted", message=f"'{filename}' 업로드 완료, 색인을 시작했습니다.", filename=filename)
 
 
 @app.get("/documents")

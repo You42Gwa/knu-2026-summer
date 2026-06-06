@@ -49,3 +49,29 @@ def drop_dataframe_files(prefix: str):
             fpath = os.path.join(DATAFRAME_DIR, fname)
             os.remove(fpath)
             logger.info("DataFrame 파일 삭제: %s", fname)
+
+
+def drop_dataframe_by_source(source: str) -> int:
+    """meta.json의 source 필드를 기준으로 parquet·meta 파일을 삭제한다. 삭제된 쌍 수를 반환."""
+    if not os.path.exists(DATAFRAME_DIR):
+        return 0
+    targets: list[str] = []
+    for fname in os.listdir(DATAFRAME_DIR):
+        if not fname.endswith(".meta.json"):
+            continue
+        meta_path = os.path.join(DATAFRAME_DIR, fname)
+        try:
+            with open(meta_path, encoding="utf-8") as f:
+                meta = json.load(f)
+            if os.path.basename(meta.get("source", "")) == os.path.basename(source):
+                stem = fname[: -len(".meta.json")]
+                targets.append(stem)
+        except Exception:
+            continue
+    for stem in targets:
+        for ext in (".parquet", ".meta.json"):
+            fpath = os.path.join(DATAFRAME_DIR, stem + ext)
+            if os.path.exists(fpath):
+                os.remove(fpath)
+                logger.info("DataFrame 파일 삭제: %s", stem + ext)
+    return len(targets)

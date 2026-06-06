@@ -299,24 +299,29 @@ def ingest_status(source: str, _: None = Depends(_verify_api_key)):
 def delete_document(source: str, _: None = Depends(_verify_api_key)):
     """색인된 문서를 완전히 삭제한다 — ChromaDB·Parquet·manifest·data 파일 모두 제거."""
     from utils.chroma_store import delete_from_chroma
-    from utils.parquet_store import drop_dataframe_files
+    from utils.parquet_store import drop_dataframe_by_source
 
     source = os.path.basename(source)
-    stem = source.rsplit(".", 1)[0] if "." in source else source
 
     chroma_deleted = delete_from_chroma(source)
-    drop_dataframe_files(stem)
+    drop_dataframe_by_source(source)
+    manifest_deleted = delete_manifest(source)
 
+    if not manifest_deleted and not os.path.exists(os.path.join(DATA_FOLDER, source)):
+        raise HTTPException(status_code=404, detail=f"'{source}' 문서를 찾을 수 없습니다.")
+
+    # Parquet·manifest 삭제 후 즉시 메모리 갱신 (파일 락 여부와 무관)
+    _load_dataframes()
+
+    # data 파일 삭제 — Windows 파일 락 시 조용히 건너뜀
     data_path = os.path.join(DATA_FOLDER, source)
     file_existed = os.path.exists(data_path)
     if file_existed:
-        os.remove(data_path)
+        try:
+            os.remove(data_path)
+        except PermissionError:
+            logger.warning("data 파일 삭제 실패 (파일 락) — 다음 재시작 시 제거 필요: %s", data_path)
 
-    manifest_deleted = delete_manifest(source)
-    if not manifest_deleted and not file_existed:
-        raise HTTPException(status_code=404, detail=f"'{source}' 문서를 찾을 수 없습니다.")
-
-    _load_dataframes()
     return {
         "source": source,
         "chroma_deleted": chroma_deleted,

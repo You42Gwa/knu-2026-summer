@@ -24,6 +24,28 @@ def ensure_manifest_table():
         """))
 
 
+def get_all_manifest_entries() -> list[dict]:
+    """모든 색인 문서 목록을 최신순으로 반환한다."""
+    with engine.begin() as conn:
+        rows = conn.execute(
+            text("""
+                SELECT source, status, file_type, chroma_doc_count, processed_at
+                FROM ingestion_manifest
+                ORDER BY processed_at DESC
+            """)
+        ).fetchall()
+    return [
+        {
+            "source": r[0],
+            "status": r[1],
+            "file_type": r[2],
+            "chroma_doc_count": r[3],
+            "processed_at": str(r[4]) if r[4] else None,
+        }
+        for r in rows
+    ]
+
+
 def get_manifest_status(source: str) -> dict | None:
     """source(파일명) 의 색인 상태를 조회한다. 기록이 없으면 None."""
     with engine.begin() as conn:

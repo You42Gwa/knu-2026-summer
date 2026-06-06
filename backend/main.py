@@ -25,7 +25,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # 도메인 모듈 (config → security/llm/datastore/rag 순으로 의존)
 from utils.ingest import process_file, ensure_manifest_table
-from utils.manifest import get_manifest_status
+from utils.manifest import get_manifest_status, get_all_manifest_entries
 from core.config import (
     OLLAMA_BASE_URL, OLLAMA_MODEL, EMBED_MODEL,
     CHROMA_HOST, CHROMA_PORT, DATA_FOLDER,
@@ -273,6 +273,13 @@ def ingest_upload(
         file.file.close()
     background_tasks.add_task(_process_and_reload, dest)
     return StatusResponse(status="accepted", message=f"'{filename}' 업로드 완료, 색인을 시작했습니다.")
+
+
+@app.get("/documents")
+def documents(_: None = Depends(_verify_api_key)):
+    """색인된 문서 전체 목록과 상태를 반환한다. n8n·Slack 문서목록 명령용."""
+    entries = get_all_manifest_entries()
+    return {"count": len(entries), "files": entries}
 
 
 @app.get("/status")

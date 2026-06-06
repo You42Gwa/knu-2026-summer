@@ -726,6 +726,110 @@
     },
     {
       "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "dc001111-0000-0001-0000-000000000001",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "문서목록",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "dc001111-0000-0002-0000-000000000002",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "어떤 파일",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "dc001111-0000-0003-0000-000000000003",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "파일 목록",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1760,
+        2672
+      ],
+      "id": "dc001111-aaaa-bbbb-cccc-dd0000000001",
+      "name": "DocList Branch"
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:8080/documents",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1568,
+        2576
+      ],
+      "id": "dc001111-aaaa-bbbb-cccc-dd0000000002",
+      "name": "Call Documents API"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst files = data.files || [];\n\nif (files.length === 0) {\n  return [{ json: { text: '현재 색인된 문서가 없습니다.' } }];\n}\n\nconst statusEmoji = { SUCCESS: '✅', FAILED: '❌', IN_PROGRESS: '⏳' };\n\nconst lines = files.map(f => {\n  const emoji = statusEmoji[f.status] || '❓';\n  const count = f.chroma_doc_count ? ` (${f.chroma_doc_count}건)` : '';\n  return `${emoji} ${f.source}${count}`;\n});\n\nreturn [{\n  json: {\n    text: `현재 색인된 문서 (${files.length}개):\\n${lines.join('\\n')}`\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1360,
+        2576
+      ],
+      "id": "dc001111-aaaa-bbbb-cccc-dd0000000003",
+      "name": "Format Doc List"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
+        "text": "={{ $json.text }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        -1152,
+        2576
+      ],
+      "id": "dc001111-aaaa-bbbb-cccc-dd0000000004",
+      "name": "Send Doc List",
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
         "jsCode": "const files = $('Slack Trigger1').first().json.files || [];\nif (files.length === 0) return [];\n\nconst file = files[0];\nreturn [{\n  json: {\n    file_id: file.id || '',\n    file_name: file.name || 'unknown',\n    file_url: file.url_private_download || file.url_private || '',\n    file_type: file.filetype || '',\n    original_text: $('Slack Trigger1').first().json.text || ''\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
@@ -1022,7 +1126,47 @@
         ],
         [
           {
+            "node": "DocList Branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DocList Branch": {
+      "main": [
+        [
+          {
+            "node": "Call Documents API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Report Branch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call Documents API": {
+      "main": [
+        [
+          {
+            "node": "Format Doc List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Doc List": {
+      "main": [
+        [
+          {
+            "node": "Send Doc List",
             "type": "main",
             "index": 0
           }

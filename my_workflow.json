@@ -1,153 +1,856 @@
 {
-  "name": "RAG Chat (테스트용, Slack 없음)",
   "nodes": [
     {
       "parameters": {
-        "public": true,
+        "fieldToSplitOut": "문서_목록",
         "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
-      "typeVersion": 1.1,
-      "position": [0, 0],
-      "id": "d1a2b3c4-0001-0001-0001-000000000001",
-      "name": "Chat Trigger",
-      "webhookId": "rag-chat-test-webhook"
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        2320
+      ],
+      "id": "8edc0582-853b-4ef7-b612-48baaaba2cd6",
+      "name": "Split Out"
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "http://host.docker.internal:8080/chat",
-        "sendHeaders": true,
-        "specifyHeaders": "json",
-        "jsonHeaders": "{\n  \"Content-Type\": \"application/json\"\n}",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"question\": \"{{ $json.chatInput }}\"\n}",
-        "options": {
-          "timeout": 60000
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $(\"Copy Template1\").first().json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "=INPUT_DOMESTIC",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "section": "=total",
+            "period": "=",
+            "purpose": "=",
+            "count_or_people": "==SUMIF(A:A,\"yearly\",D:D)",
+            "recipient": "=",
+            "amount": "==SUMIF(A:A,\"yearly\",F:F)"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "section",
+              "displayName": "section",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "period",
+              "displayName": "period",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "purpose",
+              "displayName": "purpose",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "count_or_people",
+              "displayName": "count_or_people",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "recipient",
+              "displayName": "recipient",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "amount",
+              "displayName": "amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1264,
+        2560
+      ],
+      "id": "037571cc-31c0-4a96-9d27-ed696ae1d98b",
+      "name": "Append DOMESTIC(TOTALl SUM)1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6uDdV1ssRmLTm4wO",
+          "name": "Google Sheets account"
         }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all()\n  .map(item => {\n    const doc = item.json;\n\n    const 총액Raw = String(doc[\"총액\"] || \"\").normalize(\"NFKC\");\n    const match = 총액Raw.match(/([0-9][0-9,]*)\\s*만원/);\n\n    if (!match) return null;\n\n    const amount = Number(match[1].replace(/,/g, \"\")) * 10000;\n\n    const purpose = String(doc[\"목적\"] || \"\")\n      .normalize(\"NFKC\")\n      .replace(/[-–]?\\s*[0-9][0-9,]*\\s*만원/g, \"\")\n      .trim();\n\n    return {\n      json: {\n        ...doc,\n        목적: purpose,\n        총액: amount,\n      }\n    };\n  })\n  .filter(Boolean);"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -880,
+        2320
+      ],
+      "id": "e23e1efb-a660-43f1-81bd-973567de2d48",
+      "name": "Modify Items",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:8080/summary",
+        "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
-      "position": [280, 0],
-      "id": "d1a2b3c4-0004-0004-0004-000000000004",
-      "name": "FastAPI /chat",
-      "continueOnFail": true
+      "position": [
+        -1296,
+        2320
+      ],
+      "id": "f3305273-72fe-4f2c-b9aa-b40d7fe7a2e1",
+      "name": "Run Summary"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
+        "text": "관련 문서를 찾지 못했습니다.",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        -1296,
+        3072
+      ],
+      "id": "57f838c0-bca7-47ab-98a4-a6c63cddea80",
+      "name": "Send Error Message1",
+      "webhookId": "9acffefb-4ac4-44e3-900b-bf1a97fad65b",
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
+        "text": "=답변:{{ $json.answer }}\n\n분기:{{ $json.source }}\n\n출처:{{ $json.sources }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        -1296,
+        2864
+      ],
+      "id": "ec23ea44-393c-4856-b2b8-191d4d94fc68",
+      "name": "Send Chat Answer1",
+      "webhookId": "6be90c7a-397a-4478-be48-2a35e43f1dd2",
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "trigger": [
+          "app_mention"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2384,
+        2672
+      ],
+      "id": "1fe7071b-4817-4c7a-b2c6-f88572e43336",
+      "name": "Slack Trigger1",
+      "webhookId": "c17ace21-997f-45f9-8d4a-bcb5ae7cebb6",
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a3888806-dec6-416a-819c-2925e66b8bdc",
+              "name": "question",
+              "value": "={{$json.text.replace(/^<@[^>]+>\\s*/, '')}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2192,
+        2672
+      ],
+      "id": "f940b47d-d9ce-4400-a9bf-94d5e9acfa11",
+      "name": "Edit Fields1"
     },
     {
       "parameters": {
         "conditions": {
           "options": {
-            "caseSensitive": false,
+            "caseSensitive": true,
             "leftValue": "",
-            "typeValidation": "loose"
+            "typeValidation": "strict",
+            "version": 3
           },
           "conditions": [
             {
-              "id": "cond-001",
-              "leftValue": "={{ $json.answer }}",
-              "rightValue": "",
+              "id": "dd08ecf3-0482-4850-8505-dddeada2211b",
+              "leftValue": "={{ $('Edit Fields1').item.json.question }}",
+              "rightValue": "명세서",
               "operator": {
                 "type": "string",
-                "operation": "notEmpty"
-              }
-            },
-            {
-              "id": "cond-002",
-              "leftValue": "={{ $json.error }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "empty"
+                "operation": "contains"
               }
             }
           ],
           "combinator": "and"
-        }
+        },
+        "options": {}
       },
       "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [540, 0],
-      "id": "d1a2b3c4-0005-0005-0005-000000000005",
-      "name": "응답 품질 체크"
+      "typeVersion": 2.3,
+      "position": [
+        -2016,
+        2672
+      ],
+      "id": "ec889328-91d1-4033-95a7-1cbbf3171a36",
+      "name": "Report Branch1"
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
             {
-              "id": "out-001",
-              "name": "output",
-              "value": "={{ $json.answer }}\n\n_(출처: {{ $json.source === 'pandas' ? '정형 데이터 (Parquet)' : '문서 검색 (ChromaDB)' }}{{ $json.sources && $json.sources.length > 0 ? ' — ' + $json.sources.join(', ') : '' }})_",
-              "type": "string"
+              "id": "d5d54cb6-c3ff-4f58-9e7e-c08ac07b1439",
+              "leftValue": "={{$json.answer}}",
+              "rightValue": "조회된 데이터가 없습니다.",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "4290c539-f282-4b42-8bd6-24832a967d3d",
+              "leftValue": "={{ ['pandas', 'vector'].includes(($json.source || '').trim().toLowerCase()) }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1488,
+        2976
+      ],
+      "id": "96de779b-4d1a-49cc-a316-beb0389307a9",
+      "name": "Chat Response1"
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1pyz51z8Wg0CsrwDm4QQLNNVbjpZChoEkVZrRNaKuWaE",
+          "mode": "list",
+          "cachedResultName": "기부금_활용실적명세서(템플릿)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pyz51z8Wg0CsrwDm4QQLNNVbjpZChoEkVZrRNaKuWaE/edit?usp=drivesdk"
+        },
+        "name": "={{ \"기부금_활용실적명세서_\" + $now.format(\"yyyyMMdd_HHmmss\") }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1680,
+        2320
+      ],
+      "id": "d37d429b-928c-4a33-8339-2c33396feb9e",
+      "name": "Copy Template1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "6C8yAKEzohZ3SJkt",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $(\"Copy Template1\").first().json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1362915405,
+          "mode": "list",
+          "cachedResultName": "INPUT_BASIC",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VL1F3J_oR237WBf-B0U8vSGGTH7Coch2MRoRWix6wSc/edit#gid=1362915405"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "corp_name": "={{ $('Run Summary').first().json['기관정보']['corp_name'] }}",
+            "business_no": "={{ $('Run Summary').first().json['기관정보']['business_no'] }}",
+            "representative": "={{ $('Run Summary').first().json['기관정보']['representative'] }}",
+            "donation_type": "={{ $('Run Summary').first().json['기관정보']['donation_type'] }}",
+            "email": "={{ $('Run Summary').first().json['기관정보']['email'] }}",
+            "business_year": "={{ $('Run Summary').first().json['기관정보']['business_year'] }}",
+            "phone": "={{ $('Run Summary').first().json['기관정보']['phone'] }}",
+            "designated_date": "={{ $('Run Summary').first().json['기관정보']['designated_date'] }}",
+            "address": "={{ $('Run Summary').first().json['기관정보']['address'] }}",
+            "submit_year": "={{ $now.setZone('Asia/Seoul').toFormat('yyyy') }}",
+            "submit_month": "={{ $now.setZone('Asia/Seoul').toFormat('MM') }}",
+            "submit_day": "={{ $now.setZone('Asia/Seoul').toFormat('dd') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "statement_no",
+              "displayName": "statement_no",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "corp_name",
+              "displayName": "corp_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "business_no",
+              "displayName": "business_no",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "representative",
+              "displayName": "representative",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "donation_type",
+              "displayName": "donation_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "business_year",
+              "displayName": "business_year",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "designated_date",
+              "displayName": "designated_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "submit_year",
+              "displayName": "submit_year",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "submit_month",
+              "displayName": "submit_month",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "submit_day",
+              "displayName": "submit_day",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "submitter",
+              "displayName": "submitter",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1488,
+        2320
+      ],
+      "id": "7d930943-7a79-4fe5-9fa4-ca8dee47c2f2",
+      "name": "Append INPUT_BASIC1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6uDdV1ssRmLTm4wO",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8080/chat",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "question",
+              "value": "={{ $json.question }}"
+            },
+            {
+              "name": "include_rows",
+              "value": "true"
             }
           ]
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [800, -120],
-      "id": "d1a2b3c4-0006-0006-0006-000000000006",
-      "name": "Format Answer"
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1696,
+        2976
+      ],
+      "id": "4c4739c3-afb9-47d6-bc15-1d39c875a274",
+      "name": "Run Chat2"
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $(\"Copy Template1\").first().json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "=INPUT_DOMESTIC",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "section": "=yearly",
+            "purpose": "={{$json.목적}}",
+            "count_or_people": "={{$json.인원}}",
+            "recipient": "={{ $json['지급처'] }}",
+            "amount": "={{$json.총액}}",
+            "period": "={{ $json['지출월'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
             {
-              "id": "out-002",
-              "name": "output",
-              "value": "죄송합니다, 요청하신 정보를 찾지 못했습니다.\n\n다른 표현으로 다시 질문해 주시거나, 더 구체적인 내용을 입력해 주세요.",
-              "type": "string"
+              "id": "section",
+              "displayName": "section",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "period",
+              "displayName": "period",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "purpose",
+              "displayName": "purpose",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "count_or_people",
+              "displayName": "count_or_people",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "recipient",
+              "displayName": "recipient",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "amount",
+              "displayName": "amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
             }
-          ]
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [800, 120],
-      "id": "d1a2b3c4-0007-0007-0007-000000000007",
-      "name": "Format Fallback"
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1680,
+        2560
+      ],
+      "id": "e703f9d8-2341-437d-a6e2-1357ef02017b",
+      "name": "Append INPUT_DOMESTIC2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6uDdV1ssRmLTm4wO",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {}\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1472,
+        2560
+      ],
+      "id": "ebfcc897-f138-47de-9955-833d6bf7b8e5",
+      "name": "Single Run Guard1"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0B83LZ70B1",
+          "mode": "id"
+        },
+        "text": "=명세서 작성이 완료되었습니다.",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        -1088,
+        2560
+      ],
+      "id": "8edfb21c-d674-4546-bf10-754d5cdf48eb",
+      "name": "Send Report Message1",
+      "webhookId": "6be90c7a-397a-4478-be48-2a35e43f1dd2",
+      "credentials": {
+        "slackApi": {
+          "id": "J1JrHC3TBoPCCS0v",
+          "name": "Slack account"
+        }
+      }
     }
   ],
-  "pinData": {},
   "connections": {
-    "Chat Trigger": {
+    "Split Out": {
       "main": [
         [
           {
-            "node": "FastAPI /chat",
+            "node": "Modify Items",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "FastAPI /chat": {
+    "Append DOMESTIC(TOTALl SUM)1": {
       "main": [
         [
           {
-            "node": "응답 품질 체크",
+            "node": "Send Report Message1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "응답 품질 체크": {
+    "Modify Items": {
       "main": [
         [
           {
-            "node": "Format Answer",
+            "node": "Append INPUT_DOMESTIC2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Summary": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append INPUT_BASIC1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Report Branch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Report Branch1": {
+      "main": [
+        [
+          {
+            "node": "Copy Template1",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Format Fallback",
+            "node": "Run Chat2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Response1": {
+      "main": [
+        [
+          {
+            "node": "Send Chat Answer1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Error Message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Template1": {
+      "main": [
+        [
+          {
+            "node": "Run Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append INPUT_BASIC1": {
+      "main": [
+        []
+      ]
+    },
+    "Run Chat2": {
+      "main": [
+        [
+          {
+            "node": "Chat Response1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append INPUT_DOMESTIC2": {
+      "main": [
+        [
+          {
+            "node": "Single Run Guard1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Single Run Guard1": {
+      "main": [
+        [
+          {
+            "node": "Append DOMESTIC(TOTALl SUM)1",
             "type": "main",
             "index": 0
           }
@@ -155,13 +858,9 @@
       ]
     }
   },
-  "active": false,
-  "settings": {
-    "executionOrder": "v1"
-  },
+  "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "b603014552e09ec20205047e58476b75beeed7a0f0001dc7f004959e4222b2dc"
-  },
-  "tags": []
+    "instanceId": "d50daa5f901734bb116714ccd1fb9dc9b7304d9e3d244c1bca2f919a88bd9940"
+  }
 }

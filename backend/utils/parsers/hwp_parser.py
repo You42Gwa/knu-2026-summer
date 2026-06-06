@@ -1,0 +1,137 @@
+from __future__ import annotations
+
+import json
+import logging
+import os
+import shutil
+import subprocess
+import sys
+
+import pandas as pd
+from bs4 import BeautifulSoup
+
+from utils.table_parser import _parse_table, _clean_dataframe, sanitize_table_name
+from utils.text_utils import _table_to_text_chunks, _make_doc_overview_chunk, split_into_chunks
+from utils.parquet_store import save_dataframe, drop_dataframe_files
+from utils.chroma_store import save_to_chroma
+
+logger = logging.getLogger("ingest")
+
+
+def read_text_with_fallbacks(file_path: str, encodings=("utf-8", "cp949", "euc-kr")) -> str:
+    with open(file_path, "rb") as f:
+        raw = f.read()
+    for enc in encodings:
+        try:
+            return raw.decode(enc)
+        except UnicodeDecodeError:
+            continue
+    return raw.decode("utf-8", errors="replace")
+
+
+def _extract_hwp_table_pyhwpx(file_path: str) -> "pd.DataFrame | None":
+    """hwp_extract.py를 subprocess로 실행해 COM 스레드 격리."""
+    helper = os.path.join(os.path.dirname(os.path.dirname(__file__)), "hwp_extract.py")
+    try:
+        result = subprocess.run(
+            [sys.executable, helper, file_path],
+            capture_output=True, timeout=60,
+        )
+        stdout = result.stdout.decode("utf-8", errors="replace").strip()
+        if result.returncode != 0 or not stdout:
+            stderr = result.stderr.decode("utf-8", errors="replace").strip()
+            logger.error("[HWP/pyhwpx] subprocess 실패 | rc=%d err=%s", result.returncode, stderr)
+            return None
+        records = json.loads(stdout)
+        if not records:
+            return None
+        df = pd.DataFrame(records)
+        return df if not df.empty else None
+    except Exception as e:
+        logger.error("[HWP/pyhwpx] 표 추출 실패 | file=%s err=%s", file_path, e)
+        return None
+
+
+def convert_hwp_to_html_and_ingest(file_path: str, file_hash: str, category: str) -> int:
+    logger.info("[HWP] %s", file_path)
+
+    safe_name   = sanitize_table_name(os.path.basename(file_path).rsplit(".", 1)[0])
+    source_file = os.path.basename(file_path)
+    doc_label   = os.path.splitext(source_file)[0]
+
+    drop_dataframe_files(f"df_{safe_name}_t")
+
+    html_dir = os.path.join(os.path.dirname(file_path), f"temp_{safe_name}")
+
+    try:
+        # pyhwpx COM 자동화로 표 추출
+        df_pyhwpx = _extract_hwp_table_pyhwpx(file_path)
+        if df_pyhwpx is not None:
+            df_cleaned = _clean_dataframe(df_pyhwpx)
+            if df_cleaned is not None and not df_cleaned.empty:
+                var_name = f"df_{safe_name}_t0"
+                save_dataframe(df_cleaned, var_name, source_file, doc_label)
+                overview = _make_doc_overview_chunk(doc_label, source_file, [df_cleaned])
+                chunks = _table_to_text_chunks(df_cleaned, doc_label)
+                if overview:
+                    chunks.insert(0, overview)
+                count = save_to_chroma(file_path, chunks, file_hash, category) if chunks else 0
+                logger.info("[HWP/pyhwpx] 완료 | file=%s rows=%d chunks=%d", file_path, len(df_cleaned), count)
+                return count
+        logger.error("HWP 변환 실패 | file=%s", file_path)
+        return 0
+
+        index_html = os.path.join(html_dir, "index.xhtml")
+        if not os.path.exists(index_html):
+            logger.error("index.xhtml 없음 | file=%s", file_path)
+            return 0
+
+        soup = BeautifulSoup(read_text_with_fallbacks(index_html), "html.parser")
+
+        table_count = 0
+        parsed_tables: list[pd.DataFrame] = []
+        table_chunk_records: list[dict] = []
+        for i, table in enumerate(soup.find_all("table")):
+            rows = table.find_all("tr")
+            table_data = [
+                [col.get_text(strip=True) for col in row.find_all(["td", "th"])]
+                for row in rows
+            ]
+            table_data = [r for r in table_data if any(r)]
+            if len(table_data) < 2:
+                continue
+            try:
+                max_cols = max(len(r) for r in table_data)
+                normalized = [r + [None] * (max_cols - len(r)) for r in table_data]
+                df = _parse_table(normalized)
+                if df is None:
+                    continue
+                parsed_tables.append(df)
+                var_name = f"df_{safe_name}_t{i}"
+                label    = f"{doc_label} (표{i + 1})"
+                save_dataframe(df, var_name, source_file, label)
+                logger.info("[HWP] 표 저장 | var=%s rows=%d", var_name, len(df))
+                table_count += 1
+                table_chunk_records.extend(_table_to_text_chunks(df, doc_label))
+            except Exception:
+                logger.exception("[HWP] 표 저장 실패 | file=%s t=%d", file_path, i)
+
+        for tag in soup.find_all("table"):
+            tag.decompose()
+
+        body_text = soup.get_text(separator="\n")
+        chunk_records = split_into_chunks(body_text)
+        chunk_records.extend(table_chunk_records)
+
+        if parsed_tables:
+            overview = _make_doc_overview_chunk(doc_label, source_file, parsed_tables)
+            if overview:
+                chunk_records.insert(0, overview)
+
+        chroma_count = save_to_chroma(file_path, chunk_records, file_hash, category) if chunk_records else 0
+        logger.info("HWP 완료 | file=%s tables=%d chunks=%d", file_path, table_count, chroma_count)
+        return chroma_count
+
+    finally:
+        if os.path.exists(html_dir):
+            shutil.rmtree(html_dir, ignore_errors=True)

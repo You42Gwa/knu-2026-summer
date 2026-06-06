@@ -300,6 +300,43 @@ def save_markdown(
 
 
 # ---------------------------------------------------------------------------
+# 실패 로그
+# ---------------------------------------------------------------------------
+
+def save_failed_log(results: list[dict[str, Any]], path: Path) -> None:
+    failed = [r for r in results if not r["passed"]]
+    if not failed:
+        print("  실패 케이스 없음 — failed.log 미생성")
+        return
+
+    lines = [
+        f"# 실패 케이스 로그",
+        f"생성: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        f"총 실패: {len(failed)}개 / {len(results)}개",
+        "=" * 60,
+        "",
+    ]
+    for r in failed:
+        route_note = "OK" if r["route_ok"] else f"MISMATCH (기대:{r['expected_route']} 실제:{r['actual_route']})"
+        lines += [
+            f"[{r['id']}] {r['question']}",
+            f"  카테고리  : {r['category']} ({r['difficulty']})",
+            f"  라우팅    : {route_note}",
+            f"  KW 재현율 : {r['keyword_recall']:.0%}",
+            f"  적중      : {r['hit_keywords']}",
+            f"  누락      : {r['miss_keywords']}",
+            f"  소요시간  : {r['elapsed_sec']}s",
+            f"  답변      : {r['answer_preview']}",
+        ]
+        if r["error"]:
+            lines.append(f"  오류      : {r['error']}")
+        lines.append("")
+
+    path.write_text("\n".join(lines), encoding="utf-8")
+    print(f"  실패 로그: {path}")
+
+
+# ---------------------------------------------------------------------------
 # 메인
 # ---------------------------------------------------------------------------
 
@@ -357,16 +394,11 @@ def main() -> None:
 
     # 결과 저장
     RESULT_DIR.mkdir(exist_ok=True)
-    now_str  = datetime.now().strftime("%m%d_%H%M")
-    stem     = f"{now_str}_{args.tag}"
-
-    # 결과 JSON (비교 스크립트용) — 먼저 저장
-    json_path = RESULT_DIR / f"{stem}.json"
-    json_path.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"  JSON 저장:  {json_path}")
+    now_str = datetime.now().strftime("%m%d_%H%M")
+    stem    = f"{now_str}_{args.tag}"
 
     save_markdown(results, RESULT_DIR / f"{stem}.md", args.url, args.tag, route_alias)
-    save_excel(results, RESULT_DIR / f"{stem}.xlsx")
+    save_failed_log(results, RESULT_DIR / f"{stem}_failed.log")
 
 
 if __name__ == "__main__":

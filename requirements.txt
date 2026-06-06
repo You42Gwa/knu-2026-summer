@@ -29,6 +29,8 @@ pdf2image
 pytesseract
 olefile
 pyhwp
+pyhwpx
+reportlab
 beautifulsoup4
 lxml
 html5lib

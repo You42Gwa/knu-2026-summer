@@ -17,8 +17,8 @@
 
 ### AI & Database
 ![Ollama](https://img.shields.io/badge/Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)
-![Gemma](https://img.shields.io/badge/Gemma4-4285F4?style=for-the-badge&logo=google&logoColor=white)
-![Qwen3](https://img.shields.io/badge/Qwen3--Embedding-FF6A00?style=for-the-badge&logo=huggingface&logoColor=white)
+![Qwen2.5](https://img.shields.io/badge/Qwen2.5--3B-FF6A00?style=for-the-badge&logo=huggingface&logoColor=white)
+![BGE-M3](https://img.shields.io/badge/BGE--M3-4285F4?style=for-the-badge&logo=huggingface&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 ![ChromaDB](https://img.shields.io/badge/ChromaDB-FF6D5A?style=for-the-badge&logo=chroma&logoColor=white)
 
@@ -89,9 +89,9 @@ Slack 메시지
         ├─▶ POST /chat  (질의 응답)
         │     └─▶ 키워드 기반 라우팅 판단
         │           ├─ PANDAS ─▶ Parquet 로드 → ①이름 전수 검색 / ②키워드 직접 조회 / ③LLM 코드 생성(폴백) → 결과 포맷팅
-        │           └─ VECTOR ─▶ ChromaDB 검색 (qwen3-embedding:0.6b) → LLM 답변 생성
+        │           └─ VECTOR ─▶ ChromaDB 검색 (bge-m3) → LLM 답변 생성
         │                                                    │
-        │                                             Ollama (gemma4:e4b)
+        │                                             Ollama (qwen2.5:3b)
         └─▶ GET  /summary  (문서 명세서)
               └─▶ 적재 문서별 인원·금액·목적 자동 집계 → JSON 반환
 
@@ -104,7 +104,7 @@ Slack 메시지
 POST /ingest  또는  python utils/ingest.py
   ├─ PDF (텍스트) ─▶ 표 → Parquet + .meta.json  /  텍스트(표 제외) → ChromaDB
   ├─ PDF (스캔)   ─▶ pytesseract OCR (페이지별) → ChromaDB
-  ├─ HWP         ─▶ hwp5html 변환 → 표 → Parquet + .meta.json  /  본문 → ChromaDB
+  ├─ HWP         ─▶ pyhwpx COM 자동화 → 표 → Parquet + .meta.json  /  본문 → ChromaDB
   └─ XLSX        ─▶ 시트별 → Parquet + .meta.json
 
 * 각 문서마다 [문서 개요] 청크(목적·금액·항목 요약)를 ChromaDB에 추가 주입
@@ -122,14 +122,18 @@ knu-2026-summer-rag/
 │   ├── main.py              # FastAPI 서버 (라우팅, /chat, /summary, /ingest 엔드포인트)
 │   ├── database.py          # PostgreSQL / ChromaDB 연결 설정
 │   ├── check_chroma.py      # ChromaDB 상태 확인 유틸리티
-│   ├── .env                 # [Git Ignored] 실제 환경변수 (backend/.env.example 참고)
+│   ├── .env                 # [Git Ignored] 실제 환경변수
 │   ├── data/                # [Git Ignored] 입력 문서 (hwp, pdf, xlsx)
-│   ├── dataframes/          # [Git Ignored] Parquet 캐시 + 메타데이터 (적재 시 자동 생성)
+│   ├── dataframes/          # [Git Ignored] Parquet 캐시 + 메타데이터
 │   ├── logs/                # [Git Ignored] 적재 처리 로그
 │   ├── utils/
-│   │   └── ingest.py        # 문서 파싱 및 DB 적재 파이프라인
+│   │   ├── ingest.py        # 문서 파싱 및 DB 적재 파이프라인
+│   │   └── hwp_extract.py   # HWP 표 추출 헬퍼 (pyhwpx subprocess 격리)
 │   └── tests/
 │       ├── eval.py          # 평가 스크립트 (키워드 기반 정답률 측정)
+│       ├── make_goldset.py  # 골드셋 자동 생성 스크립트
+│       ├── generate_demo_data.py  # 데모 데이터 생성 (Excel/PDF)
+│       ├── version.md       # 개선 이력 및 알려진 문제
 │       ├── compare.py       # 두 eval 결과 비교 유틸리티
 │       └── check_integrity.py   # 데이터 무결성 검증
 ├── .env.example             # 환경변수 템플릿
@@ -161,7 +165,15 @@ API_KEY=랜덤한_API_키로_변경
 
 ---
 
-### 6-2. 시스템 의존성 설치 (OCR 사용 시)
+### 6-2. HWP 파일 처리 설정 (Windows 전용)
+
+HWP 파일 적재는 **한글과컴퓨터 한글** 소프트웨어가 설치된 Windows에서만 동작합니다.  
+한글이 설치되어 있으면 `pyhwpx`가 COM 자동화로 자동 처리합니다.  
+한글 미설치 환경에서는 HWP 파일 적재가 건너뜁니다.
+
+---
+
+### 6-3. 시스템 의존성 설치 (OCR 사용 시)
 
 **Tesseract OCR** (한국어 언어팩 포함)
 - Windows: https://github.com/UB-Mannheim/tesseract/wiki 에서 installer 다운로드
@@ -191,8 +203,8 @@ docker compose up -d
 ### 6-4. Ollama 모델 준비
 
 ```bash
-docker exec ollama_server ollama pull gemma4:e4b
-docker exec ollama_server ollama pull qwen3-embedding:0.6b
+docker exec ollama_server ollama pull qwen2.5:3b
+docker exec ollama_server ollama pull bge-m3
 ```
 
 ---
@@ -288,8 +300,8 @@ curl -X POST http://localhost:8080/chat \
 | `CHROMA_HOST` | `localhost` | ChromaDB 호스트 |
 | `CHROMA_PORT` | `8000` | ChromaDB 포트 |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama 서버 주소 |
-| `OLLAMA_MODEL` | `gemma4:e4b` | 생성 LLM 모델 |
-| `EMBED_MODEL` | `qwen3-embedding:0.6b` | 임베딩 모델 |
+| `OLLAMA_MODEL` | `qwen2.5:3b` | 생성 LLM 모델 |
+| `EMBED_MODEL` | `bge-m3` | 임베딩 모델 |
 | `API_KEY` | *(비어있으면 인증 없음)* | 엔드포인트 보호용 API Key |
 | `INGEST_ALLOWED_BASE` | `backend/data/` 절대경로 | `/ingest` API 접근 가능 디렉토리 |
 
@@ -297,16 +309,18 @@ curl -X POST http://localhost:8080/chat \
 
 ## 9. 평가 결과
 
-내부 평가 질의셋(로컬 전용)으로 측정한 최종 성능입니다.
+데모 데이터 기반 골드셋(25케이스)으로 측정한 성능입니다. 모델: `qwen2.5:3b` + `bge-m3`
 
-| 카테고리 | 정답률 |
-|---|---|
-| pandas_명단 | 14/16 (88%) |
-| pandas_인원 | 7/8 (88%) |
-| vector_문서 | 12/15 (80%) |
-| **전체** | **34/42 (81%)** |
+| 카테고리 | 케이스 수 | 비고 |
+|---|---|---|
+| sql_명단 | 7 | pandas 라우팅 |
+| sql_금액 | 6 | pandas 라우팅 |
+| sql_인원 | 4 | pandas 라우팅 |
+| vector_문서 | 8 | ChromaDB + LLM |
 
-평균 응답 시간: **3.0s** (timeout 해결 후)
+> 상세 결과는 `backend/tests/results/` 참조.  
+> 알려진 문제: vector 성능 낮음 (소형 모델 한계), 크로스 도큐먼트 합산 미지원.  
+> 자세한 개선 이력은 `backend/tests/version.md` 참조.
 
 
 ---

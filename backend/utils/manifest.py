@@ -24,6 +24,28 @@ def ensure_manifest_table():
         """))
 
 
+def get_manifest_status(source: str) -> dict | None:
+    """source(파일명) 의 색인 상태를 조회한다. 기록이 없으면 None."""
+    with engine.begin() as conn:
+        row = conn.execute(
+            text("""
+                SELECT status, chroma_doc_count, error_message, processed_at, file_type
+                FROM ingestion_manifest WHERE source = :s
+            """),
+            {"s": source},
+        ).fetchone()
+    if row is None:
+        return None
+    return {
+        "source": source,
+        "status": row[0],
+        "chroma_doc_count": row[1],
+        "error_message": row[2],
+        "processed_at": str(row[3]) if row[3] else None,
+        "file_type": row[4],
+    }
+
+
 def get_existing_file_hash(source: str) -> str | None:
     with engine.begin() as conn:
         row = conn.execute(

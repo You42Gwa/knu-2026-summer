@@ -4,6 +4,7 @@ import glob
 import logging
 import os
 import re
+import shutil
 import sys
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
@@ -15,7 +16,7 @@ from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".env"))
 
 import chromadb
-from fastapi import FastAPI, HTTPException, BackgroundTasks, Depends
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Depends, UploadFile, File
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from langchain_ollama import OllamaEmbeddings
@@ -24,6 +25,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # 도메인 모듈 (config → security/llm/datastore/rag 순으로 의존)
 from utils.ingest import process_file, ensure_manifest_table
+from utils.manifest import get_manifest_status
 from core.config import (
     OLLAMA_BASE_URL, OLLAMA_MODEL, EMBED_MODEL,
     CHROMA_HOST, CHROMA_PORT, DATA_FOLDER,
@@ -241,6 +243,46 @@ def ingest(req: IngestRequest, background_tasks: BackgroundTasks, _: None = Depe
         raise HTTPException(status_code=404, detail=f"파일 없음: {safe_path}")
     background_tasks.add_task(_process_and_reload, safe_path)
     return StatusResponse(status="accepted", message=f"'{safe_path}' 처리를 시작했습니다.")
+
+
+_ALLOWED_INGEST_EXTS = {"xlsx", "pdf", "hwp", "hwpx"}
+
+
+@app.post("/ingest/upload", response_model=StatusResponse)
+def ingest_upload(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...),
+    _: None = Depends(_verify_api_key),
+):
+    """파일 바이너리를 직접 업로드받아 data 폴더에 저장 후 색인한다 (Slack 첨부 등)."""
+    filename = os.path.basename(file.filename or "")
+    if not filename:
+        raise HTTPException(status_code=400, detail="파일명이 없습니다.")
+    ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+    if ext not in _ALLOWED_INGEST_EXTS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"지원하지 않는 형식: .{ext} (허용: {', '.join(sorted(_ALLOWED_INGEST_EXTS))})",
+        )
+    os.makedirs(DATA_FOLDER, exist_ok=True)
+    dest = _validate_ingest_path(os.path.join(DATA_FOLDER, filename))
+    try:
+        with open(dest, "wb") as f:
+            shutil.copyfileobj(file.file, f)
+    finally:
+        file.file.close()
+    background_tasks.add_task(_process_and_reload, dest)
+    return StatusResponse(status="accepted", message=f"'{filename}' 업로드 완료, 색인을 시작했습니다.")
+
+
+@app.get("/status")
+def ingest_status(source: str, _: None = Depends(_verify_api_key)):
+    """파일명(source)으로 색인 상태를 조회한다. 업로드 후 n8n 폴링용.
+    반환 status: IN_PROGRESS | SUCCESS | FAILED, 기록 없으면 404."""
+    st = get_manifest_status(os.path.basename(source))
+    if st is None:
+        raise HTTPException(status_code=404, detail=f"'{source}' 색인 기록이 없습니다.")
+    return st
 
 
 @app.post("/ingest/all", response_model=StatusResponse)

@@ -5,6 +5,7 @@ python-dotenv
 fastapi
 uvicorn[standard]
 pydantic
+python-multipart
 
 # LangChain
 langchain

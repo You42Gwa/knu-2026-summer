@@ -101,7 +101,7 @@ Slack 메시지
 ### 문서 적재 파이프라인
 
 ```
-POST /ingest  또는  python utils/ingest.py
+POST /ingest (서버 경로) · /ingest/upload (파일 업로드)  또는  python utils/ingest.py
   ├─ PDF (텍스트) ─▶ 표 → Parquet + .meta.json  /  텍스트(표 제외) → ChromaDB
   ├─ PDF (스캔)   ─▶ pytesseract OCR (페이지별) → ChromaDB
   ├─ HWP         ─▶ pyhwpx COM 자동화 → 표 → Parquet + .meta.json  /  본문 → ChromaDB
@@ -119,16 +119,42 @@ POST /ingest  또는  python utils/ingest.py
 ```
 knu-2026-summer-rag/
 ├── backend/
-│   ├── main.py              # FastAPI 서버 (라우팅, /chat, /summary, /ingest 엔드포인트)
+│   ├── main.py              # FastAPI 진입점 (엔드포인트만, 도메인 로직은 모듈로 분리)
+│   ├── schemas.py           # Pydantic 요청/응답 스키마
 │   ├── database.py          # PostgreSQL / ChromaDB 연결 설정
 │   ├── check_chroma.py      # ChromaDB 상태 확인 유틸리티
 │   ├── .env                 # [Git Ignored] 실제 환경변수
 │   ├── data/                # [Git Ignored] 입력 문서 (hwp, pdf, xlsx)
 │   ├── dataframes/          # [Git Ignored] Parquet 캐시 + 메타데이터
 │   ├── logs/                # [Git Ignored] 적재 처리 로그
+│   ├── core/                # 공통 인프라
+│   │   ├── config.py        # 환경변수 로드
+│   │   ├── llm.py           # Ollama LLM · retriever 싱글턴
+│   │   └── security.py      # API Key 인증 · 경로 검증
+│   ├── datastore/           # 인메모리 DataFrame 저장소 + 조회
+│   │   ├── state.py         # 공유 DF namespace 로드/보관
+│   │   ├── schema.py        # LLM용 스키마 문자열 생성
+│   │   └── query.py         # 이름 검색 · 키워드 필터 · 직접 조회
+│   ├── pandas_engine/       # pandas 코드 실행
+│   │   ├── executor.py      # 샌드박스 exec (금지 패턴 차단)
+│   │   └── formatter.py     # 결과 포맷팅
+│   ├── rag/                 # RAG 파이프라인
+│   │   ├── router.py        # 질의 라우팅 (PANDAS / VECTOR)
+│   │   ├── prompts.py       # 프롬프트 템플릿
+│   │   ├── vector.py        # 벡터 RAG (의미 검색 → LLM)
+│   │   └── pandas_rag.py    # pandas RAG (검색 → 집계 → 포맷)
 │   ├── utils/
-│   │   ├── ingest.py        # 문서 파싱 및 DB 적재 파이프라인
-│   │   └── hwp_extract.py   # HWP 표 추출 헬퍼 (pyhwpx subprocess 격리)
+│   │   ├── ingest.py        # 적재 진입점 (유형별 파서로 위임)
+│   │   ├── manifest.py      # PostgreSQL manifest CRUD · 상태 조회
+│   │   ├── parquet_store.py # Parquet 저장/삭제
+│   │   ├── chroma_store.py  # ChromaDB 저장
+│   │   ├── text_utils.py    # 텍스트 청킹 · 문서 개요 생성
+│   │   ├── table_parser.py  # 표 파싱 · 정제 · 이름 정규화
+│   │   ├── hwp_extract.py   # HWP 표 추출 헬퍼 (pyhwpx subprocess 격리)
+│   │   └── parsers/         # 파일 유형별 파서
+│   │       ├── pdf_parser.py
+│   │       ├── xlsx_parser.py
+│   │       └── hwp_parser.py
 │   └── tests/
 │       ├── eval.py          # 평가 스크립트 (키워드 기반 정답률 측정)
 │       ├── make_goldset.py  # 골드셋 자동 생성 스크립트
@@ -242,8 +268,10 @@ python utils/ingest.py
 | GET | `/summary` | * | **모든 문서 명세서** (인원·금액·목적 자동 집계) |
 | POST | `/chat` | * | 질문 전송 → 자동 라우팅 → 답변 반환 |
 | POST | `/chat/stream` | * | 스트리밍 답변 (프론트 직접 연동용) |
-| POST | `/ingest` | * | 단일 파일 적재 (백그라운드, data/ 내부만 허용) |
+| POST | `/ingest` | * | 단일 파일 적재 — 서버 경로 기반 (백그라운드, data/ 내부만 허용) |
+| POST | `/ingest/upload` | * | **파일 업로드 적재** — multipart 바이너리 (Slack 첨부 등), 백그라운드 |
 | POST | `/ingest/all` | * | `data/` 폴더 전체 일괄 적재 (백그라운드) |
+| GET | `/status` | * | 파일별 색인 상태 조회 (`?source=파일명`) — 업로드 후 폴링용 |
 
 ### `/summary` 응답 예시
 

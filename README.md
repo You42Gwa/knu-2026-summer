@@ -393,18 +393,15 @@ uvicorn main:app --host 0.0.0.0 --port 8080 --reload
 **방법 2 — API (파일 업로드)**
 ```bash
 curl -X POST "http://localhost:8080/ingest/upload?filename_override=파일명.xlsx" \
-  -H "X-API-Key: your_api_key" \
   -F "file=@파일명.xlsx"
 
 # 색인 상태 확인
-curl "http://localhost:8080/status?source=파일명.xlsx" \
-  -H "X-API-Key: your_api_key"
+curl "http://localhost:8080/status?source=파일명.xlsx"
 ```
 
 **방법 3 — API (서버 경로 지정)**
 ```bash
 curl -X POST http://localhost:8080/ingest \
-  -H "X-API-Key: your_api_key" \
   -H "Content-Type: application/json" \
   -d '{"file_path": "data/파일명.xlsx"}'
 ```
@@ -426,7 +423,7 @@ curl -X POST http://localhost:8080/ingest \
 
 ## 8. API 엔드포인트
 
-`API_KEY` 환경변수가 설정된 경우 `*` 표시 엔드포인트에 `X-API-Key` 헤더가 필요합니다.
+`API_KEY` 환경변수 미설정 시 인증 없이 사용 가능합니다. 설정 시 `*` 표시 엔드포인트에 `X-API-Key` 헤더가 필요합니다.
 
 | Method | Path | 인증 | 설명 |
 |---|---|---|---|
@@ -445,7 +442,7 @@ curl -X POST http://localhost:8080/ingest \
 
 ```bash
 # 문서 목록
-curl http://localhost:8080/documents -H "X-API-Key: your_api_key"
+curl http://localhost:8080/documents
 ```
 ```json
 {
@@ -459,8 +456,7 @@ curl http://localhost:8080/documents -H "X-API-Key: your_api_key"
 
 ```bash
 # 문서 삭제
-curl -X DELETE "http://localhost:8080/documents/파일명.xlsx" \
-  -H "X-API-Key: your_api_key"
+curl -X DELETE "http://localhost:8080/documents/파일명.xlsx"
 ```
 ```json
 {"source": "파일명.xlsx", "chroma_deleted": 3, "file_deleted": true, "manifest_deleted": true}
@@ -470,7 +466,6 @@ curl -X DELETE "http://localhost:8080/documents/파일명.xlsx" \
 # 질의응답
 curl -X POST http://localhost:8080/chat \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: your_api_key" \
   -d '{"question": "신입생 장학금 총액이 얼마야?"}'
 ```
 ```json

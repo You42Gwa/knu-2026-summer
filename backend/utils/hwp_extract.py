@@ -63,7 +63,7 @@ def extract(file_path: str) -> list[dict]:
                 content = "\n".join(paras) if paras else td.get_text(strip=True)
                 for r in range(r_idx, min(r_idx + rowspan, num_rows)):
                     for c in range(c_idx, min(c_idx + colspan, num_cols)):
-                        grid[r][c] = content if (r == r_idx and c == c_idx) else ""
+                        grid[r][c] = content  # Context Padding: 병합 셀 내용을 모든 범위에 전파
                 c_idx += colspan
 
         if not grid or len(grid) < 2:

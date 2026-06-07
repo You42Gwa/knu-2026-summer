@@ -189,7 +189,11 @@ def _find_dfs_by_source_label(question: str) -> list[str]:
     words: set[str] = set()
     for w in re.findall(r"[가-힣]{2,}|20\d{2}|\d+월|\d+분기", question):
         stripped = _strip_kr_particle(w)
-        for cand in [w, stripped]:
+        # 조사를 모두 제거한 어근까지 추가 ("상반기에서" → "상반기")
+        fully = w
+        while len(fully) >= 3 and fully[-1] in _KR_PARTICLES:
+            fully = fully[:-1]
+        for cand in dict.fromkeys([w, stripped, fully]):
             if cand not in _SOURCE_STOP_WORDS and len(cand) >= 2:
                 words.add(cand)
 

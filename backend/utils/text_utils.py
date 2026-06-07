@@ -33,21 +33,23 @@ def split_into_chunks(raw: str, page: int | None = None) -> list[dict]:
 
 
 def _table_to_text_chunks(df, doc_label: str, page: int | None = None) -> list[dict]:
+    """Context Padding: 각 행을 '컬럼명: 값' 쌍으로 직렬화하여 문맥 보존."""
     cols = [c for c in df.columns]
     if not cols:
         return []
 
-    lines = [f"[문서: {doc_label}]", "[표 데이터]", " | ".join(cols)]
-
+    chunks = []
     for _, row in df.iterrows():
-        cell_vals = []
+        parts = [f"[문서: {doc_label}]"]
         for c in cols:
             v = row[c]
-            s = str(v).strip() if v is not None and str(v) not in ("None", "nan") else "-"
-            cell_vals.append(s[:50])
-        lines.append(" | ".join(cell_vals))
-
-    return split_into_chunks("\n".join(lines), page=page)
+            s = str(v).strip() if v is not None and str(v) not in ("None", "nan") else None
+            if s:
+                parts.append(f"{c}: {s}")
+        text = " / ".join(parts)
+        if len(text) >= MIN_CHUNK_LEN:
+            chunks.append({"text": text, "page": page})
+    return chunks
 
 
 def _make_doc_overview_chunk(doc_label: str, source_file: str, dfs: list) -> "dict | None":

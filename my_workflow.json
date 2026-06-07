@@ -410,7 +410,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        2060,
+        2620,
         100
       ],
       "id": "ead2b05c-8256-41e3-af9a-eab09a3070bd",
@@ -430,7 +430,7 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
       "position": [
-        2340,
+        2900,
         0
       ],
       "id": "8a1cc4dc-07b2-4008-bb0d-39f72f427801",
@@ -457,7 +457,7 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
       "position": [
-        2340,
+        2900,
         200
       ],
       "id": "48badbae-785d-4138-9d85-0cf1e5c86441",
@@ -1206,6 +1206,70 @@
           "name": "Slack account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "retry-cond-0001",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "IN_PROGRESS",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2060,
+        100
+      ],
+      "id": "retry-branch-0001-0001-0001-0001",
+      "name": "Retry Branch"
+    },
+    {
+      "parameters": {
+        "resume": "timeInterval",
+        "amount": 10,
+        "unit": "seconds"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2340,
+        300
+      ],
+      "id": "wait-retry-0001-0001-0001-0001",
+      "name": "Wait 10s Retry",
+      "webhookId": "wait-retry-hook-0001-0002"
+    },
+    {
+      "parameters": {
+        "url": "=http://host.docker.internal:8080/status?source={{ $('Upload to Backend').first().json.filename }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2620,
+        300
+      ],
+      "id": "check-status-retry-0001-0001-0001",
+      "name": "Check Status Retry",
+      "continueOnFail": true
     }
   ],
   "connections": {
@@ -1294,6 +1358,46 @@
       ]
     },
     "Check Status": {
+      "main": [
+        [
+          {
+            "node": "Retry Branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retry Branch": {
+      "main": [
+        [
+          {
+            "node": "Wait 10s Retry",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Index Result Branch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 10s Retry": {
+      "main": [
+        [
+          {
+            "node": "Check Status Retry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status Retry": {
       "main": [
         [
           {

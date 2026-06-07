@@ -862,7 +862,7 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "section": "=yearly",
+            "section": "=monthly",
             "period": "={{ $json['지출월'] }}",
             "purpose": "={{ $json['목적'] }}",
             "count_or_people": "={{ $json['인원'] }}",
@@ -978,9 +978,9 @@
             "section": "=total",
             "period": "=",
             "purpose": "=",
-            "count_or_people": "==SUMIF(A:A,\"yearly\",D:D)",
+            "count_or_people": "==SUMIF(A:A,\"monthly\",D:D)",
             "recipient": "=",
-            "amount": "==SUMIF(A:A,\"yearly\",F:F)"
+            "amount": "==SUMIF(A:A,\"monthly\",F:F)"
           },
           "matchingColumns": [],
           "schema": [

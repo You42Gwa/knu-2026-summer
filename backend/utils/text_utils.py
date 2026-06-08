@@ -14,7 +14,7 @@ _splitter = RecursiveCharacterTextSplitter(
     separators=["\n\n", "\n", ". ", " ", ""],
 )
 
-_FILENAME_AMOUNT_RE = re.compile(r"(\d[\d,]*)万원")
+_FILENAME_AMOUNT_RE = re.compile(r"(\d[\d,]*)만원")
 
 
 def clean_pdf_text(raw: str) -> str:
@@ -54,8 +54,6 @@ def _table_to_text_chunks(df, doc_label: str, page: int | None = None) -> list[d
 
 def _make_doc_overview_chunk(doc_label: str, source_file: str, dfs: list) -> "dict | None":
     """문서 개요 청크: 목적·내용 질문에 대한 벡터 검색용."""
-    _FILENAME_AMOUNT_RE_LOCAL = re.compile(r"(\d[\d,]*)만원")
-
     total_rows = sum(len(d) for d in dfs)
     all_cols: list[str] = []
     for d in dfs:
@@ -68,7 +66,7 @@ def _make_doc_overview_chunk(doc_label: str, source_file: str, dfs: list) -> "di
         f"문서명: {doc_label}",
         f"파일: {source_file}",
     ]
-    m = _FILENAME_AMOUNT_RE_LOCAL.search(source_file)
+    m = _FILENAME_AMOUNT_RE.search(source_file)
     if m:
         lines.append(f"총 지원 금액: {m.group(1)}만원")
     if total_rows:

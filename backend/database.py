@@ -7,7 +7,9 @@ load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".env
 
 import chromadb
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import sessionmaker
+
+from core.config import CHROMA_HOST, CHROMA_PORT
 
 POSTGRES_USER     = os.getenv("POSTGRES_USER", "admin")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "1q2w3e4r")
@@ -27,17 +29,6 @@ engine = create_engine(
     pool_pre_ping=True,  # 끊긴 연결 자동 감지
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
-
-def get_postgres_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-CHROMA_HOST = os.getenv("CHROMA_HOST", "localhost")
-CHROMA_PORT = int(os.getenv("CHROMA_PORT", "8000"))
 
 _chroma_client: chromadb.HttpClient | None = None
 _chroma_lock = threading.Lock()

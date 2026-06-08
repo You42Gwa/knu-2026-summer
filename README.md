@@ -245,7 +245,7 @@ POST /ingest/upload  또는  POST /ingest  또는  POST /ingest/all
   ├─ XLSX ─▶ 시트별 표 → Parquet + .meta.json
   ├─ PDF  ─▶ 표 → Parquet  /  텍스트(표 제외) → ChromaDB
   │          스캔 PDF → pytesseract OCR → ChromaDB
-  └─ HWP  ─▶ pyhwpx COM 자동화 → 표 → Parquet  /  본문 → ChromaDB
+  └─ HWP  ─▶ pyhwpx COM 자동화 → 표 → Parquet + ChromaDB (표·개요 청크)
 
 * 각 문서마다 [문서 개요] 청크를 ChromaDB에 추가 주입 (vector 검색 품질 향상)
 * PostgreSQL: ingestion_manifest 테이블 (중복 적재 방지용 MD5 해시)

@@ -3,8 +3,8 @@ from __future__ import annotations
 import os
 
 OLLAMA_BASE_URL     = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-OLLAMA_MODEL        = os.getenv("OLLAMA_MODEL", "gemma4:e4b")
-EMBED_MODEL         = os.getenv("EMBED_MODEL", "qwen3-embedding:0.6b")
+OLLAMA_MODEL        = os.getenv("OLLAMA_MODEL", "qwen2.5:3b")
+EMBED_MODEL         = os.getenv("EMBED_MODEL", "bge-m3")
 CHROMA_HOST         = os.getenv("CHROMA_HOST", "localhost")
 CHROMA_PORT         = int(os.getenv("CHROMA_PORT", "8000"))
 COLLECTION_NAME     = os.getenv("COLLECTION_NAME", "scholarship_rules")

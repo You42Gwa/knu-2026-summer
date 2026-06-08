@@ -8,9 +8,7 @@ from datetime import datetime, timezone
 from langchain_ollama import OllamaEmbeddings
 
 from database import get_chroma_collection
-
-OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-EMBED_MODEL     = os.getenv("EMBED_MODEL", "qwen3-embedding:0.6b")
+from core.config import OLLAMA_BASE_URL, EMBED_MODEL
 CHROMA_BATCH    = 100
 MIN_CHUNK_LEN   = 20
 

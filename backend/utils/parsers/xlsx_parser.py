@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import logging
+import math
+import os
 
 import pandas as pd
 
@@ -14,7 +16,6 @@ logger = logging.getLogger("ingest")
 
 def ingest_xlsx(file_path: str, file_hash: str = "", category: str = "") -> int:
     logger.info("[XLSX] %s", file_path)
-    import os
     base_name   = sanitize_table_name(os.path.basename(file_path).rsplit(".", 1)[0])
     source_file = os.path.basename(file_path)
     doc_label   = os.path.splitext(source_file)[0]
@@ -33,7 +34,7 @@ def ingest_xlsx(file_path: str, file_hash: str = "", category: str = "") -> int:
             continue
 
         raw_table = [
-            [None if (v is None or (isinstance(v, float) and __import__('math').isnan(v))) else v
+            [None if (v is None or (isinstance(v, float) and math.isnan(v))) else v
              for v in row]
             for row in raw_df.values.tolist()
         ]
